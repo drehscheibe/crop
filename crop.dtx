@@ -83,9 +83,13 @@
 \newcommand*\program{\texttt}
 \newcommand*\person{\textsc}
 \newcommand*\CROP{\package{crop}}
-\newcommand*\PS{\textsc{\small PS}}
+\newcommand*\versal[1]{\textsc{\small#1}}
+\newcommand*\CD{\versal{CD}}
+\newcommand*\PS{\versal{PS}}
+\newcommand*\DVI{\versal{DVI}}
+\newcommand*\A{\versal{A4}}
+\newcommand*\ISO{\versal{ISO-A4}}
 \newcommand*\POSTSCRIPT{\textsc{PostScript}}
-\newcommand*\DVI{\textsc{\small DVI}}
 \newcommand*\FIXME{\message{<FIXME>}}
 %
 %
@@ -261,7 +265,7 @@
 %    This option centers the logical document page on the physical printer paper
 %    and requires therefore, that you declare the sheet size properly. Write
 %    e.\,g.~|\usepackage[cam,a4,center]{crop}| to center a document of any size
-%    on \textsc{ISO-A4} sheets. If no paper size is chosen you get an error
+%    on \ISO\ sheets. If no paper size is chosen you get an error
 %    message, but you can proceed nevertheless.
 %
 % \item[\sffamily landscape]---
@@ -473,8 +477,8 @@
 % off by the \DVI\ driver or the printer.
 % Provided that you have declared the size of your printing paper, you can
 % use the |center| option to center every logical page on the respective sheet.
-% There's, however, no harm in centering an A4~page on
-% A4~paper, in which case both offsets are set to 0\,pt (unless, of course,
+% There's, however, no harm in centering an \A~page on
+% \A~paper, in which case both offsets are set to 0\,pt (unless, of course,
 % you have set $\hbox{\verb"\mag"}\ne1000$).
 %
 % ^^A\begin{figure}
@@ -529,12 +533,12 @@
 %
 %
 %
-% \subsection{Custom document paper size}
+% \subsection{Custom document page size}
 %
 % The \CROP\ package respects any page layout that you specify by means of
 % \LaTeX\ dimensions. The following example uses the |geometry| package,
 % which I strongly recommend. Let's assume you want to print a
-% CD~booklet ($4\,^{23}\!/_{32} \times 4\,^3\!/_4$~inch) on \textsc{ISO-A4} paper:
+% \CD~booklet ($4\,^{23}\!/_{32} \times 4\,^3\!/_4$~inch) on \ISO\ paper:
 %
 % \begin{example}
 % |\documentclass{article}|\\
