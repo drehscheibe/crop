@@ -17,7 +17,7 @@ print: $(NAME).ps
 %.ps: %.dvi 
 	dvips $(DVIPSOPT) $< -o $@
 
-archive:
+archive: $(NAME).ins
 	@ tar -czf $(ARCHNAME) $(ARCHIVE) 
 	@ echo ""
 	@ echo $(ARCHNAME)		
