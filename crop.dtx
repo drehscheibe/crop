@@ -880,14 +880,11 @@
 \DeclareOption{pdflatex}{\def\CROP@reqdriver{pdftex}}
 \DeclareOption{dvips}{\def\CROP@reqdriver{dvips}}
 \let\CROP@driver\empty
-\newcommand*\CROP@forcedriver[1]{%
-    \AtBeginDocument{\def\CROP@driver{#1}}%
-}
-\DeclareOption{vtex!}{\CROP@forcedriver{vtex}}
-\DeclareOption{pdftex!}{\CROP@forcedriver{pdftex}}
-\DeclareOption{pdflatex!}{\CROP@forcedriver{pdftex}}
-\DeclareOption{dvips!}{\CROP@forcedriver{dvips}}
-\DeclareOption{nodriver}{\CROP@forcedriver{none}}
+\DeclareOption{vtex!}{\def\CROP@driver{vtex}}
+\DeclareOption{pdftex!}{\def\CROP@driver{pdftex}}
+\DeclareOption{pdflatex!}{\def\CROP@driver{pdftex}}
+\DeclareOption{dvips!}{\def\CROP@driver{dvips}}
+\DeclareOption{nodriver}{\def\CROP@driver{none}}
 %    \end{macrocode}
 % \end{macro}
 %
