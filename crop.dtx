@@ -757,7 +757,7 @@
 %
 %
 %
-% \section{The macros}
+% \section{The implementation}
 %
 % \subsection{Preamble}
 %
@@ -808,6 +808,10 @@
 %    \begin{macrocode}
 \let\CROP@stockcolor\empty
 \let\CROP@pagecolor\empty
+\newcommand*\CROP@defmarkcolor[1]{{%
+    \def\set@color{\global\let\CROP@markcolor\current@color}%
+    \@declaredcolor{#1}%
+}}
 \IfFileExists{color.sty}{%
     \RequirePackage{color}%
     \renewcommand*\set@page@color{%
@@ -817,8 +821,8 @@
         \def\set@page@color{%
             \global\let\CROP@pagecolor\current@color
         }%
-        \CROP@defmarkcolor{black}%
     }%
+    \CROP@defmarkcolor{black}%
     \let\CROP@needscolor\relax
 }{%
     \newcommand*\CROP@needscolor{%
@@ -1886,10 +1890,6 @@
 % This is necessary to get good results on imprecise cutting machines.
 %
 %    \begin{macrocode}
-\newcommand*\CROP@defmarkcolor[1]{{%
-    \def\set@color{\global\let\CROP@markcolor\current@color}%
-    \color{#1}%
-}}
 \newcommand*\CROP@opt@color{%
     \CROP@needscolor
     \expandafter\CROP@defmarkcolor\expandafter{\CROP@@}%
