@@ -781,7 +781,8 @@
     \newdimen\stockheight
     \stockheight\paperheight
 \fi
-\newcount\CROP@index  \CROP@index\z@
+\newcount\CROP@index
+\CROP@index\z@
 \newcommand*\CROP@driver{}
 \IfFileExists{graphics.sty}{%
     \RequirePackage{graphics}%
@@ -1005,25 +1006,25 @@
 \newcommand*\CROP@@laxis{%
     \begin{picture}(0,0)
         \unitlength\p@\thinlines
-        \put(-2,0){\line(-1,0){10}}
+        \put(-2,0){\line(-1,0){11}}
     \end{picture}%
 }
 \newcommand*\CROP@@raxis{%
     \begin{picture}(0,0)
         \unitlength\p@\thinlines
-        \put(2,0){\line(1,0){10}}
+        \put(2,0){\line(1,0){11}}
     \end{picture}%
 }
 \newcommand*\CROP@@upaxis{%
     \begin{picture}(0,0)
         \unitlength\p@\thinlines
-        \put(0,2){\line(0,1){10}}
+        \put(0,2){\line(0,1){11}}
     \end{picture}%
 }
 \newcommand*\CROP@@loaxis{%
     \begin{picture}(0,0)
         \unitlength\p@\thinlines
-        \put(0,-2){\line(0,-1){10}}
+        \put(0,-2){\line(0,-1){11}}
     \end{picture}%
 }
 %    \end{macrocode}
@@ -1226,9 +1227,9 @@
 %    \begin{macrocode}
 \newcommand*\CROP@@cross{%
     \begin{picture}(0,0)
-        \unitlength2cm\thinlines
-        \put(-1,0){\line(1,0){2}}
-        \put(0,-1){\line(0,1){2}}
+        \unitlength1cm\thinlines
+        \put(-2,0){\line(1,0){4}}
+        \put(0,-2){\line(0,1){4}}
     \end{picture}%
 }
 %    \end{macrocode}
