@@ -841,7 +841,7 @@
 % This information can, of course, be overridden by the driver options.
 %
 %    \begin{macrocode}
-\newcommand*\CROP@detdriver{}
+\let\CROP@detdriver\empty
 \IfFileExists{graphics.sty}{%
     \RequirePackage{graphics}%
     \let\CROP@Ginclude@graphics\Ginclude@graphics
@@ -869,11 +869,20 @@
 % \begin{macro}{\CROP@reqdriver}
 %
 %    \begin{macrocode}
-\newcommand*\CROP@reqdriver{}
+\let\CROP@reqdriver\empty
 \DeclareOption{vtex}{\def\CROP@reqdriver{vtex}}
 \DeclareOption{pdftex}{\def\CROP@reqdriver{pdftex}}
 \DeclareOption{pdflatex}{\def\CROP@reqdriver{pdftex}}
 \DeclareOption{dvips}{\def\CROP@reqdriver{dvips}}
+\let\CROP@driver\empty
+\def\CROP@forcedriver#1{%
+    \AtBeginDocument{\def\CROP@driver{#1}}%
+}
+\DeclareOption{vtex!}{\CROP@forcedriver{vtex}}
+\DeclareOption{pdftex!}{\CROP@forcedriver{pdftex}}
+\DeclareOption{pdflatex!}{\CROP@forcedriver{pdftex}}
+\DeclareOption{dvips!}{\CROP@forcedriver{dvips}}
+\DeclareOption{nodriver}{\CROP@forcedriver{none}}
 %    \end{macrocode}
 % \end{macro}
 %
@@ -889,54 +898,40 @@
 %
 %    \begin{macrocode}
 \newcommand*\CROP@evaldriver{%
-    \PackageInfo{crop}{requested driver: `\CROP@reqdriver'}%
-    \expandafter\ifx\csname pdfoutput\endcsname\relax\else
-        \ifnum\pdfoutput=0\else
-            \def\CROP@detdriver{pdftex}%
-        \fi
-    \fi
-    \expandafter\ifx\csname VTeXversion\endcsname\relax\else
-        \def\CROP@detdriver{vtex}%
-    \fi
-    \PackageInfo{crop}{detected driver: `\CROP@detdriver'}%
-    \ifx\CROP@reqdriver\empty\else
-        \ifx\CROP@reqdriver\empty\else
-            \ifx\CROP@reqdriver\CROP@detdriver\else
-                \PackageWarningNoLine{crop}{%
-                    You requested the `\CROP@reqdriver' driver
-                    but I think that the `\CROP@detdriver' works
-                    better in the current context. You can force
-                    me to respect your decision by additionally
-                    stating the `nodriver' option.
-                    e.g. [nodriver,pdftex]%
-                }
+    \ifx\CROP@driver\empty
+        \PackageInfo{crop}{requested driver: `\CROP@reqdriver'}%
+        \expandafter\ifx\csname pdfoutput\endcsname\relax\else
+            \ifnum\pdfoutput=0\else
+                \def\CROP@detdriver{pdftex}%
             \fi
         \fi
-    \fi
-    \ifx\CROP@detdriver\empty
-        \let\CROP@driver\CROP@reqdriver
-    \else
-        \let\CROP@driver\CROP@detdriver
+        \expandafter\ifx\csname VTeXversion\endcsname\relax\else
+            \def\CROP@detdriver{vtex}%
+        \fi
+        \PackageInfo{crop}{detected driver: `\CROP@detdriver'}%
+        \ifx\CROP@reqdriver\empty\else
+            \ifx\CROP@reqdriver\empty\else
+                \ifx\CROP@reqdriver\CROP@detdriver\else
+                    \PackageWarningNoLine{crop}{%
+                        You requested the `\CROP@reqdriver' driver
+                        but I think that the `\CROP@detdriver' works
+                        better in the current context. You can force
+                        me to respect your decision by additionally
+                        stating the `nodriver' option.
+                        e.g. [nodriver,pdftex]%
+                    }
+                \fi
+            \fi
+        \fi
+        \ifx\CROP@detdriver\empty
+            \let\CROP@driver\CROP@reqdriver
+        \else
+            \let\CROP@driver\CROP@detdriver
+        \fi
     \fi
     \let\CROP@evaldriver\relax
 }
 \AtBeginDocument{\CROP@evaldriver}
-\expandafter\def\csname CROP@opt@vtex!\endcsname{%
-    \AtBeginDocument{\def\CROP@driver{}}%
-    \def\CROP@reqdirver{vtex}%
-}
-\expandafter\def\csname CROP@opt@pdftex!\endcsname{%
-    \AtBeginDocument{\def\CROP@driver{}}%
-    \def\CROP@reqdirver{pdftex}%
-}
-\expandafter\def\csname CROP@opt@pdflatex!\endcsname{%
-    \AtBeginDocument{\def\CROP@driver{}}%
-    \def\CROP@reqdirver{pdflatex}%
-}
-\expandafter\def\csname CROP@opt@dvips!\endcsname{%
-    \AtBeginDocument{\def\CROP@driver{}}%
-    \def\CROP@reqdirver{dvips}%
-}
 %    \end{macrocode}
 % \end{macro}
 %
