@@ -108,7 +108,7 @@
 % \fi
 %
 %
-% \CheckSum{823}
+% \CheckSum{828}
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -1298,8 +1298,14 @@
 %    \begin{macrocode}
 \newcommand*\CROP@incgrph{}
 \newcommand*\CROP@opt@nographics{%
-  \renewcommand\includegraphics[2][]{%
-    \CROP@includegraphics[##1]{\let\special\relax##2}}}
+  \def\includegraphics##1##{\bgroup
+    \let\special\@gobble
+		\CROP@incgrph{##1}
+	}%	
+	\def\CROP@incgrph##1##2{%
+		\CROP@includegraphics##1{##2}\egroup
+	}%
+}
 \newcommand*\CROP@opt@graphics{%
   \let\includegraphics\CROP@includegraphics}
 %    \end{macrocode}
