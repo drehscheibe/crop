@@ -8,9 +8,11 @@
 + use \reflectbox when processed with pdflatex
 
 
-- fix info font (changes with base font under pdflatex)
-- fix info (possibly broken due to recent changes)
+? repair even/odd
+? fix info (possibly broken due to recent changes)
+? fix info font (changes with base font under pdflatex)
+
+
 - add user hooks
-- repair even/odd
 - think about which actions to delay until \AtBeginDocument
 
