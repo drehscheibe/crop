@@ -9,40 +9,16 @@
 
 
 - fix info font (changes with base font under pdflatex)
+- fix info (possibly broken due to recent changes)
 - add user hooks
 - repair even/odd
+- think about which actions to delay until \AtBeginDocument
 
 
 
 
 consider this:
 --------------
-Ein anderes Problem ist mir dabei auch noch aufgefallen: Das
-Setzen des Satzspiegels muss vor dem Laden von `crop' geschehen
-(im Beispiel `\usepackage[...]{geometry}'). Es wäre zu
-überlegen, ob `crop' einige seiner Aktivitäten bis zu
-`\AtBeginDocument' verzögern sollte, um sicher zu gehen, dass
-alle Änderungen am Satzspiegel bereits geschehen sind.
-
-Und noch was. Für PDF-Dokumente muss ich die Option "pdftex"
-angeben ("vtex" dito.). Andere Pakete machen das automatisch,
-also
-
-    \usepackage[dvips]{crop}
-
-würde bei Verbesserung bedeuten:
-
-o Im LaTeX-Fall nimm Option "dvips"
-o Im pdfLaTeX-Fall erkenne ihn und nimm Option "pdftex";
-ignoriere die Angabe "dvips".
-
-
-In `driver-test.txt' ist ein kurzer Ausschnitt aus einer noch
-privaten Klasse, der einen solchen Ablauf zeigt. In `geometry'
-wird es auch ähnlich gemacht.
-						(Rolf NIEPRASCHK)
-
-
 
 
 % Is the `dvips' driver loaded from `graphics' or `color'?
