@@ -99,7 +99,7 @@
 % \fi
 %
 %
-% \CheckSum{773}
+% \CheckSum{778}
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -153,6 +153,7 @@
 %   `color', `horigin' and `vorigin' added; new info line with time stamp;
 %   some of the improvements were suggested by Cpt. Leszek Flis}
 %
+% \changes{v1.6}{????/??/??}{font option added}
 %
 %
 % \begin{abstract}
@@ -307,8 +308,17 @@
 %    with \#1 and is incremented for every page info line, so that it is more
 %    reliable than page numbers, which are not unique and may be negative or
 %    contain letters. It can also be seen as a cropmarks counter.
-%    This page information is enabled by default. See the configuration example
-%    in section~\ref{sec:config} for how to change the info font.
+%    This page information is enabled by default.
+%
+% \changes{v1.6}{????/??/??}{font option added}
+% \item[\sffamily font]
+%    The page info uses |\normalfont| by default. If you are typesetting
+%    the document in foreign glyphs or a decorative, but less readable font,
+%    you can request a specific font for the page info line. Just assign
+%    a font switching command to the \opt{font} parameter. This command
+%    may take one argument (like |\textsf|) or stand alone (like |\small|).
+%    You may even use more than one command, but note that just the last
+%    one is allowed to take the argument: |\crop[font=\small\textsf]|.
 %
 % \changes{v1.1}{1998/07/01}{mount options added}%
 % \item[\sffamily mount1, mount2]---
@@ -572,7 +582,8 @@
 %\let\Time\CROP@time
 %
 %% let's use a different font for the predefined page information
-%\renewcommand*\CROP@font{\sffamily\small}
+%\crop[font=\small\textsf]
+%% (we could also have written \newcommand*\CROP@font{\small\textsf})
 %\endinput
 %\end{verbatim}
 %
@@ -816,6 +827,7 @@
 % and an index number at the top of the page. 
 % \changes{v1.3}{1999/03/07}{killed `uppercase; (devotion to LINUX)} 
 % \changes{v1.5}{2001/10/07}{complete rewrite: time and line breaking added} 
+% \changes{v1.6}{????/??/??}{font option added}
 %
 %    \begin{macrocode}
 \newcommand*\CROP@time{}
@@ -826,9 +838,10 @@
   \def\x{\discretionary{}{}{\hbox{\kern.5em---\kern.5em}}}%
   \hskip10\p@\advance\paperwidth-20\p@
   \raise8\p@\vbox to\z@{\centering\hsize\paperwidth\vss
-  \normalfont\let\protect\relax\CROP@font
+  \normalfont\let\protect\relax\CROP@font{%
   ``\jobname''\x\the\year/\the\month/\the\day\x\CROP@time\x
-  page\kern.5em\thepage\x\#\the\CROP@index\strut}}}
+  page\kern.5em\thepage\x\#\the\CROP@index\strut}}}}
+\newcommand*\CROP@opt@font{\let\CROP@font\CROP@@}
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
