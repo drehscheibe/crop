@@ -806,7 +806,7 @@
         \renewcommand*\set@page@color{%
             \global\let\CROP@pagecolor\current@color
         }%
-        \CROP@setmarkcolor{black}
+        \CROP@setmarkcolor{black}%
     }%
     \let\CROP@needscolor\relax
 }{%
@@ -1006,7 +1006,7 @@
 %    \begin{macrocode}
 \newcommand*\CROP@size[2]{\stockwidth#1 \stockheight#2 }
 \DeclareOption{landscape}{%
-    \def\CROP@size#1#2{\stockheight#1 \stockwidth#2 }
+    \def\CROP@size#1#2{\stockheight#1 \stockwidth#2 }%
 }
 \DeclareOption{a0}{\CROP@size{841truemm}{1189truemm}}
 \DeclareOption{a1}{\CROP@size{595truemm}{841truemm}}
@@ -1496,7 +1496,7 @@
 %
 %    \begin{macrocode}
 \let\CROP@shipout\shipout
-\renewcommand*\shipout{
+\renewcommand*\shipout{%
     \afterassignment\CROP@ship
     \setbox\@cclv=%
 }
@@ -1805,7 +1805,7 @@
     \kern2\dimen0
     \rotatebox{180}{%
         \hb@xt@\paperwidth{%
-            \vbox to\paperheight{
+            \vbox to\paperheight{%
                 #1%
                 \vss
             }%
