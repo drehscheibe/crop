@@ -149,7 +149,7 @@
 % \fi
 %
 %
-% \CheckSum{1063}
+%^^A \CheckSum{1063}
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -1050,10 +1050,12 @@
 }
 \newcommand*\CROP@init@pdftex{%
     \PackageInfo{crop}{using `pdftex' graphics driver}%
-    \pdfpagewidth\stockwidth
-    \pdfpageheight\stockheight
     \let\CROP@reflect\CROP@genreflect
     \let\CROP@rotate\CROP@genrotate
+    \newcommand*\CROP@shiphook{%
+        \pdfpagewidth\stockwidth
+        \pdfpageheight\stockheight
+    }%
 }
 \newcommand*\CROP@init@vtex{%
     \PackageInfo{crop}{using `vtex' graphics driver}%
@@ -1604,6 +1606,7 @@
     \box\@cclv
 }
 \newcommand*\CROP@@ship{%
+    \csname CROP@shiphook\endcsname
     \CROP@shipout\vbox{\CROP@shiplist}%
 }
 %    \end{macrocode}
