@@ -26,7 +26,7 @@
 %% ====================================================================
 %%  @LaTeX-package-file{
 %%     author          = "Melchior FRANZ",
-%%     version         = "1.7",
+%%     version         = "1.8",
 %%     date            = "14 May 2002",
 %%     filename        = "crop.dtx",
 %%     address         = "Melchior FRANZ
@@ -75,7 +75,7 @@
 %
 %
 %<*driver>
-\def\fileversion{1.7}
+\def\fileversion{1.8}
 \def\filedate{2002/05/14}
 \documentclass[draft]{ltxdoc}
 %
@@ -130,7 +130,7 @@
 % \fi
 %
 %
-% ^^A\CheckSum{929}         \FIXME!!!
+% \CheckSum{1060}
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -151,7 +151,7 @@
 %
 %
 %
-% \title{The \package{crop} package}
+% \title{The \CROP\ package}
 %
 % \author{Melchior \textsc{FRANZ}}
 % \date{May 14, 2002}
@@ -192,7 +192,7 @@
 % \changes{v1.7}{2002/05/14}{odd/even/width/height options added; better
 %   geometry.sty compatibility; adopting `stockwidth/`stockheight}
 %
-% \changes{v1.8}{????/??/??}{removed all the `changes entries except those
+% \changes{v1.8}{2003/02/01}{removed all the `changes entries except those
 %   in the preamble (crop is in CVS since v1.4, anyway); rewrote kernel;
 %   added color support; fixed a nasty bug; better driver detection}
 %
@@ -291,7 +291,7 @@
 %    latter case you only have to add an exclamation point to the driver
 %    option. The difference is, that a suggestion may get overruled by the
 %    package. Assume you have asked for |[dvips]|, but run the document file
-%    throuh \program{pdflatex}. In this case \CROP\ will automatically use
+%    through \program{pdflatex}. In this case \CROP\ will automatically use
 %    the \option{pdflatex} driver. You can also force \CROP\ not to use any
 %    of the drivers by requesting the \option{nodriver} option.
 %    \option{pdflatex} is a synonym for \option{pdftex}.
@@ -535,7 +535,15 @@
 %
 % \subsection{Color handling}
 %
-% \FIXME
+% The \CROP\ package always tries to loads the \package{color} package.
+% You can change the color of the physical page as usual using the
+% |\pagecolor| command in the preamble. But after that, within the |document|
+% environment, |\pagecolor| is redefined to only color the logical
+% page. The color of cropmarks, axes marks and page info can independently
+% be set via the \option{color} option. The options \option{invert} and
+% \option{notext} override any color settings.
+%
+%
 %
 %
 %
@@ -575,13 +583,12 @@
 % |\end{document}|
 % \end{example}
 %
-% Note that the \package{crop} package should always be requested after setting
+% Note that the \CROP\ package should always be requested after setting
 % up the `geometry'. See the \package{geometry} documentation for details.
 % Always disable all of \package{geometry}'s driver options. While this isn't
-% necessary in all cases, it doesn't hurt and it makes your document more portable.
+% necessary in every case, it doesn't hurt and it makes your document more portable.
 % You never know how the local |geometry.cfg| file on other workstations looks
-% like! Some of \CROP's options depend very much on the used output device,
-% thus, always specify the correct driver option when you load \package{crop.sty}.
+% like!
 %
 %
 %
@@ -658,12 +665,15 @@
 % \end{example}
 %
 %
-% \FIXME userhooks, axes
+% Now you can select your new mode by typing |\crop[funny]|.
 %
-%
-% \noindent
-% You can select your own mode by typing |\crop[funny]|.
-% Local definitions like these are ideally put into a local configuration
+% Each of the axis marks is a |picture| that you can easily replace
+% by some custom definition. There's no setup command like |\cropdef|, though.
+% The kernel provides two `hooks' that can be used to add local
+% extensions. These are macros that default to |\relax|. The first, |\CROP@user@a|,
+% is executed at every page, no matter if marks are shown or not, while the
+% second, |\CROP@user@b| is only executed at pages that contain cropmarks.
+% Local definitions and modifications are ideally put into a local configuration
 % file:
 %
 %
@@ -673,7 +683,7 @@
 % If you want to change the predefined settings or add new features,
 % then create a file named `|crop.cfg|' and put it in a directory, where \TeX\
 % can find it. This configuration file will then be loaded
-% at the end of the |crop.sty| file, so you may redefine
+% at the end of the |crop.sty| file, so you can redefine
 % any settings or commands therein, select package options and even
 % introduce new ones. But if you intend to give
 % your documents to others, don't forget to give them the
@@ -683,19 +693,6 @@
 % \begin{example}
 % |% define a new printing paper size|\\
 % |\DeclareOption{special}{\CROP@size{22truecm}{37truecm}}|
-% \end{example}
-%
-% \indent
-% \begin{example}
-% |% introduce an option `oldinfo', which restores the page|\\
-% |% information that was used in older package releases|\\
-% |\newcommand*\CROP@opt@oldinfo{%|\\
-% |\renewcommand*\CROP@@info{%|\\
-% |  \hskip\paperwidth\hskip12\p@|\\
-% |  \raise12\p@\hbox{\vbox{%|\\
-% |    \hbox{``\jobname''\strut}%|\\
-% |    \hbox{\the\year/\the\month/\the\day\strut}%|\\
-% |    \hbox{page \thepage\strut}}}}}|
 % \end{example}
 %
 % \indent
@@ -740,7 +737,8 @@
 % \subsubsection{\package{latex.ltx}}
 %
 % The package works with all \LaTeXe\ standard classes (tested with
-% \LaTeXe\ 1997/12/01), it does not work with plain \TeX.
+% \LaTeXe\ 1997/12/01 and sporadically with later versions), it does
+% not work with plain \TeX.
 %
 % The \CROP\ package uses (and relies on) the internal \LaTeX\ tokens
 % |\hb@xt@|, |\filename@parse|, |\@classoptionslist|,
@@ -754,12 +752,21 @@
 %
 %
 % \subsubsection{\package{color.sty}}
+%
+% \CROP's color handling depends on the \package{color} package.
+% The following internal macros are used directly:
 % |\@declaredcolor|, |\current@color|, |\set@color|, |\set@page@color|
+% (Tested with |color.sty|, version~1.0i as of 1999/02/16.)
 %
 %
 %
 % \subsubsection{\package{graphics.sty}}
-% |\Ginclude@graphics|, |\Gin@driver|, |\Gin@PS@raw|
+%
+% \CROP's driver detection, as well as the options \option{rotate}
+% \option{mirror}, and \option{nographics} depend on the
+% \package{graphics} package. The following internal macros are used directly:
+% |\Gin@PS@raw|, |\Ginclude@graphics|, |\Gin@driver|
+% (Tested with |graphics.sty|, version~1.0l as of 1999/02/16.)
 %
 %
 %
@@ -794,7 +801,7 @@
 %    \begin{macrocode}
 %<*package>
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{crop}[2002/12/17 v1.7f cropmarks  (mf)]
+\ProvidesPackage{crop}[2002/12/17 v1.8 cropmarks  (mf)]
 \expandafter\ifx\csname stockwidth\endcsname\relax
     \newdimen\stockwidth
     \stockwidth\paperwidth
