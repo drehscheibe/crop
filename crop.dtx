@@ -1,6 +1,6 @@
 % \iffalse
 %% File: crop.dtx   Copyright (C) 1998--2000   Melchior FRANZ
-%
+%% $Id$
 %<*preamble>
 %
 %     (1)  run `crop.dtx' through LaTeX to get `crop.ins',
@@ -19,8 +19,8 @@
 %% ====================================================================
 %%  @LaTeX-package-file{
 %%     author          = "Melchior FRANZ",
-%%     version         = "1.4",
-%%     date            = "02 February 2000",
+%%     version         = "1.5pre",
+%%     date            = "31 December 2000",
 %%     filename        = "crop.dtx",
 %%     address         = "Melchior FRANZ
 %%                        A-5212 SCHNEEGATTERN 34
@@ -68,17 +68,17 @@
 %
 %
 %<*driver>
-\def\fileversion{1.4}
-\def\filedate{2000/02/02}
+\def\fileversion{1.5pre}
+\def\filedate{2000/12/31}
 \documentclass[draft]{ltxdoc}
 %
 \let\opt\textsf                % mode/option names are typeset this way
 %
 % 
 \IfFileExists{crop.sty}
-  {\usepackage{crop}[1999/03/07]\let\CROPSTYfound\active}
+  {\usepackage{crop}[2000/12/31]\let\CROPSTYfound\active}
   {\GenericWarning{crop.dtx}
-    {Package file `crop.sty' not found (Two pictures will be missing.^^J
+    {Package file `crop.sty' not found (One picture will be missing.^^J
     Generate `crop.sty' by (La)TeXing `crop.ins',
     process `crop.dtx' again.)^^J}}
 %
@@ -98,7 +98,7 @@
 % \fi
 %
 %
-% \CheckSum{563}
+% \CheckSum{735}
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -117,10 +117,12 @@
 %
 %
 %
+%
+%
 % \title{The \texttt{crop} package}
 %
 % \author{Melchior \textsc{FRANZ}}
-% \date{February 2, 2000}
+% \date{December 31, 2000}
 % \maketitle
 %
 %
@@ -145,6 +147,10 @@
 % \changes{v1.4}{2000/02/02}{options `rotate' (suggested by Rolf) and
 %   `info/noinfo' (requested by Anshuman \textsc{PANDEY}) added}
 %
+% \changes{v1.5}{2000/12/31}{*center options replaced by `center' and paper size
+%   options; options `dvips', `pdftex', `vtex', `color', `horigin' and `vorigin' added}
+%
+%
 %
 % \begin{abstract}
 % This article describes the \texttt{crop} package\footnote{This file has version 
@@ -157,8 +163,7 @@
 % mounting pages on a physical sheet, and for reflecting and inverting
 % the whole document or printing it upside-down.
 % Custom definitions are supported by loading a local configuration
-% file and providing a mode definition command, which is demonstrated
-% in an example.
+% file and providing a mode definition command.
 %
 % The package was originally developed for needs of the
 % Austrian Red Cross\slash Federal Province of Vienna\slash 
@@ -166,7 +171,7 @@
 % \end{abstract}
 %
 %
-% {\parskip0pt\tableofcontents}
+% {\setlength\parskip{0pt}\tableofcontents}
 % \addtocontents{toc}{\protect\begin{multicols}{2}}
 %
 %
@@ -183,34 +188,6 @@
 %
 %
 % \section{How to use the package}
-%
-% \subsection{Loading}
-%
-% Since all marks lie outside the logical page, the horizontal and vertical
-% offset are to be set properly. Otherwise the marks are likely to be cut
-% off by the \textsc{DVI} driver or the printer.
-% The |center| options center every logical page on the respective
-% physical paper. The \opt{a4center} option, for example, centers the
-% page exactly on an~\textsc{ISO~A4} sheet.
-%
-% \bigbreak\noindent{\catcode`\|=12\hbadness\maxdimen
-% \begin{tabular*}{\hsize}{@{\extracolsep{0pt}}l|l@{\extracolsep{10pt}}}
-% \verb+\documentclass[a5paper]{article}+  &\verb+\documentclass[a5paper]{article}+\\
-% \verb+\usepackage[cam,a4center]{crop}+   &\verb+\usepackage[a4center]{crop}+\\
-% \verb+\begin{document}+                  &\verb+\begin{document}+\\
-% \verb+...+                               &\verb+...+\\
-% \verb+\end{document}+                    &\verb+\crop  % or: \crop[cross], etc.+\\
-%                                          &\verb+...+\\
-%                                          &\verb+\end{document}+\\
-% \end{tabular*}}
-%
-% \bigbreak\noindent
-% There's, however, no harm in centering an A4~page on
-% A4~paper, in which case both offsets are set to 0\,pt (unless, of course,
-% you have set $\hbox{\verb"\mag"}\ne1000$).
-%
-%
-%
 %
 % \subsection{The options}
 % \newcommand\Ast{\llap{$^\ast$}}
@@ -276,17 +253,42 @@
 %    implement such modes. (See a \opt{mount4} suggestion on page
 %    \pageref{sec:mount4}.)
 %
+% \changes{v1.5}{2000/12/31}{options horigin and vorigin added}%
+% \item[\sffamily horigin, vorigin]---
+%    The top and left margin are by default 1 inch. This can be changed
+%    using the dimensions |\oddsidemargin|, |\evensidemargin| and
+%    |\topmargin|. The |geometry| package does a very good job setting
+%    all these parameters. The options \opt{horigin} and \opt{vorigin} only
+%    move the marks and don't change the page contents. Only them only if
+%    you know what you are doing. Both options take a mandatory dimension:
+%    write for example |horigin=-.6in|.
+%
+% \changes{v1.5}{2000/12/31}{paper size options added}%
+% \item[\sffamily\Ast a0, a1, a2, a3, a4, a5, a6,
+%    b0, b1, b2, b3, b4, b5, b6, letter, legal, executive]\hfill\break
+%    These options define the printing paper dimensions. They are required
+%    if you are using at least one of the options |center|, |dvips| and
+%    |pdftex|, otherwise an error messages gets issued.
+%
 % \changes{v1.1}{1998/07/01}{center options added}%
-% \item[\sffamily\Ast a4center, a5center, b5center, lettercenter,
-%       legalcenter, executivecenter]---\hfill\break
+% \changes{v1.5}{2000/12/31}{center options replaced}%
+% \item[\sffamily\Ast center]
 %    Corresponding to the standard classes' |paper| options there are
 %    \opt{center} options that allow to center the logical output page
 %    on the respective physical printer paper.
 %
-% \item[\sffamily\Ast landscapecenter]---
-%    This option is to be set in addition to a \opt{center}
+% \item[\sffamily\Ast landscape]---
+%    This option is to be set in addition to the \opt{center}
 %    option if a document should be centered on \emph{landscape oriented}
 %    paper. It has nothing to do with the standard |landscape| option.
+%
+% \changes{v1.5}{2000/12/31}{options `dvips' and `pdftex' added}%
+% \item[\sffamily\Ast dvips, pdftex]---
+%    \TeX\ doesn't care about your printing paper. It just typesets documents.
+%    If you are working with |dvips| or |pdftex| you may want to sepcify the
+%    dimensions of the paper you are planning to print on in your PostScript
+%    or PDF's documents. This requires you to chose one of the paper size
+%    options mentioned above, of course.
 %
 % \changes{v1.2}{1998/12/07}{mirror option added}
 % \item[\sffamily\Ast mirror]
@@ -309,11 +311,24 @@
 %    if the |color| package can be loaded and the document is output with an
 %    output device that is capable of executing \textsc{PS} commands. All color
 %    changing commands stated in the document are ignored.
+%
+% \changes{v1.5}{2000/12/31}{options `textonly' and `grphonly' added}
+% \item[\sffamily\Ast textonly, grphonly]---
+%    Color printouts are often more expensive than black and white ones, while
+%    their text quality is sometimes reduced. Therefore it may be desirable to create
+%    two versions of a document, one with only text and one with only
+%    graphics. Now you can feed the concerned pages through a color printer
+%    and then through a mono laser printer, each pass using the
+%    matching document version. The \opt{textonly} option suppresses every
+%    special command within |\includegraphics| commands. The \opt{grphonly}
+%    option typesets all text in color white, but note that it is still
+%    there!
 % \end{labeling}
 %
 %
 %^^A \noindent
 %^^A Further marks can be implemented using the |\cropdef| command (see below).
+%
 %
 % {\makeatletter
 % \ifx\CROPSTYfound\active 
@@ -322,12 +337,10 @@
 %     \begin{center}
 %       \vspace{.6in}
 %       \leavevmode
-%       \hbox{\hspace{.5in}\rlap{\hskip-\paperwidth\CROP@@info}\CROP@@urc
-%         \hspace{2in}
-%         \rlap{\hskip-\paperwidth\CROP@@info}\CROP@@cross
-%         \hspace{1in}}\vspace{1in}
-%       \caption{The upper right mark in \opt{cam} and \opt{cross} mode
-%           both with the page info.}
+%       \hbox{\paperwidth3.5in\CROP@@ulc\CROP@@info\CROP@@urc}
+%       \vspace{.2in}
+%       \caption{That's what you see on top of a four inch wide logical page when
+%           \opt{cam} mode is requested.}
 %       \label{fig:marks}
 %    \end{center}
 %   \end{quote}
@@ -335,9 +348,49 @@
 % \fi}
 %
 %
+% \subsection{Loading}
+%
+% Since all marks lie outside the logical page, the horizontal and vertical
+% offset are to be set properly. Otherwise the marks are likely to be cut
+% off by the \textsc{DVI} driver or the printer.
+% The |center| options center every logical page on the respective
+% physical paper. The \opt{a4center} option, for example, centers the    ^^A !!!!!!!!!!!!!!!!!!!!1
+% page exactly on an~\textsc{ISO~A4} sheet.
 %
 %
-% \subsection{Controlling the package}
+% \begin{multicols}{2}
+% \setlength\columnseprule{.4pt}
+% \vbox{%
+%\begin{verbatim}
+%\documentclass[a5paper]{article}
+%\usepackage[cam,a4,center]{crop}
+%\begin{document}
+%...
+%\end{document}
+%\end{verbatim}
+%}
+%
+% \vbox{%
+%\begin{verbatim}
+%\documentclass[a5paper]{article}
+%\usepackage[a4,center]{crop}
+%\begin{document}
+%...
+%\crop  % or: \crop[cross], etc.
+%...
+%\end{document}
+%\end{verbatim}
+%}
+% \end{multicols}
+%
+%
+%
+%
+% \bigbreak\noindent
+% There's, however, no harm in centering an A4~page on
+% A4~paper, in which case both offsets are set to 0\,pt (unless, of course,
+% you have set $\hbox{\verb"\mag"}\ne1000$).
+%
 %
 % You get corner markings at every page shipped out after a \opt{cam},
 % \opt{cross}, or \opt{frame} mode request until you turn things off by
@@ -352,6 +405,48 @@
 %\newpage
 %{\crop[cross,axes]\mbox{}\newpage}
 %\end{verbatim}
+%
+%
+%
+%
+%
+%
+% \subsection{Custom logical paper sizes}
+% 
+% This is in fact nothing that would have to be described in this documentation,
+% as there's nothing special about selecting \LaTeX's page dimensions. The
+% |crop| package respects any page layout that you specify by means of
+% \LaTeX\ dimensions. It just seems that people are first confronted with
+% this issue when they are using the |crop| package. So here's a little example,
+% which uses the |geometry| package. Let's assume you want to print a 
+% CD~booklet ($4\,^{23}\!/_{32} \times 4\,^3\!/_4$~inch) on A4 paper:
+%
+%\begin{verbatim}
+%\documentclass{article}
+%\usepackage{geometry}
+%\usepackage[cam,a4,center,dvips]{crop}
+%
+%\geometry{%
+%  paperwidth=4.71875in,
+%  paperheight=4.75in,
+%  margin=2em,
+%  bottom=1.5em,
+%  nohead} 
+%
+%\begin{document}
+%...
+%\end{document}
+%\end{verbatim}
+%
+% Note that the geometry parameters can also be stated as options to
+% the |\usepackage{geometry}| command. For further help see the 
+% |geometry| documentation.
+%
+%
+%
+%
+% \subsection{Custom physical paper sizes}
+% 
 %
 %
 %
@@ -399,6 +494,42 @@
 %
 %
 %
+% \subsection{The configuration file}
+% \label{sec:config}
+%
+% If you want to change the predefined settings, create a
+% file named `|crop.cfg|' and put it in a directory, where \TeX\
+% can find it. This configuration file will then be loaded
+% at the end of the |crop.sty| file, so you may redefine
+% any settings or commands, select package options and even
+% introduce new package options. But if you intend to give
+% your documents to others, don't forget to give them the
+% used configuration files, too! That's how such a file
+% could look like:                                                                                                           
+%
+%\begin{verbatim}
+%% define a new printing paper size
+%\DeclareOption{special}{\CROP@size{22truecm}{37truecm}}
+%
+%% introduce an option `oldinfo', which restores the page information
+%% that was used in older package releases
+%\newcommand*\CROP@opt@oldinfo{%
+%  \renewcommand*\CROP@@info{%
+%    \hskip\paperwidth\hskip12\p@
+%    \raise12\p@\hbox{\vbox{%
+%      \hbox{``\jobname''\strut}%
+%      \hbox{\the\year/\the\month/\the\day\strut}%
+%      \hbox{page \thepage\strut}}}}}
+%
+%% make the package time used in the page information accessible
+%% in the document
+%\let\Time\CROP@time
+%
+%\endinput
+%\end{verbatim}
+% There's not much you can't do here!
+%
+%
 % \section{How the package works}
 %
 % \subsection{The kernel mechanism}
@@ -408,11 +539,6 @@
 % the page contents. It is carefully designed to coexist peacefully with
 % other packages, which use the same method (like the |everyshi| package
 % by \textsc{Martin Schr\"oder}, from whom I have in fact borrowed some ideas).
-%
-%
-%
-%
-% \subsection{The page info}
 %
 % Every page gets its page info, containing the jobname, the current date,
 % and the page number placed at the upper left corner.
@@ -427,9 +553,9 @@
 % \LaTeXe\ 1997/12/01), it does not work with plain \TeX.
 %
 % The |crop| package uses (and relies on) the internal \LaTeX\ tokens
-% |\hb@xt@|, |\@height|, |\@depth|, |\@width|, |\z@|, |\z@skip|, |\p@|,
-% |\@ifundefined|, |\c@page|, |\@namedef|, |\@nameuse|,
-% |\strip@pt|, |\count@|, |\dimen@|, and |\@for|,
+% |\hb@xt@|, |\@height|, |\@depth|, |\@width|, |\z@|, |\@ne|, |\z@skip|, |\p@|,
+% |\@ifundefined|, |\c@page|, |\@namedef|, |\@nameuse|, |\two@digits|,
+% |\strip@pt|, |\count@|, |\dimen@|, |\@undefined|, and |\@for|,
 % all of which are expected to keep their current meaning in future
 % \LaTeX\ releases. The \texttt{crop} package will, however, be supported 
 % at least for some years, so you needn't worry about it.
@@ -444,7 +570,10 @@
 %    \begin{macrocode}
 %<*package>
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{crop}[2000/02/02 v1.4 cropmarks  (mf)]
+\ProvidesPackage{crop}[2000/12/31 v1.5pre cropmarks  (mf)]
+\newdimen\CROP@width  \CROP@width\z@
+\newdimen\CROP@height \CROP@height\z@
+\newcount\CROP@index  \CROP@index\z@
 %    \end{macrocode}
 %
 %
@@ -457,14 +586,30 @@
 % option exchanges the |\hoffset| and |\voffset| dimension.
 %
 %    \begin{macrocode}
-\DeclareOption{landscapecenter}{%
-  \def\CROP@center#1#2{\AtBeginDocument{\CROP@setoffset{#2}{#1}}}}
-\DeclareOption{a4center}{\CROP@center{297truemm}{210truemm}}
-\DeclareOption{a5center}{\CROP@center{210truemm}{148truemm}}
-\DeclareOption{b5center}{\CROP@center{250truemm}{176truemm}}
-\DeclareOption{lettercenter}{\CROP@center{11truein}{8.5truein}}
-\DeclareOption{legalcenter}{\CROP@center{14truein}{8.5truein}}
-\DeclareOption{executivecenter}{\CROP@center{10.5truein}{7.25truein}}
+\newcommand*\CROP@checksize{\ifdim\CROP@width=\z@
+  \PackageError{crop}{no physical paper size selected}%
+    {you have to select a paper size before you can use %
+    the options dvips,\MessageBreak pdftex or center}\fi}
+\newcommand*\CROP@size[2]{\CROP@width#1 \CROP@height#2 }
+\DeclareOption{landscape}{%
+  \def\CROP@size#1#2{\CROP@height#1 \CROP@width#2 }}
+\DeclareOption{a0}{\CROP@size{841truemm}{1189truemm}}
+\DeclareOption{a1}{\CROP@size{595truemm}{841truemm}}
+\DeclareOption{a2}{\CROP@size{420truemm}{595truemm}}
+\DeclareOption{a3}{\CROP@size{297truemm}{420truemm}}
+\DeclareOption{a4}{\CROP@size{210truemm}{297truemm}}
+\DeclareOption{a5}{\CROP@size{149truemm}{210truemm}}
+\DeclareOption{a6}{\CROP@size{105truemm}{149truemm}}
+\DeclareOption{b0}{\CROP@size{1000truemm}{1414truemm}}
+\DeclareOption{b1}{\CROP@size{707truemm}{1000truemm}}
+\DeclareOption{b2}{\CROP@size{500truemm}{707truemm}}
+\DeclareOption{b3}{\CROP@size{353truemm}{500truemm}}
+\DeclareOption{b4}{\CROP@size{250truemm}{353truemm}}
+\DeclareOption{b5}{\CROP@size{176truemm}{250truemm}}
+\DeclareOption{b6}{\CROP@size{125truemm}{176truemm}}
+\DeclareOption{letter}{\CROP@size{8.5truein}{11truein}}
+\DeclareOption{legal}{\CROP@size{8.5truein}{14truein}}
+\DeclareOption{executive}{\CROP@size{7.25truein}{10.5truein}}
 %    \end{macrocode}
 %
 %
@@ -477,10 +622,16 @@
 % (admittedly not very much) memory.
 %
 %    \begin{macrocode}
-\newcommand*\CROP@setoffset[2]{%
-  \voffset#1\advance\voffset-\paperheight\voffset.5\voffset
-  \hoffset#2\advance\hoffset-\paperwidth\hoffset.5\hoffset}
-\def\CROP@center#1#2{\AtBeginDocument{\CROP@setoffset{#1}{#2}}}
+\DeclareOption{center}{\CROP@checksize\AtBeginDocument{%
+  \voffset\CROP@height\advance\voffset-\paperheight\voffset.5\voffset
+  \hoffset\CROP@width\advance\hoffset-\paperwidth\hoffset.5\hoffset}}
+\DeclareOption{dvips}{\CROP@checksize
+  \AtBeginDvi{\special{papersize=\the\CROP@width,\the\CROP@height}}}
+\DeclareOption{pdftex}{\ifx\@undefined\pdfpagewidth\else\CROP@checksize
+  \AtBeginDocument{\pdfpagewidth\CROP@width \pdfpageheight\CROP@height }%
+  \fi}
+\DeclareOption{vtex}{\ifx\@undefined\mediawidth\else\CROP@checksize
+  \AtBeginDocument{\mediawidth\CROP@width \mediaheight\CROP@height }\fi}
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
@@ -532,7 +683,9 @@
   \def\CROP@##1=##2=##3\@nil{\def\CROP@{##1}\def\CROP@@{##2}}%
   \expandafter\CROP@#1==\@nil%
   \@ifundefined{CROP@opt@\CROP@}%
-    {\PackageWarning{crop}{Requested option `#1' not provided}}%
+    {\PackageError{crop}{Requested option `#1' not provided}%
+    {Note that the *center options are obsolete. You have to
+     request\MessageBreak e.g. [a4,center] instead of [a4center].}}%
       {\@nameuse{CROP@opt@\CROP@}}}
 %    \end{macrocode}
 % \end{macro}
@@ -594,12 +747,13 @@
 % \changes{v1.3}{1999/03/07}{killed `uppercase; (devotion to LINUX)} 
 %
 %    \begin{macrocode}
-\newcommand*\CROP@@info{%
-  \hskip\paperwidth\hskip12\p@
-  \raise12\p@\hbox{\vbox{%
-    \hbox{``\jobname''\strut}%
-    \hbox{\the\year/\the\month/\the\day\strut}%
-    \hbox{page \thepage\strut}}}}
+{\count@\time \divide\time60 \count\@ne\time
+\multiply\time60 \advance\count@-\time
+\xdef\CROP@time{\the\count\@ne:\two@digits{\count@}}}
+\newcommand*\CROP@@info{\global\advance\CROP@index\@ne
+  \raise8\p@\hb@xt@\paperwidth{\hss\normalfont``\jobname'' --- %
+  \the\year/\the\month/\the\day\ --- \CROP@time\ --- %
+  page \thepage\ --- \#\the\CROP@index\strut\hss}}                                             
 %    \end{macrocode}
 % \end{macro}
 %
@@ -768,7 +922,7 @@
 \renewcommand*\shipout{\afterassignment\CROP@ship\setbox\@cclv=}
 \newcommand*\CROP@ship{%
   \ifvoid\@cclv\expandafter\aftergroup\fi\CROP@@ship}
-\newcommand*\CROP@shiplist{\CROP@@@ship\unvbox\@cclv}
+\newcommand*\CROP@shiplist{\CROP@@@ship\box\@cclv}
 \newcommand*\CROP@@ship{\CROP@shipout\vbox{\CROP@shiplist}}
 %    \end{macrocode}
 % \end{macro}
@@ -794,7 +948,8 @@
 % \begin{macro}{\CROP@kernel}
 % \changes{v1.1}{1998/07/01}{`CROP@every inserted}%
 % \changes{v1.1a}{1998/10/20}{`smash replaced}%
-% \changes{v1.2}{1998/12/07}{color support added}
+% \changes{v1.2}{1998/12/07}{color support added}%
+% \changes{v.1.4.1}{2000/02/14}{variable origin added}%
 % |\CROP@kernel| essentially contains a |\vbox| with zero width and height.
 % The |\CROP@every| command---which normally equals |\relax|---allows to
 % insert commands that modify the behaviour of the selected mode
@@ -802,12 +957,12 @@
 %
 %    \begin{macrocode}
 \newcommand*\CROP@kernel{\color@setgroup
-  \vbox to\z@{\vskip-1in
-    \hb@xt@\z@{\hskip-1in
+  \vbox to\z@{\vskip\CROP@vorigin
+    \hb@xt@\z@{\hskip\CROP@horigin
       \CROP@every
       \vbox to\paperheight{%
         \hb@xt@\paperwidth{%
-          \setbox\z@\hbox{\normalfont\CROP@info}%
+          \setbox\z@\hbox{\normalfont\CROP@@@info}%
           \ht\z@\z@ \dp\z@\z@ \wd\z@\z@ \box\z@
           \CROP@ulc\CROP@uedge\CROP@urc}%
         \CROP@ledge
@@ -815,6 +970,8 @@
           \CROP@llc\hfil\CROP@lrc}}%
     \hss}%
   \vss}\color@endgroup}
+\newcommand*\CROP@opt@horigin{\let\CROP@horigin\CROP@@}
+\newcommand*\CROP@opt@vorigin{\let\CROP@vorigin\CROP@@}
 %    \end{macrocode}
 % \end{macro}
 %
@@ -845,8 +1002,8 @@
 % Enable and disable the output of axis marks and page info.
 %
 %    \begin{macrocode}
-\newcommand*\CROP@opt@info{\let\CROP@info\CROP@@info}
-\newcommand*\CROP@opt@noinfo{\let\CROP@info\relax}
+\newcommand*\CROP@opt@info{\def\CROP@@@info{\CROP@info}}
+\newcommand*\CROP@opt@noinfo{\let\CROP@@@info\relax}
 \newcommand*\CROP@opt@axes{%
   \let\CROP@uedge\CROP@@vaxis
   \let\CROP@ledge\CROP@@haxis}
@@ -899,6 +1056,7 @@
 % \subsection{Page manipulation}
 % \changes{v1.2}{1998/12/07}{options `mirror' and `invert' added}
 % \changes{v1.4}{2000/02/02}{option `rotate' added}
+% \changes{v1.4.1}{2000/02/14}{origin support added}
 %  
 % \begin{macro}{\CROP@reflect}
 % \begin{macro}{\CROP@rotate}
@@ -915,7 +1073,7 @@
 \DeclareOption{mirror}{%
   \AtBeginDocument{\CROP@shipadd\CROP@reflect\CROP@setps}}
 \newcommand*\CROP@reflect[1]{%
-  \vbox to\z@{\vskip-1in\hb@xt@\z@{\hskip-1in
+  \vbox to\z@{\vskip\CROP@vorigin\hb@xt@\z@{\hskip\CROP@horigin
     \CROP@ps{gsave currentpoint}\kern\paperwidth
     \CROP@ps{currentpoint}\hss}\vss}%
   \CROP@ps{translate -1 1 scale neg exch neg exch translate}%
@@ -924,14 +1082,14 @@
 \DeclareOption{rotate}{%
   \AtBeginDocument{\CROP@shipadd\CROP@rotate\CROP@setps}}
 \newcommand*\CROP@rotate[1]{%
-  \hb@xt@\z@{\hskip-1in\vbox to\z@{\vskip-1in
+  \hb@xt@\z@{\hskip\CROP@horigin\vbox to\z@{\vskip\CROP@vorigin
     \CROP@ps{gsave currentpoint}\kern\paperheight
     \hb@xt@\z@{\kern\paperwidth\CROP@ps{currentpoint}\hss}\vss}\hss}%
   \CROP@ps{translate 180 rotate neg exch neg exch translate}%
   \vbox{#1}%
   \CROP@ps{grestore}}
 \newcommand*\CROP@setps{%
-  \ifx\Gin@PS@raw\undefined
+  \ifx\Gin@PS@raw\@undefined
     \PackageWarning{crop}{internal PostScript interface used}%
     \newcommand*\CROP@ps[1]{\special{ps: ##1}}%
   \else
@@ -954,23 +1112,64 @@
 %    \begin{macrocode}
 \DeclareOption{invert}{%
   \AtEndOfPackage{\RequirePackage{color}}%
-  \AtBeginDocument{\CROP@invert}}
-\newcommand*\CROP@invert{%
-  \ifx\color\undefined
+  \AtBeginDocument{\CROP@invert{black}}}
+\newcommand*\CROP@invert[1]{%
+  \ifx\color\@undefined
     \PackageWarning{crop}%
-      {The `color' package could not be loaded,^^J%
-      so I'm ignoring the `invert' option}%
+      {The `color' package could not be loaded, so I'm\MessageBreak
+       ignoring the `invert' and `graphicsonly' option}%
   \else
-    \pagecolor{black}\color{white}%
+    \pagecolor{#1}\color{white}%
     \newcommand\CROP@color[2][]{}%
     \DeclareRobustCommand\color{\CROP@color}%
     \DeclareRobustCommand\pagecolor{\CROP@color}%
     \DeclareRobustCommand\textcolor{\CROP@color}%
     \let\normalcolor\relax
   \fi
-  \let\CROP@invert\undefined}
+  \let\CROP@invert\relax}
+\DeclareOption{grphonly}{%
+  \AtEndOfPackage{\RequirePackage{color}}%
+  \AtBeginDocument{\CROP@invert{white}}}
+\DeclareOption{textonly}{%
+  \AtBeginDocument{\CROP@nographics}}
+\newcommand*\CROP@nographics{%
+  \let\CROP@graphics\includegraphics
+  \def\includegraphics##1{{\let\special\@gobble\CROP@graphics{##1}}}%
+  \let\CROP@nographics\@undefined}
 %    \end{macrocode}
 % \end{macro}
+%
+%
+%
+%
+%
+% \subsection{Some olde stuff}
+%
+%    \begin{macrocode}
+\newcommand*\CROP@compat{\PackageWarning{crop}{center options like
+  `a4center' are obsolete and only\MessageBreak provided for
+  compatibility reasons. They will be removed\MessageBreak in future
+  releases. Use the new separate options `a4'\MessageBreak and
+  `center' instead.}}
+\DeclareOption{landscapecenter}{%
+  \CROP@compat\ExecuteOptions{landscape,center}}
+\DeclareOption{a4center}{%
+  \CROP@compat\ExecuteOptions{a4,center}}
+\DeclareOption{a5center}{%
+  \CROP@compat\ExecuteOptions{a5,center}}
+\DeclareOption{b5center}{%
+  \CROP@compat\ExecuteOptions{b5,center}}
+\DeclareOption{lettercenter}{%
+  \CROP@compat\ExecuteOptions{letter,center}}
+\DeclareOption{legalcenter}{%
+  \CROP@compat\ExecuteOptions{legal,center}}
+\DeclareOption{executivecenter}{%
+  \CROP@compat\ExecuteOptions{executive,center}}
+%    \end{macrocode}
+%
+%
+%
+%
 %
 %
 %
@@ -986,6 +1185,8 @@
 % \changes{v1.1}{1998/07/01}{Load optional configuration file `crop.cfg'}%
 %
 %    \begin{macrocode}
+\newcommand*\CROP@horigin{-1truein}
+\newcommand*\CROP@vorigin{-1truein}
 \crop[off,noaxes,info,mount1]
 \InputIfFileExists{crop.cfg}%
   {\PackageInfo{crop}{Local config file crop.cfg used}}{}
