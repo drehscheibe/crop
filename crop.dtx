@@ -1,3 +1,4 @@
+%? rm crop.sty; make
 % \iffalse
 %% File: crop.dtx   Copyright (C) 1998--2001   Melchior FRANZ
 %% $Id$
@@ -100,7 +101,7 @@
 % \fi
 %
 %
-% \CheckSum{752}
+% \CheckSum{765}
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -128,7 +129,7 @@
 % \maketitle
 %
 %
-% \changes{v1.0}{1998/05/20}{Initial version (under this name---sigh!)}%
+% \changes{v1.0}{1998/05/20}{Initial version}%
 %
 % \changes{v1.1a}{1998/10/20}{`smash replaced; The cropmarks
 %   were displaced, when the package was used together with the
@@ -248,20 +249,13 @@
 %    output device that is capable of executing \textsc{PS} commands. All further color
 %    changing commands stated in the document are ignored.
 %
-% \changes{v1.5}{2001/10/07}{options `graphicsoff', `graphicson' and `textoff' added}
-% \item[\sffamily graphicsoff, graphicson, textoff]---
-%    Color printouts are often more expensive than black and white ones, while
-%    their text quality is sometimes reduced. Therefore it may be desirable to create
-%    two versions of a document, one with only text and one with only
-%    graphics. Now you can feed the concerned pages through a color printer and
-%    print the \opt{textoff} version, and then through a mono laser printer with the
-%    \opt{graphicsoff} version. The \mbox{\opt{graphicsoff}} option suppresses every
-%    special command within |\includegraphics| arguments and does therefore not work
-%    with |pdftex|. The \opt{graphicson} option turns graphics on again. You may
-%    want to surround just colored images by |\crop[graphicsoff]| and |\crop[]|.
-%    The \mbox{\opt{textoff}} option `typesets' all text
-%    in white color, but note that it is still there, so you can't save disk space
-%    with it.
+% \changes{v1.5}{2001/10/07}{option `textoff' added}
+% \item[\sffamily textoff]---
+%    This option uses the |color| package to turn text to white
+%    color, after which all further color switching commands are disabled. This
+%    makes the text disappear from the printout, although it remains in the
+%    output file. See the description of the options \opt{graphicsoff} and
+%    \opt{graphicson} on page~\pageref{graphicson} for an explanation.
 % \end{labeling}
 %
 %
@@ -337,6 +331,18 @@
 %    you would for example write |horigin=-.6in| to move the marks by 0.4~inch to the
 %    right.
 %
+% \changes{v1.5}{2001/10/07}{options `graphicsoff' and `graphicson' added}
+% \item[\sffamily graphicsoff, graphicson]---
+%    \label{graphicson}
+%    Color printouts are often more expensive than black and white ones, while
+%    their text quality is sometimes reduced. Therefore it may be desirable to create
+%    two versions of a document, one with only text and one with only
+%    graphics. Now you can feed the concerned pages through a color printer and
+%    print the \opt{textoff} version, and then through a mono laser printer with the
+%    \opt{graphicsoff} version. The \mbox{\opt{graphicsoff}} option suppresses every
+%    special command within |\includegraphics| arguments and does therefore not work
+%    with |pdftex|. The \opt{graphicson} option turns graphics on again. You may
+%    want to surround just \emph{colored} images by |\crop[graphicsoff]| and |\crop[graphicson]|.
 % \end{labeling}
 %
 %
@@ -351,9 +357,9 @@
 %     \begin{center}
 %       \vspace{.6in}
 %       \leavevmode
-%       \hbox{\paperwidth3.5in\CROP@@ulc\CROP@@info\CROP@@urc}
+%       \hbox{\paperwidth3.5in\CROP@@ulc\rlap{\CROP@@info}\hskip\paperwidth\CROP@@urc}
 %       \vspace{.2in}
-%       \caption{That's what you see on top of a four inch wide logical page when
+%       \caption{That's what you see on top of a 3.5~inch wide logical page when
 %           \opt{cam} mode is requested.}
 %       \label{fig:marks}
 %    \end{center}
@@ -610,7 +616,7 @@
 \newcommand*\CROP@includegraphics{%
   \PackageError{crop.sty}%
   {Package file graphics.sty not found.}{The options
-  graphicsoff, and graphicson require the graphics package.}}
+  graphicsoff and graphicson require the graphics package.}}
 \IfFileExists{graphics.sty}
   {\RequirePackage{graphics}
   \let\CROP@includegraphics\includegraphics}{}
@@ -784,9 +790,8 @@
 %
 % \begin{macro}{\CROP@time}
 % \begin{macro}{\CROP@@info}
-% This macro prints the jobname, the current date, and the page number
-% at the upper right corner. (In fact it prints it at the upper \emph{left}
-% corner, but the first thing the macro does is jumping to the
+% This macro prints the jobname, the current date and time, the page number
+% and an index number at the top of the logical page. 
 % right.)
 % \changes{v1.3}{1999/03/07}{killed `uppercase; (devotion to LINUX)} 
 %
@@ -794,10 +799,12 @@
 {\count@\time \divide\time60 \count\@ne\time
 \multiply\time60 \advance\count@-\time
 \xdef\CROP@time{\the\count\@ne:\two@digits{\count@}}}
-\newcommand*\CROP@@info{\global\advance\CROP@index\@ne
-  \raise8\p@\hb@xt@\paperwidth{\hss\normalfont``\jobname'' --- %
-  \the\year/\the\month/\the\day\ --- \CROP@time\ --- %
-  page \thepage\ --- \#\the\CROP@index\strut\hss}}                                             
+\newcommand*\CROP@@info{{\global\advance\CROP@index\@ne
+  \def\x{\discretionary{}{}{\hbox{\kern.5em---\kern.5em}}}%
+  \hskip10\p@\advance\paperwidth-20\p@
+  \raise8\p@\vbox to\z@{\centering\hsize\paperwidth\vss\normalfont
+  ``\jobname''\x\the\year/\the\month/\the\day\x\CROP@time\x
+  page\kern.5em\thepage\x\#\the\CROP@index\strut}}}
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
