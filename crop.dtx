@@ -126,7 +126,7 @@
 % \fi
 %
 %
-% \CheckSum{922}
+% \CheckSum{925}
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -390,13 +390,12 @@
 %    The page info line uses |\normalfont| by default. If you are typesetting
 %    the document in non-latin glyphs or a decorative, but less legible font,
 %    you may want to request a specific font for that info. Just assign
-%    a font switching command to the \option{font} option parameter. This command
-%    may take one argument (like |\textsf{}|) or stand alone (like |\small|).
-%    You may even use more than one command, but note that just the last
-%    one is able to take the argument: |\crop[font=\small\textsf]|. You can,
-%    of course, still define a more complex command first, and assign that
+%    a font switching command like |\textsf| to the \option{font} option
+%    parameter, leaving the initial backslash away: |[font=textsf]|. This
+%    command may take one argument (like |\textsf{}|) or stand alone (like |\small|).
+%    You can, of course, define a more complex command first, and assign that
 %    one: |\newcommand*\infofont[1]{\textcolor{blue}{\textsf{\small#1}}}|
-%    |\crop[font=\infofont]|
+%    |\crop[font=infofont]|
 %
 % \changes{v1.1}{1998/07/01}{mount options added}%
 % \item[\sffamily mount1, mount2]---
@@ -456,10 +455,10 @@
 % \begin{figure}
 %   \begin{quote}
 %     \begin{center}
-%       \vspace{.6in}
+%       \vspace{1.5cm}
 %       \leavevmode
 %       \hbox{\paperwidth9cm\CROP@@ulc\rlap{\CROP@@info}\hskip\paperwidth\CROP@@urc}
-%       \vspace{.2in}
+%       \vspace{.5cm}
 %       \caption{That's what you see on top of a 9~cm wide document page when
 %           \option{cam} mode is requested: the marks, jobname, date, time, page number and
 %           cropmarks index.}
@@ -1066,7 +1065,7 @@
         \vss
         \normalfont
         \let\protect\relax
-        \CROP@font{%
+        \expandafter\csname\CROP@font\endcsname{%
             ``\jobname''\x
             \the\year/\the\month/\the\day\x
             \CROP@time\x
