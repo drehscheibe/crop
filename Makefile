@@ -20,7 +20,7 @@ clean:
 	rm -f $(NAME).{log,toc,lot,lof,idx,ilg,ind,aux,blg,bbl,dvi,ins}
 
 distclean: clean
-	rm -f $(NAME).ps $(ARCHNAME)
+	rm -f $(NAME).{ps,sty} $(ARCHNAME)
 
 
 REFWARN = 'Rerun to get cross-references'
