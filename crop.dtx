@@ -256,7 +256,7 @@
 %    makes the text disappear from the printout, although it remains in the
 %    output file. See the description of the options \opt{nographics} and
 %    \opt{graphics} on page~\pageref{graphics} for an explanation.
-%    This option is ignored after a \opt{invert} option request.
+%    This option is ignored after an \opt{invert} option request.
 % \end{labeling}
 %
 %
@@ -363,8 +363,8 @@
 %    whether they shall be printed or not.
 %
 %\begin{verbatim}
-%\newcommand*\colorgraphics{\crop[nographics]}
-%%\newcommand*\colorgraphics{}
+%%\newcommand*\colorgraphics{}                    % print them
+%\newcommand*\colorgraphics{\crop[nographics]}    % don't
 %...
 %{\colorgraphics
 %\includegraphics{...}
@@ -469,15 +469,15 @@
 %
 %\begin{verbatim}
 %\documentclass{article}
-%\usepackage{geometry}
 %\usepackage[cam,a4,center,dvips]{crop}
+%\usepackage{geometry}
 %
 %\geometry{%
-%  paperwidth=4.71875in,
-%  paperheight=4.75in,
-%  margin=2em,
-%  bottom=1.5em,
-%  nohead} 
+%   paperwidth=4.71875in,
+%   paperheight=4.75in,
+%   margin=2em,
+%   bottom=1.5em,
+%   nohead} 
 %
 %\begin{document}
 %...
