@@ -78,7 +78,7 @@
 \def\filedate{2002/05/14}
 \documentclass[draft]{ltxdoc}
 %
-\newcommand*\option{\textsf}             % mode/option names are typeset this way
+\newcommand*\option{\textsf}
 \newcommand*\package{\texttt}
 \newcommand*\program{\texttt}
 \newcommand*\person{\textsc}
@@ -126,7 +126,7 @@
 % \fi
 %
 %
-% \CheckSum{934}
+% \CheckSum{913}
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -993,42 +993,42 @@
 %
 % \subsection{Axes and page info}
 %
-% \begin{macro}{\CROP@@vaxis}
-% \begin{macro}{\CROP@@haxis}
+% \begin{macro}{\CROP@@laxis}
+% \begin{macro}{\CROP@@raxis}
+% \begin{macro}{\CROP@@upaxis}
+% \begin{macro}{\CROP@@loaxis}
 % \changes{v1.1a}{1998/10/20}{`smash replaced}%
 % The standard definitions for the \option{axes} option. The |\CROP@@vaxis|
 % macro must have zero height and depth.
 %
 %    \begin{macrocode}
-\newcommand*\CROP@@vaxis{%
-    \hfil
-    \setbox\z@\hbox{%
-        \vtop{%
-            \hrule\@height12\p@\@depth-2\p@\@width.4\p@
-            \vskip\paperheight
-            \vskip4\p@
-            \hrule\@height\z@\@depth10\p@\@width.4\p@
-        }%
-    }%
-    \ht\z@\z@
-    \dp\z@\z@
-    \box\z@
-    \hfil
+\newcommand*\CROP@@laxis{%
+    \begin{picture}(0,0)
+        \unitlength\p@\thinlines
+        \put(-2,0){\line(-1,0){10}}
+    \end{picture}%
 }
-\newcommand*\CROP@@haxis{%
-    \vfil
-    \hb@xt@\paperwidth{%
-        \llap{%
-            \vrule\@height.2\p@\@depth.2\p@\@width10\p@\hskip2\p@
-        }%
-        \hfil
-        \rlap{%
-            \hskip2\p@\vrule\@height.2\p@\@depth.2\p@\@width10\p@
-        }%
-    }%
-    \vfil
+\newcommand*\CROP@@raxis{%
+    \begin{picture}(0,0)
+        \unitlength\p@\thinlines
+        \put(2,0){\line(1,0){10}}
+    \end{picture}%
+}
+\newcommand*\CROP@@upaxis{%
+    \begin{picture}(0,0)
+        \unitlength\p@\thinlines
+        \put(0,2){\line(0,1){10}}
+    \end{picture}%
+}
+\newcommand*\CROP@@loaxis{%
+    \begin{picture}(0,0)
+        \unitlength\p@\thinlines
+        \put(0,-2){\line(0,-1){10}}
+    \end{picture}%
 }
 %    \end{macrocode}
+% \end{macro}
+% \end{macro}
 % \end{macro}
 % \end{macro}
 %
@@ -1405,11 +1405,11 @@
                 \CROP@every
                 \CROP@color
                 \CROP@@@info
-                \CROP@ulc\hfill\CROP@upedge\hfill\CROP@urc
+                \CROP@ulc\null\hfill\CROP@upedge\hfill\null\CROP@urc
                 \vfill
                 \CROP@ledge\hfill\CROP@redge
                 \vfill
-                \CROP@llc\hfill\CROP@loedge\hfill\CROP@lrc
+                \CROP@llc\null\hfill\CROP@loedge\hfill\null\CROP@lrc
             }%
             \hss
         }%
@@ -1417,10 +1417,6 @@
     }%
     \color@endgroup
 }
-\let\CROP@upedge\CROP@@cross
-\let\CROP@ledge\CROP@@cross
-\let\CROP@redge\CROP@@cross
-\let\CROP@loedge\CROP@@cross
 \newcommand*\CROP@opt@horigin{\let\CROP@horigin\CROP@@}
 \newcommand*\CROP@opt@vorigin{\let\CROP@vorigin\CROP@@}
 %    \end{macrocode}
@@ -1482,12 +1478,16 @@
 \newcommand*\CROP@opt@info{\def\CROP@@@info{\CROP@info}}
 \newcommand*\CROP@opt@noinfo{\let\CROP@@@info\relax}
 \newcommand*\CROP@opt@axes{%
-    \let\CROP@uedge\CROP@@vaxis
-    \let\CROP@ledge\CROP@@haxis
+    \let\CROP@ledge\CROP@@laxis
+    \let\CROP@redge\CROP@@raxis
+    \let\CROP@upedge\CROP@@upaxis
+    \let\CROP@loedge\CROP@@loaxis
 }
 \newcommand*\CROP@opt@noaxes{%
-    \let\CROP@uedge\hfil
-    \let\CROP@ledge\vfil
+    \let\CROP@ledge\relax
+    \let\CROP@redge\relax
+    \let\CROP@upedge\relax
+    \let\CROP@loedge\relax
 }
 %    \end{macrocode}
 % \end{macro}
