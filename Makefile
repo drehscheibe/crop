@@ -8,6 +8,12 @@ DEP=$(NAME).sty
 
 all: $(NAME).ps
 
+print: $(NAME).ps
+	psbook $(NAME).ps|psnup -2|psselect -e|lpr
+	@ echo -n revert paper stack and hit return
+	@ read key
+	psbook $(NAME).ps|psnup -2|psselect -o -r|lpr
+
 %.ps: %.dvi 
 	dvips $(DVIPSOPT) $< -o $@
 
