@@ -21,7 +21,7 @@
 %%  @LaTeX-package-file{
 %%     author          = "Melchior FRANZ",
 %%     version         = "1.7",
-%%     date            = "12 May 2002",
+%%     date            = "14 May 2002",
 %%     filename        = "crop.dtx",
 %%     address         = "Melchior FRANZ
 %%                        Rieder Hauptstrasse 52
@@ -70,7 +70,7 @@
 %
 %<*driver>
 \def\fileversion{1.7}
-\def\filedate{2002/05/12}
+\def\filedate{2002/05/14}
 \documentclass[draft]{ltxdoc}
 %
 \newcommand*\option{\textsf}             % mode/option names are typeset this way
@@ -78,9 +78,10 @@
 \newcommand*\program{\texttt}
 \newcommand*\person{\textsc}
 \newcommand*\CROP{\package{crop}}
+\newcommand*\FIXME{\message{<FIXME>}}
 %
 %
-% 
+%
 \IfFileExists{crop.sty}
   {\usepackage{crop}[2001/11/16]\let\CROPSTYfound\active}
   {\GenericWarning{crop.dtx}
@@ -100,7 +101,7 @@
   {\end{tabular}\noindentafter\medbreak}
 %
 \makeatletter
-\newcommand*\noindentafter{\@nobreaktrue\everypar{{\setbox\z@\lastbox}}}    
+\newcommand*\noindentafter{\@nobreaktrue\everypar{{\setbox\z@\lastbox}}}
 \makeatother
 %
 % ^^A \RecordChanges
@@ -113,7 +114,7 @@
 % \fi
 %
 %
-% \CheckSum{865}
+% \CheckSum{854}
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -137,7 +138,7 @@
 % \title{The \package{crop} package}
 %
 % \author{Melchior \textsc{FRANZ}}
-% \date{May 12, 2002}
+% \date{May 14, 2002}
 % \maketitle
 %
 %
@@ -149,7 +150,7 @@
 %   command to have a different meaning. Although, this is definitly a
 %   bug in the \texttt{amsmath} design, we do no longer use
 %   `smash. This problem was kindly reported by \person{Pauli Viljamaa.}}%
-% 
+%
 % \changes{v1.2}{1998/12/07}{options `mirror' and `invert' added
 %   on suggestion by \person{Rolf Niepraschk.}}%
 %
@@ -172,8 +173,8 @@
 %   disallowed setting the physical paper size in the config file---thanks
 %   to \person{Stefan Becuwe} for reporting this.}
 %
-% \changes{v1.7}{2002/05/12}{odd/even/width/height options added; better
-%   geometry.sty compatibility; adopting `stockwidth/`stockheight}  
+% \changes{v1.7}{2002/05/14}{odd/even/width/height options added; better
+%   geometry.sty compatibility; adopting `stockwidth/`stockheight}
 %
 %
 %
@@ -187,16 +188,16 @@
 % A big thank you also goes to \person{Walter Schmidt} for his extensive
 % tests and his expertise on compatibility issues with different devices.}^^A
 %^^A
-% , which provides different forms of cropmarks for trimming paper 
+% , which provides different forms of cropmarks for trimming paper
 % stacks, for camera alignment and for visualizing the page dimensions.
-% There are options for centering the document page on the physical
+% There are options for centering the document page on the
 % paper sheet, for marking the vertical and horizontal middle axis, for
 % mounting pages on a physical sheet, for reflecting and inverting
 % the whole document or printing it upside-down, and for suppressing
-% either text or graphics output. 
+% either text or graphics output.
 %
 % The package was originally developed for needs of the
-% Austrian Red Cross\slash Federal Province of Vienna\slash 
+% Austrian Red Cross\slash Federal Province of Vienna\slash
 % Department of Radiation Protection.
 % \end{abstract}
 %
@@ -214,7 +215,7 @@
 % On the one hand this keeps from changing paper stacks, on the other
 % hand it allows printing close to the logical paper edge and even outside
 % the logical page.
-% 
+%
 % For trimming a whole paper stack or ligning up the single pages on
 % printing plates for photographical duplication a set of corner marks
 % is required.
@@ -239,7 +240,7 @@
 %    \option{pdftex} and \option{vtex} options is used, in which case the paper size is
 %    passed to the respective option.
 %
-% \changes{v1.7}{2002/05/12}{width/height added}%
+% \changes{v1.7}{2002/05/14}{width/height added}%
 % \item[\sffamily width, height]---
 %    Instead of using one of the pre-defined paper formats as described
 %    above, you can also set the paper dimensions directly. You can omit
@@ -260,26 +261,29 @@
 %    to center a document on \emph{landscape oriented} paper. Note that it has nothing
 %    to do with the standard |landscape| option.
 %
-% \changes{v1.5}{2001/10/07}{options `dvips', `pdftex' and `vtex' added}%
+% \changes{v1.5}{2001/10/07}{options `dvips', `pdftex', `vtex' and `nodriver' added}%
 % \changes{v1.6}{2001/11/16}{option `pdflatex' added}%
-% \item[\sffamily dvips, pdftex, pdflatex, vtex]---
-%    If you are working with |dvips|, |pdftex| or |vtex| you may want to pass the
-%    dimensions of the paper you are planning to print on to the respective
-%    program. Especially viewer programs like |gs| or |gv| make use of that
-%    \emph{bounding box} information.
+% \item[\sffamily dvips, pdftex, pdflatex, vtex, nodriver]---
+%    If you are working with \program{dvips}, \program{pdftex} or \program{vtex}
+%    you may want to pass the dimensions of the paper you are planning to print on to
+%    the respective program. Especially viewer programs like \program{gs} or \program{gv}
+%    make use of that \emph{bounding box} information.
 %    This requires, of course, that you also choose one of the paper size
-%    options mentioned above (e.\,g.~|[letter,dvips]|). Furthermore, the 
-%    \option{pdftex} option is necessary to make the \option{(no)graphics} options
-%    work together with the |pdftex| program. \option{pdflatex} is a synonym for
-%    \option{pdftex}.
+%    options mentioned above (e.\,g.~|[letter,dvips]|).
+%    If none of the driver options is given, \CROP\ automatically
+%    uses the \package{graphics} driver that your installation suggests
+%    (see the |graphics.cfg| file). The \option{nodriver}
+%    option suppresses this automatism. This is, for example, required if a document scaled
+%    with \TeX's |\mag| register is to be processed by \program{ghostcript}.
+%    \option{pdflatex} is a synonym for \option{pdftex}.
 %
 % \changes{v1.2}{1998/12/07}{mirror option added}
 % \item[\sffamily mirror]
 %    This option reflects the whole document, provided that the \emph{dvi} output
 %    driver handles PostScript |\special|'s. It uses the standard graphics interfaces,
-%    if the \package{graphics} package could be found or the |color| package is included,
-%    or a matching interface file such as |dvips.def|. 
-%    If no interface is defined, the package uses its internal, less portable  macros. 
+%    if the \package{graphics} package could be found or the \package{color} package is included,
+%    or a matching interface file such as |dvips.def|.
+%    If no interface is defined, the package uses its internal, less portable macros.
 %
 % \changes{v1.4}{2000/02/02}{rotate option added}
 % \item[\sffamily rotate]
@@ -290,18 +294,19 @@
 %
 % \changes{v1.2}{1998/12/07}{invert option added}
 % \item[\sffamily invert]
-%    Lets the whole document be printed white onto black background, 
-%    if the |color| package can be loaded and the document is output with an
+%    Lets the whole document be printed white onto black background,
+%    if the \package{color} package can be loaded and the document is output with an
 %    output device that is capable of executing \textsc{PS} commands. All further color
 %    changing commands stated in the document are ignored. This option is ignored
 %    after a \option{notext} option request.
 %
 % \changes{v1.5}{2001/10/07}{notext option added}
 % \item[\sffamily notext]---
-%    This option uses the |color| package to turn text to white
+%    This option uses the \package{color} package to turn text to white
 %    color, after which all further color switching commands are disabled. This
 %    makes the text disappear from the printout, although it remains in the
-%    output file. See the description of the options \option{nographics} and
+%    output file. Note that neither cropmarks nor the info line are shown. 
+%    See the description of the options \option{nographics} and
 %    \option{graphics} on page~\pageref{graphics} for an explanation.
 %    This option is ignored after an \option{invert} option request.
 % \end{labeling}
@@ -317,7 +322,7 @@
 % These options may be used in the preamble like the `conventional' options
 % (see above), but also as arguments to the |\crop| command everywhere in the
 % document (e.\,g.~|\crop[frame]|).
-% 
+%
 % \begin{labeling}{\indent\indent}
 % \item[\sffamily cam]
 %    This mode provides four different marks (see figure \ref{fig:marks}),
@@ -342,7 +347,7 @@
 %    (i.\,e.~at runtime). It disables all markings and is selected by
 %    default if the package is input without options requested.
 %
-% \changes{v1.7}{2002/05/12}{odd, even options added}%
+% \changes{v1.7}{2002/05/14}{odd, even options added}%
 % \item[\sffamily odd, even]---
 %    Use these options to let the cropmarks be put on odd\slash even pages only.
 %    The marks must have been turned on before, using one of the options |cam|,
@@ -405,7 +410,7 @@
 %    always a mistake, so use them only as a last resort!} Both options take a
 %    (mandatory) dimension. These dimensions describe the way from the reference point---the
 %    upper left corner of the text block---to the upper left corner of the page in
-%    a cartesian coordinate system. 
+%    a cartesian coordinate system.
 %    As both |horigin| and |vorigin| are by default $-1$~inch, you would for
 %    example write |horigin=-.6in| to move the marks by 0.4~inch to the right.
 %
@@ -423,7 +428,7 @@
 %
 % \begin{example}[.86\textwidth]^^A
 % |%\newcommand*\colorgraphics{}                 % print them|\\
-% |\newcommand*\colorgraphics{\crop[nographics]} % don't|\\
+% |\newcommand*\colorgraphics{\crop[nographics]} % don't!|\\
 % |...|\\
 % |{\colorgraphics|\\
 % |\includegraphics{...}|\\
@@ -435,7 +440,7 @@
 %
 %
 % {\makeatletter
-% \ifx\CROPSTYfound\active 
+% \ifx\CROPSTYfound\active
 % \begin{figure}
 %   \begin{quote}
 %     \begin{center}
@@ -464,9 +469,8 @@
 % A4~paper, in which case both offsets are set to 0\,pt (unless, of course,
 % you have set $\hbox{\verb"\mag"}\ne1000$).
 %
-%
-% \begin{figure}
-% \hbox{
+% ^^A\begin{figure}
+% \qquad\hbox{
 % \begin{minipage}[t]{.45\textwidth}
 %\begin{verbatim}
 %\documentclass[a5paper]{article}
@@ -488,17 +492,18 @@
 %\end{document}
 %\end{verbatim}
 % \end{minipage}
-% }
-% \caption{Loading the package. The marks can be activated in the preamble
-%          and anywhere in the document.}
-% \label{fig:loading}
-% \end{figure}
+% }\hspace*{-1cm}
+% ^^A\caption{Loading the package. The marks can be activated in the preamble
+% ^^A         and anywhere in the document.}
+% ^^A\label{fig:loading}
+% ^^A\end{figure}
+% \bigskip\FIXME
 %
 % You get corner markings at every page shipped out after a \option{cam},
 % \option{cross}, or \option{frame} mode request until you turn things off by
 % typing \DescribeMacro{\crop}|\crop[off]|, or the actual grouping level
 % ends.
-% See figure \ref{fig:loading}.
+% ^^ASee figure \ref{fig:loading}.
 % Typing |\crop| without argument(s) is equivalent to typing
 % |\crop[cam,noaxes]|.
 % Axis marks appear only together with one of the above mentioned modes.
@@ -517,19 +522,14 @@
 %
 %
 % \subsection{Custom document paper size}
-% 
-% This is in fact nothing that would have to be described in this documentation,
-% as there's nothing special about selecting \LaTeX's page dimensions in connection
-% with this package.
+%
 % The \CROP\ package respects any page layout that you specify by means of
-% \LaTeX\ dimensions. It just seems that people are first confronted with
-% this issue when they start using the \CROP\ package. The following example
-% uses the |geometry| package, which I strongly recommend. Let's assume you want to print a 
+% \LaTeX\ dimensions. The following example uses the |geometry| package,
+% which I strongly recommend. Let's assume you want to print a
 % CD~booklet ($4\,^{23}\!/_{32} \times 4\,^3\!/_4$~inch) on \textsc{ISO-A4} paper:
 %
 % \begin{example}
 % |\documentclass{article}|\\
-% |\usepackage[cam,a4,center,dvips]{crop}|\\
 % |\usepackage[dvips=false,pdftex=false,vtex=false]{geometry}|
 % \end{example}
 %
@@ -546,23 +546,30 @@
 %
 % \indent
 % \begin{example}
+% |\usepackage[cam,a4,center,dvips]{crop}|\\
+% \end{example}
+%
+% \indent
+% \begin{example}
 % |\begin{document}|\\
 % |...|\\
 % |\end{document}|
 % \end{example}
 %
-% Note that the geometry parameters can also be stated as options to
-% the |\usepackage{geometry}| command. For further help see the 
-% \package{geometry} documentation. To keep that package
-% from using its own \program{dvips} driver or one of the other device
-% drivers, these should be turned off explicitly. Otherwise the marks might
-% be placed wrongly.
+% Note that the \package{crop} package should always be requested after setting
+% up the `geometry'. See the \package{geometry} documentation for details.
+% Always disable all of \package{geometry}'s driver options. While this isn't
+% necessary in all cases, it doesn't hurt and it makes your document more portable.
+% You never know how the local |geometry.cfg| file on other workstations looks
+% like! Some of \CROP's options depend very much on the used output device,
+% thus, always specify the correct driver option when you load \package{crop.sty}.
+%
 %
 %
 %
 %
 % \subsection{Custom printing paper sheet size}
-% 
+%
 % If you want to use one of the \option{center}, \option{dvips}, \option{pdftex} or \option{vtex}
 % options together with non-standard printing paper, you can set it
 % via the \option{width} and \option{height} option, or simply add
@@ -572,15 +579,24 @@
 % otherwise you will get really weird results with scaled documents.
 %
 % \begin{example}
-% |\DeclareOption{weird}{\CROP@size{123truemm}{456truemm}}|
+% |\DeclareOption{weird}{\CROP@size{12truecm}{34truecm}}|
 % \end{example}
 %
 % Now you can use your new printing paper format like the pre-defined ones.
 %
 % \begin{example}
 % |\usepackage[frame,weird,center]{crop}|\\
-% {}
 % \end{example}
+%
+% If you don't need that format regularly, then you can declare the
+% dimensions optionally in the document:
+%
+% \begin{example}
+% |\usepackage[frame,width=12truecm,height=34truecm,center]{crop}|\hspace*{-3cm}\\
+% \end{example}
+%
+%
+%
 %
 %
 %
@@ -639,7 +655,7 @@
 % introduce new ones. But if you intend to give
 % your documents to others, don't forget to give them the
 % required configuration files, too! That's how such a file
-% could look like:                                                                                                           
+% could look like:
 %
 % \begin{example}
 % |% define a new printing paper size|\\
@@ -692,23 +708,23 @@
 % jobname, the current date and time, the page number and an index number
 % printed on top. This line can be turned off (\option{noinfo}) and on (\option{info})
 % anywhere in the document.
-% 
+%
 %
 %
 %
 % \subsection{Compatibility}
 %
-% The package works with all \LaTeXe\ standard classes (tested with 
+% The package works with all \LaTeXe\ standard classes (tested with
 % \LaTeXe\ 1997/12/01), it does not work with plain \TeX.
 %
 % The \CROP\ package uses (and relies on) the internal \LaTeX\ tokens
 % |\hb@xt@|, |\filename@parse|, |\@classoptionslist|,
 % |\@ifundefined|, |\@height|, |\@depth|, |\filename@base|
 % |\@width|, |\z@|, |\@ne|, |\z@skip|, |\p@|,
-% |\c@page|, |\@namedef|, |\@nameuse|, |\strip@pt|, |\two@digits|, 
-% |\count@|, |\dimen@|, |\@for|, |\@empty|, |\@gobble| and |\@undefined|, 
+% |\c@page|, |\@namedef|, |\@nameuse|, |\strip@pt|, |\two@digits|,
+% |\count@|, |\dimen@|, |\@for|, |\@empty|, |\@gobble| and |\@undefined|,
 % % all of which are expected to keep their current meaning in future
-% \LaTeXe\ releases. The \CROP\ package will, however, be supported 
+% \LaTeXe\ releases. The \CROP\ package will, however, be supported
 % at least for some years, so you needn't worry about it.
 %
 % \StopEventually{\addtocontents{toc}{\protect\end{multicols}}}
@@ -730,7 +746,7 @@
 %
 % \subsection{Preamble}
 %
-% \begin{macro}{\CROP@includegraphics}
+% \begin{macro}{\CROP@Ginclude@graphics}
 % \begin{macro}{\CROP@driver}
 % \begin{macro}{\CROP@font}
 % \begin{macro}{\CROP@init}
@@ -741,23 +757,16 @@
 % a device dependent graphics driver already loaded, that we can use.
 % This information can, of course, be overridden by the driver options.
 % The |\CROP@font| macro is by default empty and can be changed
-% via the \option{font} option.
+% via the \option{font} option. |\CROP@init| is a not yet used hook in
+% the redefined |\shipout| macro.
 %
 %    \begin{macrocode}
 %<*package>
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{crop}[2002/05/12 v1.7 cropmarks  (mf)]
-\ifx\stockwidth\@undefined  \newdimen\stockwidth  \stockwidth\z@  \fi
-\ifx\stockheight\@undefined \newdimen\stockheight \stockheight\z@ \fi
+\ProvidesPackage{crop}[2002/05/14 v1.7 cropmarks  (mf)]
+\ifx\stockwidth\@undefined  \newdimen\stockwidth  \stockwidth\z@\fi
+\ifx\stockheight\@undefined \newdimen\stockheight \stockheight\z@\fi
 \newcount\CROP@index  \CROP@index\z@
-\newcommand*\CROP@Ginclude@graphics{%
-    \PackageError{crop}{%
-        Package file `graphics.sty' not found.
-    }{%
-        The options `nographics' and `graphics' require the graphics
-        package.
-    }%
-}
 \newcommand*\CROP@driver{}
 \IfFileExists{graphics.sty}{%
     \RequirePackage{graphics}%
@@ -785,13 +794,17 @@
 %
 % \subsection{Size options}
 % \changes{v1.3}{1999/03/07}{the center options are processed `AtBeginDocument}
+% \changes{v1.7}{2002/05/14}{width and height options added}
 %
 % \begin{macro}{\CROP@size}
+% \begin{macro}{\CROP@opt@width}
+% \begin{macro}{\CROP@opt@height}
 % These options set different standard printing paper sizes, which
-% are needed for centering and as hint for the |dvips|, |pdftex| or |vtex| program.
+% are needed for centering and as hint for the \program{dvips},
+% \program{pdftex} or \program{vtex} program.
 % Since the physical paper dimensions must not underlie
 % a possible scaling, |true| dimensions are taken. The \option{landscape}
-% option exchanges the |\hoffset| and |\voffset| dimension.
+% option exchanges the |\hoffset| and |\voffset| values.
 %
 %    \begin{macrocode}
 \newcommand*\CROP@size[2]{\stockwidth#1 \stockheight#2 }
@@ -815,11 +828,11 @@
 \DeclareOption{letter}{\CROP@size{8.5truein}{11truein}}
 \DeclareOption{legal}{\CROP@size{8.5truein}{14truein}}
 \DeclareOption{executive}{\CROP@size{7.25truein}{10.5truein}}
-\newcommand\CROP@opt@stockwidth{\global\stockwidth\CROP@@}
-\newcommand\CROP@opt@stockheight{\global\stockheight\CROP@@}
-\let\CROP@opt@width\CROP@opt@stockwidth
-\let\CROP@opt@height\CROP@opt@stockheight
+\newcommand\CROP@opt@width{\stockwidth\CROP@@}
+\newcommand\CROP@opt@height{\stockheight\CROP@@}
 %    \end{macrocode}
+% \end{macro}
+% \end{macro}
 % \end{macro}
 %
 %
@@ -839,10 +852,11 @@
 \newcommand*\CROP@center{%
     \ifdim\stockwidth=\z@
         \PackageError{crop}{%
-            no printing paper size selected
+            No printing paper size selected%
         }{%
-            you have to select a paper size before you can use %
-            the `center' option
+            You have to select a paper size like `a4' or
+            `height=20truecm,width=...' to be able to use the
+            `center' option.%
         }%
     \else
         \voffset\stockheight
@@ -910,10 +924,6 @@
 % arguments for options that are not prepared to handle arguments
 % (e.\,g.~|cross=garbage|), or more than one argument
 % (e.\,g.~|mount2=1=garbage|). This is not a bug, it's a feature!
-% The reason why I didn't make use of the |keyval| package that does all
-% this (and much more) is, that the \CROP\ package shouldn't depend
-% on further packages (except \LaTeX, of course), if it can be
-% avoided easily.
 %
 % \changes{v1.1}{1998/07/01}{Parsing optional option arguments}%
 %
@@ -1022,10 +1032,11 @@
 %
 % \begin{macro}{\CROP@time}
 % \begin{macro}{\CROP@@info}
+% \begin{macro}{\CROP@opt@font}
 % This macro prints the jobname, the current date and time, the page number
-% and an index number at the top of the page. 
-% \changes{v1.3}{1999/03/07}{killed `uppercase; (devotion to LINUX)} 
-% \changes{v1.5}{2001/10/07}{complete rewrite: time and line breaking added} 
+% and an index number at the top of the page.
+% \changes{v1.3}{1999/03/07}{killed `uppercase; (devotion to LINUX)}
+% \changes{v1.5}{2001/10/07}{complete rewrite: time and line breaking added}
 % \changes{v1.6}{2001/11/16}{font option added}
 %
 %    \begin{macrocode}
@@ -1043,7 +1054,7 @@
     \def\x{\discretionary{}{}{\hbox{\kern.5em---\kern.5em}}}%
     \hskip10\p@
     \advance\paperwidth-20\p@
-    \raise8\p@\vbox to\z@{%
+    \raise10\p@\vbox to\z@{%
         \centering
         \hsize\paperwidth
         \vss
@@ -1061,6 +1072,7 @@
 }}
 \newcommand*\CROP@opt@font{\let\CROP@font\CROP@@}
 %    \end{macrocode}
+% \end{macro}
 % \end{macro}
 % \end{macro}
 %
@@ -1238,8 +1250,8 @@
 % \begin{macro}{\CROP@@frame}
 % The \option{frame} mode draws a simple frame around the document
 % page. The respective mark is designed to be used in the upper left
-% corner. Since graphics commands expect numbers without dimensions, 
-% |\paperwidth| and \hbox{-|height|} are transformed to numbers 
+% corner. Since graphics commands expect numbers without dimensions,
+% |\paperwidth| and \hbox{-|height|} are transformed to numbers
 % (representing printer's points). This is done by stripping off the
 % unit~|pt|.
 %
@@ -1284,6 +1296,7 @@
 % \subsection{The kernel}
 %
 % \begin{macro}{\CROP@shipout}
+% \begin{macro}{\shipout}
 % \begin{macro}{\CROP@ship}
 % \begin{macro}{\CROP@shiplist}
 % \begin{macro}{\CROP@@ship}
@@ -1319,6 +1332,7 @@
 % \end{macro}
 % \end{macro}
 % \end{macro}
+% \end{macro}
 %
 %
 %
@@ -1331,7 +1345,7 @@
 % \begin{macro}{\CROP@shipadd}
 % \changes{v1.2}{1998/12/07}{`CROP@shipadd introduced}
 % This macro adds a \emph{page manipulation command} to the \emph{shiplist},
-% which gets every ready page as argument and may change it somehow. 
+% which gets every ready page as argument and may change it somehow.
 %
 %    \begin{macrocode}
 \newcommand*\CROP@shipadd[1]{%
@@ -1413,6 +1427,8 @@
 % \begin{macro}{\CROP@@@ship}
 % \begin{macro}{\CROP@on}
 % \begin{macro}{\CROP@opt@off}
+% \begin{macro}{\CROP@opt@odd}
+% \begin{macro}{\CROP@opt@even}
 % These macros start and stop the kernel mechanism.
 %
 %    \begin{macrocode}
@@ -1426,6 +1442,8 @@
     \def\CROP@@@ship{\ifodd\c@page\else\CROP@kernel\fi}%
 }
 %    \end{macrocode}
+% \end{macro}
+% \end{macro}
 % \end{macro}
 % \end{macro}
 % \end{macro}
@@ -1519,10 +1537,11 @@
 %
 %
 % \subsection{Page manipulation}
+%
 % \changes{v1.2}{1998/12/07}{option `mirror' added}
 % \changes{v1.4}{2000/02/02}{option `rotate' added}
 % \changes{v1.5}{2001/10/07}{origin support added}
-%  
+%
 % \begin{macro}{\CROP@reflect}
 % \begin{macro}{\CROP@rotate}
 % \begin{macro}{\CROP@setps}
@@ -1532,7 +1551,7 @@
 % and do not affect the outcome on all other drivers. Raw \textsc{PS}
 % commands are ouput via the \package{graphics} package's PostScript interface |\Gin@PS@raw|,
 % or the built-in |\CROP@ps|. The latter issues a warning, because it is
-% less portable. 
+% less portable.
 %
 %    \begin{macrocode}
 \DeclareOption{mirror}{%
@@ -1600,7 +1619,9 @@
 %
 %
 %
-% \begin{macro}{\CROP@invert}  
+% \subsection{Color handling}
+%
+% \begin{macro}{\CROP@invert}
 % \changes{v1.2}{1998/12/07}{option `invert' added}
 % The \option{invert} option simply switches to black background
 % and white text, after which it disables all color
@@ -1620,10 +1641,10 @@
     \else
         \pagecolor{#1}%
         \color{white}%
-        \newcommand\CROP@color[2][]{}%
-        \DeclareRobustCommand\color{\CROP@color}%
-        \DeclareRobustCommand\pagecolor{\CROP@color}%
-        \DeclareRobustCommand\textcolor{\CROP@color}%
+        \newcommand\CROP@@color[2][]{}%
+        \DeclareRobustCommand\color{\CROP@@color}%
+        \DeclareRobustCommand\pagecolor{\CROP@@color}%
+        \DeclareRobustCommand\textcolor{\CROP@@color}%
         \let\normalcolor\relax
     \fi
     \let\CROP@invert\relax
@@ -1657,7 +1678,7 @@
 %
 %    \begin{macrocode}
 \newcommand*\CROP@opt@nographics{%
-    \renewcommand*\Ginclude@graphics[1]{%
+    \def\Ginclude@graphics##1{%
         \phantom{%
             \CROP@Ginclude@graphics{##1}%
         }%
@@ -1678,11 +1699,19 @@
 %
 %
 %
+% \subsection{The device drivers}
+%
 % \begin{macro}{\CROP@init@dvips}
 % \begin{macro}{\CROP@init@pdftex}
 % \begin{macro}{\CROP@init@vtex}
+% \begin{macro}{\CROP@driver}
 % \changes{v1.6}{2001/11/16}{driver options re-implemented}
-% \changes{v1.7}{2002/05/12}{nodriver option implemented}
+% \changes{v1.7}{2002/05/14}{nodriver option implemented}
+% These options are automatically selected (via definition in |graphics.cfg|)
+% and can as well be chosen explicitly. They do nothing else than handing
+% the given printer paper size over to the \textsc{DVI} driver. This wouldn't
+% be necessary if there was some sort of standard. Sigh \dots
+%
 %    \begin{macrocode}
 \DeclareOption{vtex}{\def\CROP@driver{vtex}}
 \DeclareOption{pdftex}{\def\CROP@driver{pdftex}}
@@ -1691,7 +1720,7 @@
 \DeclareOption{nodriver}{\def\CROP@driver{}}
 \newcommand*\CROP@init@dvips{%
     \PackageInfo{crop}{using dvips graphics driver}%
-    \AtBeginDocument{%    
+    \AtBeginDvi{%
         \ifdim\stockwidth=\z@
         \else
             \special{papersize=\the\stockwidth,\the\stockheight}%
@@ -1702,7 +1731,7 @@
     \PackageInfo{crop}{using pdf(la)tex graphics driver}%
     \ifx\@undefined\pdfpagewidth
         \PackageWarning{crop}{implicit or explicit pdf(la)tex option
-        ignored:^^JThis isn't pdftex!}%
+        ignored:^^JThis doesn't seem to be pdftex!}%
     \else
         \AtBeginDocument{%
             \ifdim\stockwidth=\z@
@@ -1718,7 +1747,7 @@
     \ifdim\stockwidth=\z@\else
         \ifx\@undefined\mediawidth
             \PackageWarning{crop}{implicit or explicit vtex option
-            ignored:^^JThis isn't vtex!}%
+            ignored:^^JThis doesn't seem to be vtex!}%
         \else
             \AtBeginDocument{%
                 \mediawidth\stockwidth
@@ -1728,6 +1757,7 @@
     \fi
 }
 %    \end{macrocode}
+% \end{macro}
 % \end{macro}
 % \end{macro}
 % \end{macro}
@@ -1744,8 +1774,8 @@
 %
 % \begin{macro}{\CROP@compat}
 % These options are just kept for compatibility reasons. They issue
-% a warning that might become an error message in one of the next
-% releases. Finally they might be dropped altogether.
+% a warning that will become an error message in the next
+% release. Finally they will be dropped altogether.
 %
 %    \begin{macrocode}
 \newcommand*\CROP@compat{%
@@ -1794,8 +1824,8 @@
 % \begin{macro}{\CROP@vorigin}
 % \changes{v1.1}{1998/07/01}{Load optional configuration file `crop.cfg'}%
 % \changes{v1.6}{2001/11/16}{Execute graphics driver specific settings}%
-% Switch off marks and axes, set one page per sheet, 
-% load the local configuration file, and 
+% Switch off marks and axes, set one page per sheet,
+% load the local configuration file, and
 % process the requested options. Finally: Exit.
 %
 % Notice that we cannot simply use |\ExecuteOptions| to preselect options
@@ -1853,14 +1883,14 @@
 %   \label{fig:mount4}
 % \end{figure}
 %
-% 
+%
 % \noindent
 % First of all |\CROP@offset| is set to the value of the (optional)
 % argument or zero.
 % Then |\CROP@every| is defined first to set |\count@| to the page number
 % increased by this offset: $p=\mbox{pagenumber}+\mbox{offset}$.
 % \medbreak
-% 
+%
 % {\def\MacroFont{\small\ttfamily\itshape}%
 %\begin{verbatim}
 %\expandafter\newcommand\expandafter*\csname CROP@opt@mount4\endcsname
@@ -1868,7 +1898,7 @@
 %  \def\CROP@every{\count@\c@page
 %    \advance\count@\CROP@offset
 %\end{verbatim}
-% 
+%
 % \noindent
 % Now bits~0 and~1 are checked via |\ifodd| to get
 % $p$ modulo 4, after which the respective marks are deleted.
