@@ -1302,6 +1302,7 @@
 % \begin{macro}{\CROP@@ship}
 % \changes{v1.1}{1998/07/01}{kernel re-implemented completely new}%
 % \changes{v1.2}{1998/12/07}{`CROP@shiplist added, `CROP@@ship changed}
+% \changes{v1.8}{2002/??/??}{`lineskip added ... doh!}%
 %
 % These macros redefine the \TeX\ primitive |\shipout| to insert the
 % contents of the macro |\CROP@@@ship| on top of the box which contains
@@ -1321,7 +1322,9 @@
     \CROP@@ship
 }
 \newcommand*\CROP@shiplist{%
-    \CROP@@@ship\box\@cclv
+    \lineskip\z@
+    \CROP@@@ship
+    \box\@cclv
 }
 \newcommand*\CROP@@ship{%
     \CROP@shipout\vbox{\CROP@shiplist}%
@@ -1371,7 +1374,6 @@
 % \changes{v1.1a}{1998/10/20}{`smash replaced}%
 % \changes{v1.2}{1998/12/07}{color support added}%
 % \changes{v1.5}{2001/10/07}{variable origin added}%
-% \changes{v1.8}{2002/??/??}{`lineskip added ... doh!}%
 % |\CROP@kernel| essentially contains a |\vbox| with zero width and height.
 % The |\CROP@every| command---which normally equals |\relax|---allows to
 % insert commands that modify the behavior of the selected mode
@@ -1380,7 +1382,6 @@
 %    \begin{macrocode}
 \newcommand*\CROP@kernel{%
     \color@setgroup
-    \lineskip\z@
     \vbox to\z@{%
         \vskip\CROP@vorigin
         \hb@xt@\z@{%
