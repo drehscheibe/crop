@@ -98,7 +98,7 @@
 % \fi
 %
 %
-% \CheckSum{735}
+% \CheckSum{740}
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -148,7 +148,8 @@
 %   `info/noinfo' (requested by Anshuman \textsc{PANDEY}) added}
 %
 % \changes{v1.5}{2000/12/31}{*center options replaced by `center' and paper size
-%   options; options `dvips', `pdftex', `vtex', `color', `horigin' and `vorigin' added}
+%   options; options `dvips', `pdftex', `grapnicson', `graphicsoff', `textoff',
+%   `color', `horigin' and `vorigin' added}
 %
 %
 %
@@ -189,15 +190,82 @@
 %
 % \section{How to use the package}
 %
-% \subsection{The options}
-% \newcommand\Ast{\llap{$^\ast$}}
+% \subsection{Conventional options}
 %
-% The following list shows all package options, whereby those marked with
-% a little asterisk are conventional options that are only accessible,
-% when the package is loaded (e.\,g.~|\usepackage[frame]{crop}|).
-% All other options can also be executed after loading the
-% package, in which case they are to be stated as an optional argument(list)
-% to the |\crop| command (e.\,g.~|\crop[frame]|).
+% These options may only be used in the preamble and have to be stated
+% as arguments to the |\usepackage| command (e.\,g.~|\usepackage[frame]{crop}|).
+%
+% \begin{labeling}{\indent\indent}
+% \changes{v1.5}{2000/12/31}{paper size options added}%
+% \item[\sffamily a0, a1, a2, a3, a4, a5, a6,
+%    b0, b1, b2, b3, b4, b5, b6, letter, legal, executive]\hfill\break
+%    These options define the printing paper dimensions. They are required
+%    if you are using at least one of the options |center|, |dvips| and
+%    |pdftex|, otherwise an error messages gets issued.
+%
+% \changes{v1.1}{1998/07/01}{center options added}%
+% \changes{v1.5}{2000/12/31}{center options replaced}%
+% \item[\sffamily center]
+%    Corresponding to the standard classes' |paper| options there are
+%    \opt{center} options that allow to center the logical output page
+%    on the respective physical printer paper.
+%
+% \item[\sffamily landscape]---
+%    This option is to be set in addition to the \opt{center}
+%    option if a document should be centered on \emph{landscape oriented}
+%    paper. It has nothing to do with the standard |landscape| option.
+%
+% \changes{v1.5}{2000/12/31}{options `dvips' and `pdftex' added}%
+% \item[\sffamily dvips, pdftex]---
+%    \TeX\ doesn't care about your printing paper. It just typesets documents.
+%    If you are working with |dvips| or |pdftex| you may want to sepcify the
+%    dimensions of the paper you are planning to print on in your PostScript
+%    or PDF's documents. This requires you to choose one of the paper size
+%    options mentioned above, of course.
+%
+% \changes{v1.2}{1998/12/07}{mirror option added}
+% \item[\sffamily mirror]
+%    This option reflects the whole document, provided that the \emph{dvi} output
+%    driver handles PostScript |\special|'s. It uses the standard graphics interfaces,
+%    if the document loads the |graphics| and/or the |color| package,
+%    or a matching interface file such as |dvips.def|. 
+%    If no interface is defined, the package uses its internal macros. 
+%
+% \changes{v1.4}{2000/02/02}{rotate option added}
+% \item[\sffamily rotate]
+%    Rotates the document by 180\(^\circ\) so that it appears upside-down.
+%    This may be useful to circumvent problems with printers, which do not print
+%    close enough to the lower paper edge due to their paper feed mechanism.
+%    This option relies on \textsc{PS}, just like the \opt{mirror} option.
+%
+% \changes{v1.2}{1998/12/07}{invert option added}
+% \item[\sffamily invert]
+%    Lets the whole document be printed white onto black background, 
+%    if the |color| package can be loaded and the document is output with an
+%    output device that is capable of executing \textsc{PS} commands. All color
+%    changing commands stated in the document are ignored.
+%
+% \changes{v1.5}{2000/12/31}{options `graphicsoff', `graphicson' and `textoff' added}
+% \item[\sffamily graphicsoff, graphicson, textoff]---
+%    Color printouts are often more expensive than black and white ones, while
+%    their text quality is sometimes reduced. Therefore it may be desirable to create
+%    two versions of a document, one with only text and one with only
+%    graphics. Now you can feed the concerned pages through a color printer
+%    and then through a mono laser printer, each pass using the
+%    matching document version. The \opt{textonly} option suppresses every
+%    special command within |\includegraphics| commands. The \opt{grphonly}
+%    option typesets all text in color white, but note that it is still
+%    there!
+% \end{labeling}
+%
+%
+%
+%
+%
+% \subsection{Runtime options}
+%
+% These options may be used in the preamble (see above), but also as arguments
+% to the |\crop| command everywhere in the document (e.\,g.~|\crop[frame]|).
 % 
 % \begin{labeling}{\indent\indent}
 % \item[\sffamily cam]
@@ -245,84 +313,23 @@
 %    There's also a \opt{mount1} mode that is selected by default.
 %    These commands take a number as an optional argument serving
 %    as a page offset. Type |mount2| or |mount2=0| for odd pages right
-%    and |mount2=1| for odd pages left.\footnote{The `|=|' notation may not
-%    look very intuitive at first glance, but other packages already use 
-%    this notation for assignments and it was not desirable to introduce a
-%    new one.} Since further modes are likely to be document, driver, and
-%    printer dependent, no more modes are included. It is up to you, to
-%    implement such modes. (See a \opt{mount4} suggestion on page
-%    \pageref{sec:mount4}.)
+%    and |mount2=1| for odd pages left. Since further modes are likely
+%    to be document, driver, and printer dependent, no more modes are
+%    included. It is up to you, to implement such modes. (See a \opt{mount4}
+%    suggestion on page \pageref{sec:mount4}.)
 %
 % \changes{v1.5}{2000/12/31}{options horigin and vorigin added}%
 % \item[\sffamily horigin, vorigin]---
-%    The top and left margin are by default 1 inch. This can be changed
+%    The top and left margin are by default 1~inch. This can be changed
 %    using the dimensions |\oddsidemargin|, |\evensidemargin| and
 %    |\topmargin|. The |geometry| package does a very good job setting
 %    all these parameters. The options \opt{horigin} and \opt{vorigin} only
 %    move the marks and don't change the page contents. Use them only if
 %    you know what you are doing. Both options take a mandatory dimension:
-%    write for example |horigin=-.6in|.
+%    as both |horigin| and |vorigin| are by default $-1$~inch you would
+%    for example write |horigin=-.6in| to move the marks by 0.4~inch to the
+%    right.
 %
-% \changes{v1.5}{2000/12/31}{paper size options added}%
-% \item[\sffamily\Ast a0, a1, a2, a3, a4, a5, a6,
-%    b0, b1, b2, b3, b4, b5, b6, letter, legal, executive]\hfill\break
-%    These options define the printing paper dimensions. They are required
-%    if you are using at least one of the options |center|, |dvips| and
-%    |pdftex|, otherwise an error messages gets issued.
-%
-% \changes{v1.1}{1998/07/01}{center options added}%
-% \changes{v1.5}{2000/12/31}{center options replaced}%
-% \item[\sffamily\Ast center]
-%    Corresponding to the standard classes' |paper| options there are
-%    \opt{center} options that allow to center the logical output page
-%    on the respective physical printer paper.
-%
-% \item[\sffamily\Ast landscape]---
-%    This option is to be set in addition to the \opt{center}
-%    option if a document should be centered on \emph{landscape oriented}
-%    paper. It has nothing to do with the standard |landscape| option.
-%
-% \changes{v1.5}{2000/12/31}{options `dvips' and `pdftex' added}%
-% \item[\sffamily\Ast dvips, pdftex]---
-%    \TeX\ doesn't care about your printing paper. It just typesets documents.
-%    If you are working with |dvips| or |pdftex| you may want to sepcify the
-%    dimensions of the paper you are planning to print on in your PostScript
-%    or PDF's documents. This requires you to choose one of the paper size
-%    options mentioned above, of course.
-%
-% \changes{v1.2}{1998/12/07}{mirror option added}
-% \item[\sffamily\Ast mirror]
-%    This option reflects the whole document, provided that the \emph{dvi} output
-%    driver handles PostScript |\special|'s. It uses the standard graphics interfaces,
-%    if the document loads the |graphics| and/or the |color| package,
-%    or a matching interface file such as |dvips.def|. 
-%    If no interface is defined, the package uses its internal macros. 
-%
-% \changes{v1.4}{2000/02/02}{rotate option added}
-% \item[\sffamily\Ast rotate]
-%    Rotates the document by 180\(^\circ\) so that it appears upside-down.
-%    This may be useful to circumvent problems with printers, which do not print
-%    close enough to the lower paper edge due to their paper feed mechanism.
-%    This option relies on \textsc{PS}, just like the \opt{mirror} option.
-%
-% \changes{v1.2}{1998/12/07}{invert option added}
-% \item[\sffamily\Ast invert]
-%    Lets the whole document be printed white onto black background, 
-%    if the |color| package can be loaded and the document is output with an
-%    output device that is capable of executing \textsc{PS} commands. All color
-%    changing commands stated in the document are ignored.
-%
-% \changes{v1.5}{2000/12/31}{options `textonly' and `grphonly' added}
-% \item[\sffamily\Ast textonly, grphonly]---
-%    Color printouts are often more expensive than black and white ones, while
-%    their text quality is sometimes reduced. Therefore it may be desirable to create
-%    two versions of a document, one with only text and one with only
-%    graphics. Now you can feed the concerned pages through a color printer
-%    and then through a mono laser printer, each pass using the
-%    matching document version. The \opt{textonly} option suppresses every
-%    special command within |\includegraphics| commands. The \opt{grphonly}
-%    option typesets all text in color white, but note that it is still
-%    there!
 % \end{labeling}
 %
 %
@@ -638,7 +645,7 @@
 %
 %
 %
-% \subsection{Special options handling}
+% \subsection{Runtime options handling}
 %
 % Every unknown option is passed to the macro |\CROP@execopt|.
 %
@@ -1134,8 +1141,10 @@
   \AtBeginDocument{\CROP@nographics}}
 \newcommand*\CROP@nographics{%
   \let\CROP@graphics\includegraphics
-  \def\includegraphics##1{{\let\special\@gobble\CROP@graphics{##1}}}%
-  \let\CROP@nographics\@undefined}
+  \def\includegraphics##1##{\bgroup
+    \let\special\@gobble\CROP@incgrph{##1}}%
+  \newcommand\CROP@incgrph[2]{\CROP@graphics##1{##2}\egroup}%
+  \let\CROP@nographics\undefined}
 %    \end{macrocode}
 % \end{macro}
 %
