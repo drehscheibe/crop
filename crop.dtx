@@ -126,7 +126,7 @@
 % \fi
 %
 %
-% \CheckSum{914}
+% \CheckSum{922}
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -1058,7 +1058,9 @@
     \def\x{\discretionary{}{}{\hbox{\kern.5em---\kern.5em}}}%
     \hskip10\p@
     \advance\paperwidth-20\p@
-    \raise10\p@\vbox to\z@{%
+    \dimen@\CROP@overlap
+    \advance\dimen@6\p@
+    \raise\dimen@\vbox to\z@{%
         \centering
         \hsize\paperwidth
         \vss
@@ -1628,6 +1630,10 @@
 %
 % \subsection{Color handling}
 %
+% \begin{macro}{\CROP@overlap}
+% \begin{macro}{\CROP@color}
+% \begin{macro}{\CROP@setcolor}
+% \begin{macro}{\CROP@pagecolor}
 % \begin{macro}{\CROP@invert}
 % \changes{v1.2}{1998/12/07}{option `invert' added}
 % \changes{v1.8}{2002/??/??}{background color handling added}
@@ -1636,6 +1642,7 @@
 % switching commands.
 %
 %    \begin{macrocode}
+\def\CROP@overlap{3truemm}
 \let\CROP@color\relax
 \let\CROP@setcolor\relax
 \AtBeginDocument{%
@@ -1660,7 +1667,7 @@
         \smash{%
             \let\protect\relax
             \CROP@setcolor
-            \dimen@=3truemm
+            \dimen@\CROP@overlap
             \advance\paperwidth2\dimen@
             \advance\paperheight2\dimen@
             \raise\dimen@\hbox{%
@@ -1696,6 +1703,10 @@
     \AtBeginDocument{\CROP@invert{white}}
 }
 %    \end{macrocode}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
 % \end{macro}
 %
 %
