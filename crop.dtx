@@ -1478,7 +1478,6 @@
 %
 %    \begin{macrocode}
 \newcommand*\CROP@kernel{%
-    \color@setgroup
     \vbox to\z@{%
         \vskip\CROP@vorigin
         \hb@xt@\z@{%
@@ -1496,9 +1495,7 @@
         }%
         \vss
     }%
-    \color@endgroup
 }
-\let\CROP@user@a\relax
 \newcommand*\CROP@marks{%
     \CROP@user@b
     \CROP@@@info
@@ -1508,6 +1505,7 @@
     \vfill
     \CROP@llc\null\hfill\CROP@loedge\hfill\null\CROP@lrc
 }
+\let\CROP@user@a\relax
 \let\CROP@user@b\relax
 \let\CROP@@@marks\CROP@marks
 \newcommand*\CROP@opt@horigin{\let\CROP@horigin\CROP@@}
@@ -1770,7 +1768,7 @@
         \let\CROP@@color\color
         \def\CROP@setcolor{\CROP@@color{black}}%     %\FIXME
         \let\CROP@@pagecolor\pagecolor
-        \DeclareRobustCommand*\pagecolor[2][]{%
+        \renewcommand*\pagecolor[2][]{%
             \def\CROP@{white}%
             \def\CROP@@{#2}%
             \ifx\CROP@\CROP@@
@@ -1814,9 +1812,9 @@
         \CROP@@color{white}%
         \def\CROP@setcolor{\CROP@@color{white}}%
         \newcommand*\CROP@@@color[2][]{}%
-        \DeclareRobustCommand*\color{\CROP@@@color}%
-        \DeclareRobustCommand*\pagecolor{\CROP@@@color}%
-        \DeclareRobustCommand*\textcolor{\CROP@@@color}%
+        \renewcommand*\color{\CROP@@@color}%
+        \renewcommand*\pagecolor{\CROP@@@color}%
+        \renewcommand*\textcolor{\CROP@@@color}%
         \let\normalcolor\relax
     \fi
     \let\CROP@invert\relax
