@@ -19,8 +19,9 @@ print: $(NAME).ps
 
 archive: $(NAME).ins
 	@ tar -czf $(ARCHNAME) $(ARCHIVE) 
-	@ echo ""
-	@ echo $(ARCHNAME)		
+	@ echo $(ARCHNAME):
+	@ echo ====================
+	@ tar -tzf $(ARCHNAME)
 
 clean: 
 	rm -f $(NAME).{log,toc,lot,lof,idx,ilg,ind,aux,blg,bbl,dvi,ins}
