@@ -3,7 +3,7 @@
 %% $Id$
 %<*preamble>
 %
-
+%
 %     (1)  run `crop.dtx' through LaTeX to get `crop.ins',
 %          (if you don't already have it)
 %
@@ -99,7 +99,7 @@
 % \fi
 %
 %
-% \CheckSum{765}
+% \CheckSum{771}
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -199,17 +199,17 @@
 % \changes{v1.5}{2001/10/07}{paper size options added}%
 % \item[\sffamily a0, a1, a2, a3, a4, a5, a6,
 %    b0, b1, b2, b3, b4, b5, b6, letter, legal, executive]\hfill\break
-%    These options define the printing paper dimensions. They are only required
-%    if you are also using at least one of the options |center|, |dvips| and
-%    |pdftex|. An error messages is issued otherwise.
+%    These options declare the printing paper dimensions. They are only required
+%    if you are also using at least one of the options |center|, |dvips|,
+%    |pdftex| and |vtex|. An error messages is issued otherwise.
 %
 % \changes{v1.1}{1998/07/01}{center options added}%
 % \changes{v1.5}{2001/10/07}{center options replaced by a separate center option}%
 % \item[\sffamily center]
 %    This option centers the logical document page on the physical printer paper
 %    and requires therefore, that you declare the sheet size properly. Write
-%    e.\,g.~|\usepackage[cam,a4,center]{crop}| to center a document on \textsc{ISO-A4} sheets,
-%    no matter for which paper they have originally been designed. 
+%    e.\,g.~|\usepackage[cam,a4,center]{crop}| to center a document of any size
+%    on \textsc{ISO-A4} sheets. 
 %
 % \item[\sffamily landscape]---
 %    Use this option in addition to the \opt{center} option if you want
@@ -228,9 +228,9 @@
 % \item[\sffamily mirror]
 %    This option reflects the whole document, provided that the \emph{dvi} output
 %    driver handles PostScript |\special|'s. It uses the standard graphics interfaces,
-%    if the document loads the |graphics| and/or the |color| package,
+%    if the |graphics| package could be found or the |color| package is included,
 %    or a matching interface file such as |dvips.def|. 
-%    If no interface is defined, the package uses its internal macros. 
+%    If no interface is defined, the package uses its internal, less portable  macros. 
 %
 % \changes{v1.4}{2000/02/02}{rotate option added}
 % \item[\sffamily rotate]
@@ -244,15 +244,17 @@
 %    Lets the whole document be printed white onto black background, 
 %    if the |color| package can be loaded and the document is output with an
 %    output device that is capable of executing \textsc{PS} commands. All further color
-%    changing commands stated in the document are ignored.
+%    changing commands stated in the document are ignored. This option is ignored
+%    after a \opt{notext} option request.
 %
-% \changes{v1.5}{2001/10/07}{option `notext' added}
+% \changes{v1.5}{2001/10/07}{notext option added}
 % \item[\sffamily notext]---
 %    This option uses the |color| package to turn text to white
 %    color, after which all further color switching commands are disabled. This
 %    makes the text disappear from the printout, although it remains in the
 %    output file. See the description of the options \opt{nographics} and
 %    \opt{graphics} on page~\pageref{graphics} for an explanation.
+%    This option is ignored after a \opt{invert} option request.
 % \end{labeling}
 %
 %
@@ -261,7 +263,7 @@
 %
 % \subsection{Runtime options}
 %
-% These options may be used in the preamble like the `conventional options'
+% These options may be used in the preamble like the `conventional' options
 % (see above), but also as arguments to the |\crop| command everywhere in the
 % document (e.\,g.~|\crop[frame]|).
 % 
@@ -282,7 +284,7 @@
 %
 % \item[\sffamily frame]
 %    This mode draws a frame around the logical page and is mainly thought
-%    for visualizing the logical paper dimensions.
+%    for visualizing the document page dimensions.
 %
 % \item[\sffamily off]
 %    This `option' makes only sense in connection with the |\crop| command
@@ -299,8 +301,13 @@
 %
 % \changes{v1.4}{2000/02/02}{info/noinfo options added}
 % \item[\sffamily info, noinfo]---
-%    Show the page info consisting of filename, date and page number on every
-%    sheet (see figure \ref{fig:marks}).  This information is enabled by default.
+%    Show the page info consisting of filename, date, time, page number and page
+%    index on every sheet (see figure \ref{fig:marks}). The page index starts
+%    with \#1 and is incremented for every page info line, so that it is more
+%    reliable than page numbers, which are not unique and may be negative or
+%    contain letters. It can also be seen as a cropmarks counter.
+%    This page information is enabled by default. See the configuration example
+%    in section~\ref{sec:config} for how to change the info font.
 %
 % \changes{v1.1}{1998/07/01}{mount options added}%
 % \item[\sffamily mount1, mount2]---
@@ -322,11 +329,13 @@
 %    using the dimensions |\oddsidemargin|, |\evensidemargin| and
 %    |\topmargin|. It's more convenient, though, to let the |geometry| package
 %    define all these and further parameters. The options \opt{horigin} and \opt{vorigin} only
-%    move the marks and don't change the page contents. (Using these options is almost
-%    always a mistake. Use them only as a last resort!) Both options take a
-%    (mandatory) dimension. As both |horigin| and |vorigin| are by default $-1$~inch,
-%    you would for example write |horigin=-.6in| to move the marks by 0.4~inch to the
-%    right.
+%    move the marks and don't change the page contents. \emph{Using these options is almost
+%    always a mistake, so use them only as a last resort!} Both options take a
+%    (mandatory) dimension. These dimensions describe the way from the reference point---the
+%    upper left corner of the text block---to the upper left corner of the page in
+%    a cartesian coordinate system. 
+%    As both |horigin| and |vorigin| are by default $-1$~inch, you would for
+%    example write |horigin=-.6in| to move the marks by 0.4~inch to the right.
 %
 % \changes{v1.5}{2001/10/07}{options `graphics' and `nographics' added}
 % \item[\sffamily graphics, nographics]---
@@ -367,7 +376,7 @@
 %       \vspace{.2in}
 %       \caption{That's what you see on top of a 3.5~inch wide document page when
 %           \opt{cam} mode is requested: the marks, jobname, date, time, page number and
-%           index number.}
+%           cropmark index.}
 %       \label{fig:marks}
 %    \end{center}
 %   \end{quote}
@@ -381,12 +390,15 @@
 % offset are to be set properly. Otherwise the marks are likely to be cut
 % off by the \textsc{DVI} driver or the printer.
 % Provided that you have declared the size of your printing paper, you can
-% use the |center| option to centers every logical page on the respective sheet.
+% use the |center| option to center every logical page on the respective sheet.
+% There's, however, no harm in centering an A4~page on
+% A4~paper, in which case both offsets are set to 0\,pt (unless, of course,
+% you have set $\hbox{\verb"\mag"}\ne1000$).
 %
 %
-% \begin{multicols}{2}
-% \setlength\columnseprule{.4pt}
-% \vbox{%
+% \begin{figure}
+% \hbox{
+% \begin{minipage}[t]{.45\textwidth}
 %\begin{verbatim}
 %\documentclass[a5paper]{article}
 %\usepackage[cam,a4,center]{crop}
@@ -394,9 +406,9 @@
 %...
 %\end{document}
 %\end{verbatim}
-%}
+% \end{minipage}
 %
-% \vbox{%
+% \begin{minipage}[t]{.45\textwidth}
 %\begin{verbatim}
 %\documentclass[a5paper]{article}
 %\usepackage[a4,center]{crop}
@@ -406,27 +418,23 @@
 %...
 %\end{document}
 %\end{verbatim}
-%}
-% \end{multicols}
-%
-%
-%
-%
-% \bigbreak\noindent
-% There's, however, no harm in centering an A4~page on
-% A4~paper, in which case both offsets are set to 0\,pt (unless, of course,
-% you have set $\hbox{\verb"\mag"}\ne1000$).
-%
+% \end{minipage}
+% }
+% \caption{Loading the package. The marks can be activated in the preamble
+%          and anywhere in the document.}
+% \label{fig:loading}
+% \end{figure}
 %
 % You get corner markings at every page shipped out after a \opt{cam},
 % \opt{cross}, or \opt{frame} mode request until you turn things off by
 % typing \DescribeMacro{\crop}|\crop[off]|, or the actual grouping level
 % ends.
+% See figure \ref{fig:loading}.
 % Typing |\crop| without argument(s) is equivalent to typing
-% |\crop[cam,noaxes]|.
+% |\crop[cam,info,graphics,noaxes,horigin=-1in,vorigin=-1in]|.
 % Axis marks appear only together with one of the above mentioned modes.
 % If you only want one cover page for trimming, make sure that a page is
-% output in the scope of |\crop|, e.\,g.:
+% actually output in the scope of |\crop|, e.\,g.:
 %\begin{verbatim}
 %\newpage
 %{\crop[cross,axes]\mbox{}\newpage}
@@ -440,10 +448,11 @@
 % \subsection{Custom document paper size}
 % 
 % This is in fact nothing that would have to be described in this documentation,
-% as there's nothing special about selecting \LaTeX's page dimensions. The
-% |crop| package respects any page layout that you specify by means of
+% as there's nothing special about selecting \LaTeX's page dimensions in connection
+% with this package.
+% The |crop| package respects any page layout that you specify by means of
 % \LaTeX\ dimensions. It just seems that people are first confronted with
-% this issue when they are using the |crop| package. The following little example
+% this issue when they start using the |crop| package. The following example
 % uses the |geometry| package, which I strongly recommend. Let's assume you want to print a 
 % CD~booklet ($4\,^{23}\!/_{32} \times 4\,^3\!/_4$~inch) on \textsc{ISO-A4} paper:
 %
@@ -473,11 +482,11 @@
 %
 % \subsection{Custom printing paper sheet size}
 % 
-% If you want to use one of the \opt{center}, \opt{dvips} or \opt{pdftex}
+% If you want to use one of the \opt{center}, \opt{dvips}, \opt{pdftex} or \opt{vtex}
 % options together with non-standard printing paper, you can easily add
 % the respective paper definition to your |crop.cfg| file (see \ref{sec:config}).
-% Let's for example define a new paper format \opt{weird}, whereby the first dimension
-% describes the width. Don't forget to request |true| dimensions,
+% Let's for example define a new \opt{weird} paper format, whereby the first dimension
+% shall describe the paper width. Don't forget to request |true| dimensions,
 % otherwise you will get really weird results with scaled documents.
 %
 %\begin{verbatim}
@@ -537,7 +546,7 @@
 % then create a file named `|crop.cfg|' and put it in a directory, where \TeX\
 % can find it. This configuration file will then be loaded
 % at the end of the |crop.sty| file, so you may redefine
-% any settings or commands, select package options and even
+% any settings or commands therein, select package options and even
 % introduce new ones. But if you intend to give
 % your documents to others, don't forget to give them the
 % required configuration files, too! That's how such a file
@@ -560,6 +569,9 @@
 %% make the internal time string (used in the page information)
 %% accessible in the whole document
 %\let\Time\CROP@time
+%
+%% let's use a different font for the page information
+%\renewcommand*\CROP@font{\sffamily\small}
 %\endinput
 %\end{verbatim}
 %
@@ -603,14 +615,16 @@
 %
 % \section{The macros}
 %
-% \subsection{Conventional options}
+% \subsection{Preamble}
 %
+% \begin{macro}{\CROP@font}
 % \begin{macro}{\CROP@includegraphics}
 % The options \opt{graphics} and \opt{nographics} depend on the |graphics|
 % package, so we try to load it here. We don't complain now if it can't
 % be found, because we cannot say yet, if one of these options is used in
 % the document at all. Therefore we just prepare an error message for eventual
-% later use.
+% later use. The |\CROP@font| command is by default empty and may be
+% used to change the font for the page info line.
 %
 %    \begin{macrocode}
 %<*package>
@@ -626,18 +640,20 @@
 \IfFileExists{graphics.sty}
   {\RequirePackage{graphics}
   \let\CROP@includegraphics\includegraphics}{}
+\newcommand*\CROP@font{}
 %    \end{macrocode}
+% \end{macro}
 % \end{macro}
 %
 %
 %
-% \subsection{Conventional options}
+% \subsection{Size options}
 % \changes{v1.3}{1999/03/07}{the center options are processed `AtBeginDocument}
 %
 % \begin{macro}{\CROP@checksize}
 % \begin{macro}{\CROP@size}
 % These options set different standard printing paper sizes, which
-% are needed for centering and as hint for the |dvips| or |pdftex| program.
+% are needed for centering and as hint for the |dvips|, |pdftex| or |vtex| program.
 % Since the physical paper dimensions must not underlie
 % a possible scaling, |true| dimensions are taken. The \opt{landscape}
 % option exchanges the |\hoffset| and |\voffset| dimension.
@@ -726,7 +742,8 @@
 % (e.\,g.~|mount2=1=garbage|). This is not a bug, it's a feature!
 % The reason why I didn't make use of the |keyval| package that does all
 % this (and much more) is, that the |crop| package shouldn't depend
-% on \emph{any} further package (except \LaTeX, of course).
+% on further packages (except \LaTeX, of course), if it can be
+% avoided easily.
 %
 % \changes{v1.1}{1998/07/01}{Parsing optional option arguments}%
 %
@@ -738,7 +755,7 @@
     {\PackageError{crop}{Requested option `#1' not provided}%
     {Note that the `*center' options are obsolete. You have to
      request\MessageBreak e.g. [a4,center] instead of [a4center].}}%
-      {\@nameuse{CROP@opt@\CROP@}}}
+    {\@nameuse{CROP@opt@\CROP@}}}
 %    \end{macrocode}
 % \end{macro}
 %
@@ -763,7 +780,7 @@
 %
 %
 %
-% \subsection{Standard definitions}
+% \subsection{Axes and page info}
 %
 % \begin{macro}{\CROP@@vaxis}
 % \begin{macro}{\CROP@@haxis}
@@ -797,6 +814,7 @@
 % This macro prints the jobname, the current date and time, the page number
 % and an index number at the top of the page. 
 % \changes{v1.3}{1999/03/07}{killed `uppercase; (devotion to LINUX)} 
+% \changes{v1.5}{2001/10/07}{complete rewrite: time and line breaking added} 
 %
 %    \begin{macrocode}
 {\count@\time \divide\time60 \count\@ne\time
@@ -805,7 +823,8 @@
 \newcommand*\CROP@@info{{\global\advance\CROP@index\@ne
   \def\x{\discretionary{}{}{\hbox{\kern.5em---\kern.5em}}}%
   \hskip10\p@\advance\paperwidth-20\p@
-  \raise8\p@\vbox to\z@{\centering\hsize\paperwidth\vss\normalfont
+  \raise8\p@\vbox to\z@{\centering\hsize\paperwidth\vss
+  \normalfont\let\protect\relax\CROP@font
   ``\jobname''\x\the\year/\the\month/\the\day\x\CROP@time\x
   page\kern.5em\thepage\x\#\the\CROP@index\strut}}}
 %    \end{macrocode}
@@ -815,7 +834,7 @@
 %
 %
 %
-% \subsection{The \opt{cam} mode}
+% \subsection{The marks}
 %
 % The following four macros provide different marks for the \opt{cam}
 % mode. Since they do not affect the logical page by keeping distance
@@ -897,8 +916,6 @@
 %
 %
 %
-% \subsection{The \opt{cross} mode}
-%
 % \begin{macro}{\CROP@@cross}
 % This macro provides a two inch wide cross.
 %
@@ -922,8 +939,6 @@
 %
 %
 %
-%
-% \subsection{The \opt{frame} mode}
 %
 % \begin{macro}{\CROP@@frame}
 % The \opt{frame} mode draws a simple frame around the document
@@ -961,11 +976,11 @@
 %
 % \subsection{The kernel}
 %
-% \changes{v1.1}{1998/07/01}{kernel re-implemented completely new}%
 % \begin{macro}{\CROP@shipout}
 % \begin{macro}{\CROP@ship}
 % \begin{macro}{\CROP@shiplist}
 % \begin{macro}{\CROP@@ship}
+% \changes{v1.1}{1998/07/01}{kernel re-implemented completely new}%
 % \changes{v1.2}{1998/12/07}{`CROP@shiplist added, `CROP@@ship changed}
 %
 % These macros redefine the \TeX\ primitive |\shipout| to insert the
@@ -1120,7 +1135,7 @@
 %
 %
 % \subsection{Page manipulation}
-% \changes{v1.2}{1998/12/07}{options `mirror' and `invert' added}
+% \changes{v1.2}{1998/12/07}{option `mirror' added}
 % \changes{v1.4}{2000/02/02}{option `rotate' added}
 % \changes{v1.5}{2001/10/07}{origin support added}
 %  
@@ -1170,10 +1185,8 @@
 %
 %
 %
-% \begin{macro}{\CROP@invert}
-% \begin{macro}{\CROP@incgrph}
-% \begin{macro}{\CROP@opt@nographics}
-% \begin{macro}{\CROP@opt@graphics}
+% \begin{macro}{\CROP@invert}  
+% \changes{v1.2}{1998/12/07}{option `invert' added}
 % The \opt{invert} option simply switches to black background
 % and white text, after which it disables all color
 % switching commands.
@@ -1199,6 +1212,30 @@
 \DeclareOption{notext}{%
   \AtEndOfPackage{\RequirePackage{color}}%
   \AtBeginDocument{\CROP@invert{white}}}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+%
+%
+% \subsection{The graphics commands}
+%
+% \begin{macro}{\CROP@opt@nographics}
+% \begin{macro}{\CROP@opt@graphics}
+% \begin{macro}{\CROP@incgrph}
+% \changes{v1.5}{2001/10/07}{options `graphics' and `nographics' added}
+% The \opt{nographics} option redefines the |\includegraphics| command from
+% the |graphics| package, so that it ignores all |\special| commands within.
+% This is a quite simple approach and it might produce unexpected results
+% in some rare cases.
+% Furthermore it doesn't work with |pdftex|, because that doesn't use
+% |\special| to output graphics, but some non-standard \emph{primitives.}
+% Unfortunately we cannot disable those, because we wouldn't even get white
+% space for the left-out pictures then. This is of course no tragedy,
+% because the \textsc{PDF} format isn't the first choice for such tasks,
+% anyway. The \opt{graphics} option re-enables graphics.
+%
+%    \begin{macrocode}
 \newcommand*\CROP@incgrph{}
 \newcommand*\CROP@opt@nographics{%
   \def\includegraphics##1##{\bgroup
@@ -1210,7 +1247,6 @@
 % \end{macro}
 % \end{macro}
 % \end{macro}
-% \end{macro}
 %
 %
 %
@@ -1218,7 +1254,7 @@
 %
 % These options are just kept for compatibility reasons. They issue
 % a warning that might become an error message in one of the next
-% releases. Finally they will be dropped altogether.
+% releases. Finally they might be dropped altogether.
 %
 %    \begin{macrocode}
 \newcommand*\CROP@compat{\PackageWarning{crop}{center options like
