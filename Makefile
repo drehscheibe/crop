@@ -1,7 +1,7 @@
 # $Id$
 NAME=crop
 ARCHNAME=$(NAME).tar.gz
-ARCHIVE=$(NAME).dtx Makefile $(NAME).txt crop.ins
+ARCHIVE=$(NAME).dtx Makefile $(NAME).txt $(NAME).ins
 MAKEIDXOPT=
 DVIPSOPT= #-Pcmz -Pamz
 DEP=$(NAME).sty
