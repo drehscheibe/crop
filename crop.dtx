@@ -799,11 +799,15 @@
 \let\CROP@pagecolor\empty
 \IfFileExists{color.sty}{%
     \RequirePackage{color}%
-    \def\set@page@color{\global\let\CROP@stockcolor\current@color}
+    \renewcommand*\set@page@color{%
+        \global\let\CROP@stockcolor\current@color
+    }%
     \AtBeginDocument{%
-        \def\set@page@color{\global\let\CROP@pagecolor\current@color}
+        \renewcommand*\set@page@color{%
+            \global\let\CROP@pagecolor\current@color
+        }%
         \CROP@setmarkcolor{black}
-    }
+    }%
     \let\CROP@needscolor\relax
 }{%
     \newcommand*\CROP@needscolor{%
@@ -875,7 +879,7 @@
 \DeclareOption{pdflatex}{\def\CROP@reqdriver{pdftex}}
 \DeclareOption{dvips}{\def\CROP@reqdriver{dvips}}
 \let\CROP@driver\empty
-\def\CROP@forcedriver#1{%
+\newcommand*\CROP@forcedriver[1]{%
     \AtBeginDocument{\def\CROP@driver{#1}}%
 }
 \DeclareOption{vtex!}{\CROP@forcedriver{vtex}}
@@ -916,9 +920,8 @@
                         You requested the `\CROP@reqdriver' driver
                         but I think that the `\CROP@detdriver' works
                         better in the current context. You can force
-                        me to respect your decision by additionally
-                        stating the `nodriver' option.
-                        e.g. [nodriver,pdftex]%
+                        me to respect your decision by adding an
+                        exclamation mark e.g. [pdftex!]%
                     }
                 \fi
             \fi
