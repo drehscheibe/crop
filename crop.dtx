@@ -1855,6 +1855,7 @@
 \newcommand*\CROP@opt@overlap{\let\CROP@overlap\CROP@@}
 \DeclareOption{invert}{%
     \CROP@invert{black}%
+    \let\CROP@setmarkcolorxxxxx\relax
 }
 \DeclareOption{notext}{%
     \CROP@invert{white}%
@@ -1866,12 +1867,11 @@
         \global\let\set@page@color\relax
         \global\let\CROP@setpagecolor\relax
     }%
-    \let\CROP@setmarkcolorxxxxx\relax
     \color{white}%
     \DeclareRobustCommand*\color[2][]{}%
     \let\pagecolor\color
     \let\textcolor\color
-    \let\CROP@invert\relax
+    \let\CROP@invert\@gobble
 }
 %    \end{macrocode}
 % \end{macro}
