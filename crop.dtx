@@ -812,8 +812,8 @@
 }{%
     \newcommand*\CROP@needscolor{%
         \PackageError{crop}{%
-            The `invert' and `notext' options require the `color'
-            package,\MessageBreak which doesn't seem to be installed.
+            The `invert' and `notext' options require the\MessageBreak
+            `color' package, which doesn't seem to be installed%
         }{%
             Install the `color' package or don't use the `invert'
             \MessageBreak or `notext' option.
@@ -855,8 +855,9 @@
     \fi
     \let\CROP@ps\Gin@PS@raw
 }{%
-    \PackageWarning{crop}{couldn't find graphics.sty; will use
-        internal PostScript interface}%
+    \PackageWarning{crop}{I couldn't find the `graphics' package, so
+        I'll use\MessageBreak my internal PostScript interface%
+    }%
     \newcommand*\CROP@ps[1]{\special{ps: ##1}}%
 }
 %    \end{macrocode}
@@ -918,11 +919,13 @@
                 \ifx\CROP@reqdriver\CROP@detdriver\else
                     \PackageWarningNoLine{crop}{%
                         You requested the `\CROP@reqdriver' driver
-                        but I think that the `\CROP@detdriver' works
-                        better in the current context. You can force
-                        me to respect your decision by adding an
-                        exclamation mark e.g. [pdftex!]%
-                    }
+                        but I think that\MessageBreak the
+                        `\CROP@detdriver' driver works better in the
+                        current\MessageBreak context. You can force
+                        me to respect your decision\MessageBreak
+                        by adding an exclamation mark as in
+                        [\CROP@reqdriver!]%
+                    }%
                 \fi
             \fi
         \fi
@@ -956,20 +959,20 @@
 %
 %    \begin{macrocode}
 \newcommand*\CROP@init@dvips{%
-    \PackageInfo{crop}{using dvips graphics driver}%
+    \PackageInfo{crop}{using `dvips' graphics driver}%
     \AtBeginDvi{%
         \special{papersize=\the\stockwidth,\the\stockheight}%
     }%
 }
 \newcommand*\CROP@init@pdftex{%
-    \PackageInfo{crop}{using pdf(la)tex graphics driver}%
+    \PackageInfo{crop}{using `pdftex' graphics driver}%
     \pdfpagewidth\stockwidth
     \pdfpageheight\stockheight
     \let\CROP@reflect\CROP@pdfreflect
     \let\CROP@rotate\CROP@pdfrotate
 }
 \newcommand*\CROP@init@vtex{%
-    \PackageInfo{crop}{using vtex graphics driver}%
+    \PackageInfo{crop}{using `vtex' graphics driver}%
     \mediawidth\stockwidth
     \mediaheight\stockheight
     \let\CROP@reflect\CROP@pdfreflect
