@@ -773,6 +773,38 @@
 %
 %
 %
+% \begin{macro}{\CROP@FIXME}\FIXME
+%
+%    \begin{macrocode}
+\let\CROP@stockcolor\empty
+\let\CROP@pagecolor\empty
+\IfFileExists{color.sty}{%
+    \RequirePackage{color}%
+    \def\set@page@color{\global\let\CROP@stockcolor\current@color}
+    \AtBeginDocument{%
+        \def\set@page@color{\global\let\CROP@pagecolor\current@color}
+    }
+    \newcommand*\CROP@needscolor{}%
+}{%
+    \newcommand*\CROP@needscolor{%
+        \PackageWarning{crop}{%             % \FIXME Error?
+            The `color' package could not be loaded, so I'm\MessageBreak
+            ignoring the `invert' and `notext' option
+        }%
+        \let\CROP@needscolor\relax
+    }%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+%
+%
+%^^A--------------------------------------------------------------------
+%
+%
+%
+%
 % \subsection{The device drivers}
 %
 % \begin{macro}{\CROP@driver}
@@ -827,7 +859,7 @@
 %
 %    \begin{macrocode}
 \newcommand*\CROP@evaldriver{%
-    \PackageInfo{crop}{requested driver: \CROP@reqdriver}%
+    \PackageInfo{crop}{requested driver: `\CROP@reqdriver'}%
     \expandafter\ifx\csname pdfoutput\endcsname\relax\else
         \ifnum\pdfoutput=0\else
             \def\CROP@detdriver{pdftex}%
@@ -836,7 +868,7 @@
     \expandafter\ifx\csname VTeXversion\endcsname\relax\else
         \def\CROP@detdriver{vtex}%
     \fi
-    \PackageInfo{crop}{detected driver: \CROP@detdriver}%
+    \PackageInfo{crop}{detected driver: `\CROP@detdriver'}%
     \ifx\CROP@reqdriver\empty\else
         \ifx\CROP@reqdriver\empty\else
             \ifx\CROP@reqdriver\CROP@detdriver\else
@@ -1489,10 +1521,10 @@
             \vbox to\paperheight{%
                 \let\protect\relax
                 \hsize\paperwidth
-%                \CROP@stockcolor
-                \CROP@setcolor
                 \CROP@every             % \FIXME
-                \CROP@background
+                \CROP@drawstockcolor
+                \CROP@drawpagecolor
+                \normalcolor
                 \CROP@@@marks
             }%
             \hss
@@ -1501,12 +1533,17 @@
     }%
 }
 \newcommand*\CROP@marks{%
+    \CROP@setmarkcolorxxxxx         % \FIXME
     \CROP@user@b
     \CROP@ulc\null\hfill\CROP@@@info\CROP@upedge\hfill\null\CROP@urc
     \vfill
     \CROP@ledge\hfill\CROP@redge
     \vfill
     \CROP@llc\null\hfill\CROP@loedge\hfill\null\CROP@lrc
+}
+\newcommand*\CROP@setmarkcolorxxxxx{%
+    \let\current@color\CROP@markcolor
+    \set@color
 }
 \let\CROP@user@a\relax
 \let\CROP@user@b\relax
@@ -1762,82 +1799,69 @@
 % switching commands.
 %
 %    \begin{macrocode}
+\newcommand*\CROP@setmarkcolor[1]{{%
+    \def\set@color{\global\let\CROP@markcolor\current@color}%
+    \color{#1}%
+}}
+\CROP@setmarkcolor{black}
+\newcommand*\CROP@opt@color{%
+    \expandafter\CROP@setmarkcolor\expandafter{\CROP@@}%
+}
+\newcommand*\CROP@drawstockcolor{%
+    \ifx\CROP@stockcolor\empty
+    \else
+        \rlap{%
+            \smash{%
+                \raise\voffset\hbox{%
+                    \let\current@color\CROP@stockcolor
+                    \set@color
+                    \hskip-\hoffset
+                    \vrule width\stockwidth height\z@ depth\stockheight
+                }%
+            }%
+        }%
+    \fi
+}
+\newcommand*\CROP@drawpagecolor{%
+    \ifx\CROP@pagecolor\empty
+    \else
+        \rlap{%
+            \smash{%
+                \let\protect\relax
+                \dimen@\CROP@overlap
+                \advance\paperwidth2\dimen@
+                \advance\paperheight2\dimen@
+                \raise\dimen@\hbox{%
+                    \let\current@color\CROP@pagecolor
+                    \set@color
+                    \hskip-\dimen@
+                    \vrule width\paperwidth height\z@ depth\paperheight
+                }%
+            }%
+        }%
+    \fi
+}
 \def\CROP@overlap{3truemm}
 \newcommand*\CROP@opt@overlap{\let\CROP@overlap\CROP@@}
-\let\CROP@background\relax
-\let\CROP@setbgcolor\relax
-\AtBeginDocument{%
-    \ifx\color\@undefined
-        \let\CROP@setcolor\relax               %\FIXME
-    \else
-        \let\CROP@@color\color
-        \def\CROP@setcolor{\CROP@@color{black}}%     %\FIXME
-        \let\CROP@@pagecolor\pagecolor
-        \renewcommand*\pagecolor[2][]{%
-            \def\CROP@{white}%
-            \def\CROP@@{#2}%
-            \ifx\CROP@\CROP@@
-                \global\let\CROP@background\relax
-            \else
-                \xdef\CROP@setbgcolor{%
-                    \noexpand\color\if$#1$\else[#1]\fi{#2}%
-                }%
-                \let\CROP@background\CROP@pagecolor
-            \fi
-        }%
-    \fi
-}
-\def\CROP@stockcolor{%
-    \rlap{%
-        \smash{%
-            \raise\voffset\hbox{%
-                \hskip-\hoffset
-                \vrule width\stockwidth height\z@ depth\stockheight
-            }%
-        }%
-    }%
-}
-\newcommand*\CROP@pagecolor{%
-    \rlap{%
-        \smash{%
-            \let\protect\relax
-            \CROP@setbgcolor
-            \dimen@\CROP@overlap
-            \advance\paperwidth2\dimen@
-            \advance\paperheight2\dimen@
-            \raise\dimen@\hbox{%
-                \hskip-\dimen@
-                \vrule width\paperwidth height\z@ depth\paperheight
-            }%
-        }%
-    }%
-}
-\def\GPTorg@shipout{}%      %\FIXME
 \DeclareOption{invert}{%
-    \AtEndOfPackage{\RequirePackage{color}}
-    \AtBeginDocument{\CROP@invert{black}}
-}
-\newcommand*\CROP@invert[1]{%
-    \ifx\color\@undefined
-        \PackageWarning{crop}{%
-            The `color' package could not be loaded, so I'm\MessageBreak
-            ignoring the `invert' and `notext' option
-        }%
-    \else
-        \CROP@@pagecolor{#1}%
-        \CROP@@color{white}%
-        \def\CROP@setcolor{\CROP@@color{white}}%
-        \newcommand*\CROP@@@color[2][]{}%
-        \renewcommand*\color{\CROP@@@color}%
-        \renewcommand*\pagecolor{\CROP@@@color}%
-        \renewcommand*\textcolor{\CROP@@@color}%
-        \let\normalcolor\relax
-    \fi
-    \let\CROP@invert\relax
+    \CROP@invert{black}%
 }
 \DeclareOption{notext}{%
-    \AtEndOfPackage{\RequirePackage{color}}
-    \AtBeginDocument{\CROP@invert{white}}
+    \CROP@invert{white}%
+}
+\newcommand*\CROP@invert[1]{%
+    \CROP@needscolor
+    \AtBeginDvi{%
+        \pagecolor{#1}%
+        \global\let\set@page@color\relax
+        \global\let\CROP@setpagecolor\relax
+    }%
+    \let\CROP@setmarkcolorxxxxx\relax
+    \color{white}%
+    \DeclareRobustCommand*\color[2][]{}%
+    \let\pagecolor\color
+    \let\textcolor\color
+    \let\CROP@invert\relax
 }
 %    \end{macrocode}
 % \end{macro}
