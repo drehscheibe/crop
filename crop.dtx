@@ -20,8 +20,8 @@
 %% ====================================================================
 %%  @LaTeX-package-file{
 %%     author          = "Melchior FRANZ",
-%%     version         = "1.5",
-%%     date            = "7 October 2001",
+%%     version         = "1.6",
+%%     date            = "16 November 2001",
 %%     filename        = "crop.dtx",
 %%     address         = "Melchior FRANZ
 %%                        Rieder Hauptstrasse 52
@@ -69,15 +69,15 @@
 %
 %
 %<*driver>
-\def\fileversion{1.5}
-\def\filedate{2001/10/07}
+\def\fileversion{1.6}
+\def\filedate{2001/11/16}
 \documentclass[draft]{ltxdoc}
 %
 \let\opt\textsf                % mode/option names are typeset this way
 %
 % 
 \IfFileExists{crop.sty}
-  {\usepackage{crop}[2001/10/07]\let\CROPSTYfound\active}
+  {\usepackage{crop}[2001/11/16]\let\CROPSTYfound\active}
   {\GenericWarning{crop.dtx}
     {Package file `crop.sty' not found (One picture will be missing.^^J
     Generate `crop.sty' by (La)TeXing `crop.ins' and
@@ -108,7 +108,7 @@
 % \fi
 %
 %
-% \CheckSum{779}
+% \CheckSum{823}
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -132,7 +132,7 @@
 % \title{The \texttt{crop} package}
 %
 % \author{Melchior \textsc{FRANZ}}
-% \date{October 7, 2001}
+% \date{November 16, 2001}
 % \maketitle
 %
 %
@@ -162,7 +162,10 @@
 %   `color', `horigin' and `vorigin' added; new info line with time stamp;
 %   some of the improvements were suggested by Cpt. Leszek Flis}
 %
-% \changes{v1.6}{????/??/??}{font option added}
+% \changes{v1.6}{2001/11/16}{font option added; dvips/pdftex/vtex options
+%   changed; nographics enabled for pdftex}
+%
+%
 %
 %
 % \begin{abstract}
@@ -210,9 +213,10 @@
 % \changes{v1.5}{2001/10/07}{paper size options added}%
 % \item[\sffamily a0, a1, a2, a3, a4, a5, a6,
 %    b0, b1, b2, b3, b4, b5, b6, letter, legal, executive]\hfill\break
-%    These options declare the printing paper dimensions. They are only required
-%    if you are also using at least one of the options |center|, |dvips|,
-%    |pdftex| and |vtex|. An error messages is issued otherwise.
+%    These options declare the printing paper dimensions. They are mandatory
+%    if the \opt{center} option is used and optional if one of the \opt{dvips},
+%    \opt{pdftex} and \opt{vtex} options is used, in which case the paper size is
+%    passed to the respective option.
 %
 % \changes{v1.1}{1998/07/01}{center options added}%
 % \changes{v1.5}{2001/10/07}{center options replaced by a separate center option}%
@@ -220,7 +224,8 @@
 %    This option centers the logical document page on the physical printer paper
 %    and requires therefore, that you declare the sheet size properly. Write
 %    e.\,g.~|\usepackage[cam,a4,center]{crop}| to center a document of any size
-%    on \textsc{ISO-A4} sheets. 
+%    on \textsc{ISO-A4} sheets. If no paper size is chosen you get an error
+%    message, but you can proceed nevertheless.
 %
 % \item[\sffamily landscape]---
 %    Use this option in addition to the \opt{center} option if you want
@@ -229,11 +234,12 @@
 %
 % \changes{v1.5}{2001/10/07}{options `dvips', `pdftex' and `vtex' added}%
 % \item[\sffamily dvips, pdftex, vtex]---
-%    \TeX\ doesn't care about your printing paper, it just typesets documents.
 %    If you are working with |dvips|, |pdftex| or |vtex| you may want to pass the
 %    dimensions of the paper you are planning to print on to the respective
-%    program. This requires, of course, that you also choose one of the paper size
-%    options mentioned above (e.\,g.~|[letter,dvips]|).
+%    program. Especially viewer programs like |gs| or |gv| make use of that
+%    \emph{bounding box} information.
+%    This requires, of course, that you also choose one of the paper size
+%    options mentioned above (e.\,g.~|[letter,dvips]|). Furthermore, the 
 %
 % \changes{v1.2}{1998/12/07}{mirror option added}
 % \item[\sffamily mirror]
@@ -319,15 +325,18 @@
 %    contain letters. It can also be seen as a cropmarks counter.
 %    This page information is enabled by default.
 %
-% \changes{v1.6}{????/??/??}{font option added}
+% \changes{v1.6}{2001/11/16}{font option added}
 % \item[\sffamily font]
-%    The page info uses |\normalfont| by default. If you are typesetting
+%    The page info line uses |\normalfont| by default. If you are typesetting
 %    the document in foreign glyphs or a decorative, but less readable font,
-%    you can request a specific font for the page info line. Just assign
-%    a font switching command to the \opt{font} parameter. This command
-%    may take one argument (like |\textsf|) or stand alone (like |\small|).
+%    you may want to request a specific font for that info. Just assign
+%    a font switching command to the \opt{font} option parameter. This command
+%    may take one argument (like |\textsf{}|) or stand alone (like |\small|).
 %    You may even use more than one command, but note that just the last
-%    one is allowed to take the argument: |\crop[font=\small\textsf]|.
+%    one is able to take the argument: |\crop[font=\small\textsf]|. You can,
+%    of course, still define a more complex command first, and assign that
+%    one: |\newcommand*\infofont[1]{\textcolor{blue}{\textsf{\small#1}}}|
+%    |\crop[font=\infofont]|
 %
 % \changes{v1.1}{1998/07/01}{mount options added}%
 % \item[\sffamily mount1, mount2]---
@@ -641,11 +650,13 @@
 % \LaTeXe\ 1997/12/01), it does not work with plain \TeX.
 %
 % The |crop| package uses (and relies on) the internal \LaTeX\ tokens
-% |\hb@xt@|, |\@height|, |\@depth|, |\@width|, |\z@|, |\@ne|, |\z@skip|, |\p@|,
-% |\@ifundefined|, |\c@page|, |\@namedef|, |\@nameuse|, |\two@digits|,
-% |\strip@pt|, |\count@|, |\dimen@|, |\@for|, and |\@undefined|, 
-% all of which are expected to keep their current meaning in future
-% \LaTeX\ releases. The \texttt{crop} package will, however, be supported 
+% |\hb@xt@|, |\filename@parse|, |\@classoptionslist|,
+% |\@ifundefined|, |\@height|, |\@depth|, |\filename@base|
+% |\@width|, |\z@|, |\@ne|, |\z@skip|, |\p@|,
+% |\c@page|, |\@namedef|, |\@nameuse|, |\strip@pt|, |\two@digits|, 
+% |\count@|, |\dimen@|, |\@for|, |\@empty| and |\@undefined|, 
+% % all of which are expected to keep their current meaning in future
+% \LaTeXe\ releases. The \texttt{crop} package will, however, be supported 
 % at least for some years, so you needn't worry about it.
 %
 % \StopEventually{\addtocontents{toc}{\protect\end{multicols}}}
@@ -669,7 +680,7 @@
 %    \begin{macrocode}
 %<*package>
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{crop}[2001/10/07 v1.5 cropmarks  (mf)]
+\ProvidesPackage{crop}[2001/11/16 v1.6 cropmarks  (mf)]
 \newdimen\CROP@width  \CROP@width\z@
 \newdimen\CROP@height \CROP@height\z@
 \newcount\CROP@index  \CROP@index\z@
@@ -677,9 +688,15 @@
   \PackageError{crop}%
   {Package file `graphics.sty' not found.}{The options
   `nographics' and `graphics' require the graphics package.}}
-\IfFileExists{graphics.sty}
-  {\RequirePackage{graphics}
-  \let\CROP@includegraphics\includegraphics}{}
+\newcommand*\CROP@driver{}
+\IfFileExists{graphics.sty}{%
+  \RequirePackage{graphics}%
+  \let\CROP@includegraphics\includegraphics
+  \ifx\Gin@driver\@empty\else
+      \filename@parse{\Gin@driver}%
+      \edef\CROP@driver{\filename@base}%
+  \fi
+}{}
 \newcommand*\CROP@font{}
 %    \end{macrocode}
 % \end{macro}
@@ -699,10 +716,6 @@
 % option exchanges the |\hoffset| and |\voffset| dimension.
 %
 %    \begin{macrocode}
-\newcommand*\CROP@checksize{\ifdim\CROP@width=\z@
-  \PackageError{crop}{no printing paper size selected}%
-    {you have to select a paper size before you can use %
-    the options `center',\MessageBreak `dvips' or `pdftex'}\fi}
 \newcommand*\CROP@size[2]{\CROP@width#1 \CROP@height#2 }
 \DeclareOption{landscape}{%
   \def\CROP@size#1#2{\CROP@height#1 \CROP@width#2 }}
@@ -734,20 +747,20 @@
 % just pass the paper dimensions to the respective programs.
 %
 %    \begin{macrocode}
-\DeclareOption{center}{\CROP@checksize\AtBeginDocument{%
-  \voffset\CROP@height\advance\voffset-\paperheight\voffset.5\voffset
-  \hoffset\CROP@width\advance\hoffset-\paperwidth\hoffset.5\hoffset}}
-\DeclareOption{dvips}{\CROP@checksize
-  \AtBeginDvi{\special{papersize=\the\CROP@width,\the\CROP@height}}}
-\DeclareOption{pdftex}{\ifx\@undefined\pdfpagewidth\else\CROP@checksize
-  \AtBeginDocument{\pdfpagewidth\CROP@width \pdfpageheight\CROP@height
-    \renewcommand*\CROP@opt@nographics{%
-      \renewcommand\includegraphics[2][]{%
-        \phantom{\CROP@includegraphics[##1]{##2}}}}%
-  }%
-  \fi}
-\DeclareOption{vtex}{\ifx\@undefined\mediawidth\else\CROP@checksize
-  \AtBeginDocument{\mediawidth\CROP@width \mediaheight\CROP@height}\fi}
+\DeclareOption{center}{\AtEndOfPackage{\CROP@center}}
+\newcommand*\CROP@center{%
+  \ifdim\CROP@width=\z@
+    \PackageError{crop}{no printing paper size selected}{%
+      you have to select a paper size before you can use %
+      the `center' option
+    }%
+  \else
+    \voffset\CROP@height
+    \advance\voffset-\paperheight\voffset.5\voffset
+    \hoffset\CROP@width
+    \advance\hoffset-\paperwidth\hoffset.5\hoffset
+  \fi
+}
 %    \end{macrocode}
 %
 %
@@ -1296,8 +1309,10 @@
 %
 %
 %
+%
 % \subsection{Compatibility stuff}
 %
+% \begin{macro}{\CROP@compat}
 % These options are just kept for compatibility reasons. They issue
 % a warning that might become an error message in one of the next
 % releases. Finally they might be dropped altogether.
@@ -1323,11 +1338,68 @@
 \DeclareOption{executivecenter}{%
   \CROP@compat\ExecuteOptions{executive,center}}
 %    \end{macrocode}
+% \end{macro}
+%
+%
+%
+%
+%
+% \begin{macro}{\CROP@init@dvips}
+% \begin{macro}{\CROP@init@pdftex}
+% \begin{macro}{\CROP@init@vtex}
+% \changes{v1.2}{1998/12/07}{option `invert' added}
+%    \begin{macrocode}
+\DeclareOption{vtex}{\renewcommand*\CROP@driver{vtex}}
+\DeclareOption{pdftex}{\renewcommand*\CROP@driver{pdftex}}
+\DeclareOption{pdflatex}{\renewcommand*\CROP@driver{pdftex}}
+\DeclareOption{dvips}{\renewcommand*\CROP@driver{dvips}}
+\newcommand*\CROP@init@dvips{%
+  \PackageInfo{crop}{using dvips graphics driver}%
+  \ifdim\CROP@width=\z@\else
+    \special{papersize=\the\CROP@width,\the\CROP@height}%
+  \fi
+}
+\newcommand*\CROP@init@pdftex{%
+  \PackageInfo{crop}{using pdf(la)tex graphics driver}%
+  \ifx\@undefined\pdfpagewidth
+    \PackageWarning{crop}{implicit or explicit pdf(la)tex option
+    ignored:^^JThis isn't pdftex!	}%
+  \else
+    \ifdim\CROP@width=\z@\else
+      \pdfpagewidth\CROP@width
+      \pdfpageheight\CROP@height
+    \fi
+    \renewcommand*\CROP@opt@nographics{%
+      \renewcommand\includegraphics[2][]{%
+        \phantom{\CROP@includegraphics[####1]{####2}}
+      }%
+    }%
+  \fi
+}
+\newcommand*\CROP@init@vtex{%
+  \PackageInfo{crop}{using vtex graphics driver}%
+  \ifdim\CROP@width=\z@\else
+    \ifx\@undefined\mediawidth
+      \PackageWarning{crop}{implicit or explicit vtex option
+      ignored:^^JThis isn't vtex!}%
+    \else
+      \mediawidth\CROP@width \mediaheight\CROP@height
+    \fi
+  \fi
+}
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+%
 %
 %
 %
 % \subsection{Final settings}
 %
+%
+% \begin{macro}{\CROP@horigin}
+% \begin{macro}{\CROP@vorigin}
 % Switch off marks and axes, set one page per sheet, 
 % load the local configuration file, and 
 % process the requested options. Finally: Exit.
@@ -1336,6 +1408,7 @@
 % \opt{off}, \opt{noaxes}, \opt{info}, and \opt{mount1}, because it does not accept
 % default options declared with |\DeclareOption*|.
 % \changes{v1.1}{1998/07/01}{Load optional configuration file `crop.cfg'}%
+% \changes{v1.6}{2001/11/16}{Execute graphics driver specific settings}%
 %
 %    \begin{macrocode}
 \newcommand*\CROP@horigin{-1truein}
@@ -1344,9 +1417,12 @@
 \InputIfFileExists{crop.cfg}%
   {\PackageInfo{crop}{Local config file crop.cfg used}}{}
 \ProcessOptions
+\AtEndOfPackage{\@nameuse{CROP@init@\CROP@driver}}
 \endinput
 %</package>
 %    \end{macrocode}
+% \end{macro}
+% \end{macro}
 %
 %
 %
@@ -1422,4 +1498,4 @@
 %
 % ^^A \PrintChanges
 % \Finale                                               ^^A.E.I.O.U.^^
-%
+% ^^A vim:ts=2:sw=2:noet
