@@ -842,7 +842,9 @@
 %
 %    \begin{macrocode}
 \newcommand*\CROP@evaldriver{%
-    \PackageWarning{crop}{requested driver: \CROP@reqdriver}%
+%   \PackageWarning{crop}{requested driver: \CROP@reqdriver}%
+    \message{^^J}%
+    \message{HHHH requested driver: \CROP@reqdriver^^J}%
     \expandafter\ifx\csname pdfoutput\endcsname\relax\else
         \ifnum\pdfoutput=0\else
             \def\CROP@detdriver{pdftex}%
@@ -851,14 +853,15 @@
     \expandafter\ifx\csname VTeXversion\endcsname\relax\else
         \def\CROP@detdriver{vtex}%
     \fi
-    \PackageWarning{crop}{detected driver: \CROP@detdriver}%
+%   \PackageWarning{crop}{detected driver: \CROP@detdriver}%
+    \message{HHHH detected driver: \CROP@detdriver^^J}%
     \ifx\CROP@reqdriver\empty\else
         \ifx\CROP@reqdriver\empty\else
             \ifx\CROP@reqdriver\CROP@detdriver\else
                 \PackageWarning{crop}{I feel like using the
                     driver \CROP@detdriver\space rather than
                     \CROP@reqdriver\space which you requested. :-P}%
-            \fi
+            \fi     % \FIXME wording
         \fi
     \fi
     \ifx\CROP@detdriver\empty
@@ -906,11 +909,15 @@
     \PackageInfo{crop}{using pdf(la)tex graphics driver}%
     \pdfpagewidth\stockwidth
     \pdfpageheight\stockheight
+    \let\CROP@reflect\CROP@pdfreflect
+    \let\CROP@rotate\CROP@pdfrotate
 }
 \newcommand*\CROP@init@vtex{%
     \PackageInfo{crop}{using vtex graphics driver}%
     \mediawidth\stockwidth
     \mediaheight\stockheight
+    \let\CROP@reflect\CROP@pdfreflect
+    \let\CROP@rotate\CROP@pdfrotate
 }
 %    \end{macrocode}
 % \end{macro}
@@ -1686,9 +1693,10 @@
     \AtBeginDocument{\CROP@shipadd\CROP@reflect\CROP@setps}
 }
 \newcommand*\CROP@reflect[1]{%
+    \message{HHHH normal reflect^^J}%
     \vbox to\z@{%
         \vskip\CROP@vorigin
-        \hb@xt@\z@{
+        \hb@xt@\z@{%
             \hskip\CROP@horigin
             \CROP@ps{gsave currentpoint}%
             \kern\paperwidth
@@ -1701,21 +1709,26 @@
     \vbox{#1}%
     \CROP@ps{grestore}%
 }
-% \FIXME version for everyting except dvips
-\newcommand*\CROP@nondvipsreflect[1]{%
-    \vbox to\z@{%
-        \hb@xt@\z@{%
-            \hskip\CROP@horigin
-            \reflectbox{\vbox{#1}}%
+\newcommand*\CROP@pdfreflect[1]{%
+    \message{HHHH pdfreflect^^J}%
+    \leavevmode
+    \dimen0\CROP@horigin
+    \kern2\dimen0
+    \reflectbox{%
+        \hb@xt@\paperwidth{%
+            \vbox to\paperheight{%
+                #1%
+                \vss
+            }%
             \hss
         }%
-        \vss
     }%
 }
 \DeclareOption{rotate}{%
     \AtBeginDocument{\CROP@shipadd\CROP@rotate\CROP@setps}
 }
 \newcommand*\CROP@rotate[1]{%
+    \message{HHHH normal rotate^^J}%
     \hb@xt@\z@{%
         \hskip\CROP@horigin
         \vbox to\z@{%
@@ -1734,6 +1747,23 @@
     \CROP@ps{translate 180 rotate neg exch neg exch translate}%
     \vbox{#1}%
     \CROP@ps{grestore}%
+}
+\newcommand*\CROP@pdfrotate[1]{%
+    \message{HHHH pdfrotate^^J}%
+    \dimen0\CROP@vorigin
+    \kern2\dimen0
+    \leavevmode
+    \dimen0\CROP@horigin
+    \kern2\dimen0
+    \rotatebox{180}{%
+        \hb@xt@\paperwidth{%
+            \vbox to\paperheight{
+                #1%
+                \vss
+            }%
+            \hss
+        }%
+    }%
 }
 \newcommand*\CROP@setps{%
     \ifx\Gin@PS@raw\@undefined
