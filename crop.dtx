@@ -1749,6 +1749,7 @@
 % \subsection{Color handling}
 %
 % \begin{macro}{\CROP@overlap}
+% \begin{macro}{\CROP@opt@overlap}
 % \begin{macro}{\CROP@background}
 % \begin{macro}{\CROP@setbgcolor}
 % \begin{macro}{\CROP@pagecolor}
@@ -1759,6 +1760,7 @@
 %
 %    \begin{macrocode}
 \def\CROP@overlap{3truemm}
+\newcommand*\CROP@opt@overlap{\let\CROP@overlap\CROP@@}
 \let\CROP@background\relax
 \let\CROP@setbgcolor\relax
 \AtBeginDocument{%
@@ -1797,6 +1799,7 @@
         }%
     }%
 }
+\gdef\GPTorg@shipout{}%      %\FIXME
 \DeclareOption{invert}{%
     \AtEndOfPackage{\RequirePackage{color}}
     \AtBeginDocument{\CROP@invert{black}}
@@ -1824,6 +1827,7 @@
     \AtBeginDocument{\CROP@invert{white}}
 }
 %    \end{macrocode}
+% \end{macro}
 % \end{macro}
 % \end{macro}
 % \end{macro}
