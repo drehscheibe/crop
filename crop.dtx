@@ -277,7 +277,7 @@
 % \item[\sffamily mirror]
 %    This option reflects the whole document, provided that the \emph{dvi} output
 %    driver handles PostScript |\special|'s. It uses the standard graphics interfaces,
-%    if the |graphics| package could be found or the |color| package is included,
+%    if the \package{graphics} package could be found or the |color| package is included,
 %    or a matching interface file such as |dvips.def|. 
 %    If no interface is defined, the package uses its internal, less portable  macros. 
 %
@@ -685,8 +685,8 @@
 % \TeX\ outputs a page via the |\shipout| command. The \CROP\ package
 % redefines |\shipout| to insert the requested marks before it outputs
 % the page contents. It is carefully designed to coexist peacefully with
-% other packages, which use the same method (like the |everyshi| package
-% by \textsc{Martin Schr\"oder}, from whom I have in fact borrowed some ideas).
+% other packages, which use the same method (like the \package{everyshi} package
+% by \person{Martin Schr\"oder,} from whom I have in fact borrowed some ideas).
 %
 % In addition to the cropmarks every page gets an info line containing the
 % jobname, the current date and time, the page number and an index number
@@ -734,7 +734,7 @@
 % \begin{macro}{\CROP@driver}
 % \begin{macro}{\CROP@font}
 % \begin{macro}{\CROP@init}
-% The options \option{graphics} and \option{nographics} depend on the |graphics|
+% The options \option{graphics} and \option{nographics} depend on the \package{graphics}
 % package, so we try to load it here. We don't complain now if it can't
 % be found, because we cannot say yet, if one of these options is used in
 % the document at all. Then we try to be clever and look if there's
@@ -1529,7 +1529,7 @@
 % which then gets every output page and embeds it in a PostScript environment.
 % The \textsc{PS} commands are only interpreted by \textsc{PS}-aware output drivers
 % and do not affect the outcome on all other drivers. Raw \textsc{PS}
-% commands are ouput via the |graphics| package's PostScript interface |\Gin@PS@raw|,
+% commands are ouput via the \package{graphics} package's PostScript interface |\Gin@PS@raw|,
 % or the built-in |\CROP@ps|. The latter issues a warning, because it is
 % less portable. 
 %
@@ -1648,7 +1648,7 @@
 % \begin{macro}{\CROP@opt@graphics}
 % \changes{v1.5}{2001/10/07}{options `graphics' and `nographics' added}
 % The \option{nographics} option redefines the |\includegraphics| command from
-% the |graphics| package, so that it ignores all |\special| commands within.
+% the \package{graphics} package, so that it ignores all |\special| commands within.
 % This is a quite simple approach and it might produce unexpected results
 % in some rare cases. The \option{pdftex} option redefines |\SOUL@opt@nographics|
 % to simply output the picture in a |\phantom|.
