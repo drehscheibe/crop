@@ -773,7 +773,9 @@
 %
 %
 %
-% \begin{macro}{\CROP@FIXME}\FIXME
+% \begin{macro}{\CROP@stockcolor}
+% \begin{macro}{\CROP@pagecolor}
+% \begin{macro}{\CROP@needscolor}
 %
 %    \begin{macrocode}
 \let\CROP@stockcolor\empty
@@ -787,14 +789,18 @@
     \newcommand*\CROP@needscolor{}%
 }{%
     \newcommand*\CROP@needscolor{%
-        \PackageWarning{crop}{%             % \FIXME Error?
-            The `color' package could not be loaded, so I'm\MessageBreak
-            ignoring the `invert' and `notext' option
+        \PackageError{crop}{%
+            The `invert' and `notext' options require the `color'
+            package,\MessageBreak which doesn't seem to be installed.
+        }{
+            The `crop' packes tries to load %\FIXME
         }%
         \let\CROP@needscolor\relax
     }%
 }
 %    \end{macrocode}
+% \end{macro}
+% \end{macro}
 % \end{macro}
 %
 %
@@ -1184,7 +1190,11 @@
     \global\advance\CROP@index\@ne
     \def\x{\discretionary{}{}{\hbox{\kern.5em---\kern.5em}}}%
     \advance\paperwidth-20\p@
-    \dimen@\CROP@overlap
+    \dimen@3pt
+    \ifx\CROP@pagecolor\empty
+    \else
+        \advance\dimen@\CROP@overlap
+    \fi
     \hb@xt@\z@{%
         \hss
         \vbox to\z@{%
