@@ -99,7 +99,7 @@
 % \fi
 %
 %
-% \CheckSum{771}
+% \CheckSum{773}
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -432,7 +432,7 @@
 % ends.
 % See figure \ref{fig:loading}.
 % Typing |\crop| without argument(s) is equivalent to typing
-% |\crop[cam,info,graphics,noaxes,horigin=-1in,vorigin=-1in]|.
+% |\crop[cam,noaxes]|.
 % Axis marks appear only together with one of the above mentioned modes.
 % If you only want one cover page for trimming, make sure that a page is
 % actually output in the scope of |\crop|, e.\,g.:
@@ -818,6 +818,7 @@
 % \changes{v1.5}{2001/10/07}{complete rewrite: time and line breaking added} 
 %
 %    \begin{macrocode}
+\newcommand*\CROP@time{}
 {\count@\time \divide\time60 \count\@ne\time
 \multiply\time60 \advance\count@-\time
 \xdef\CROP@time{\the\count\@ne:\two@digits{\count@}}}
