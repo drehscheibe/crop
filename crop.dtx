@@ -761,13 +761,18 @@
 % \subsection{Preamble}
 %
 % \begin{macro}{\CROP@font}
+% Make sure that |\stockwidth| and |\stockheight| are |\dimen|
+% registers that hold the physical paper size. They are initially set
+% to the papersize, but will be changed by the size options.
+% These registers are also used\slash provided by the \package{memoir}
+% class and the \package{hyperref} package.
 % The |\CROP@font| macro is by default empty and can be changed
 % via the \option{font} option.
 %
 %    \begin{macrocode}
 %<*package>
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{crop}[2002/12/16 v1.7b cropmarks  (mf)]
+\ProvidesPackage{crop}[2002/12/17 v1.7e cropmarks  (mf)]
 \expandafter\ifx\csname stockwidth\endcsname\relax
     \newdimen\stockwidth
     \stockwidth\paperwidth
@@ -792,7 +797,12 @@
 %
 % \begin{macro}{\CROP@stockcolor}
 % \begin{macro}{\CROP@pagecolor}
+% \begin{macro}{\set@page@color}
 % \begin{macro}{\CROP@needscolor}
+% Here we try to load the \package{color} package and make sure that
+% the |\pagecolor| command doesn't actually set the color, but resorts
+% to storing the requested color. If the package can't be found, we
+% only prepare an error message for eventual later use.
 %
 %    \begin{macrocode}
 \let\CROP@stockcolor\empty
@@ -825,6 +835,7 @@
 % \end{macro}
 % \end{macro}
 % \end{macro}
+% \end{macro}
 %
 %
 %
@@ -836,16 +847,17 @@
 %
 % \subsection{The device drivers}
 %
-% \begin{macro}{\CROP@driver}
-% The options \option{graphics} and \option{nographics} depend on the \package{graphics}
-% package, so we try to load it here. We don't complain now if it can't
-% be found, because we cannot say yet, if one of these options is used in
-% the document at all. Then we try to be clever and look if there's
-% a device dependent graphics driver already loaded, that we can use.
-% This information can, of course, be overridden by the driver options.
+% \begin{macro}{\CROP@detdriver}
+% \begin{macro}{\CROP@Ginclude@graphics}
+% \begin{macro}{\CROP@ps}
+% The options (\option{graphics} and \option{nographics}) depend on the
+% \package{graphics} package, which, if configured appropriately, also
+% tells us what output device is preferred on the system. Issue a
+% warning, if the package couldn't be loaded, because we have to use a
+% less portable \PS-`driver' then.
 %
 %    \begin{macrocode}
-\let\CROP@detdriver\empty
+\let\CROP@detdriver\@empty
 \IfFileExists{graphics.sty}{%
     \RequirePackage{graphics}%
     \let\CROP@Ginclude@graphics\Ginclude@graphics
@@ -862,6 +874,8 @@
 }
 %    \end{macrocode}
 % \end{macro}
+% \end{macro}
+% \end{macro}
 %
 %
 %
@@ -872,20 +886,25 @@
 %
 %
 % \begin{macro}{\CROP@reqdriver}
+% \begin{macro}{\CROP@driver}
+% Define options that suggest (\option{dvips}) or enforce
+% (\option{dvips!}) a graphics driver.
 %
 %    \begin{macrocode}
-\let\CROP@reqdriver\empty
+\let\CROP@reqdriver\@empty
 \DeclareOption{vtex}{\def\CROP@reqdriver{vtex}}
 \DeclareOption{pdftex}{\def\CROP@reqdriver{pdftex}}
 \DeclareOption{pdflatex}{\def\CROP@reqdriver{pdftex}}
 \DeclareOption{dvips}{\def\CROP@reqdriver{dvips}}
-\let\CROP@driver\empty
+\let\CROP@driver\@empty
 \DeclareOption{vtex!}{\def\CROP@driver{vtex}}
 \DeclareOption{pdftex!}{\def\CROP@driver{pdftex}}
 \DeclareOption{pdflatex!}{\def\CROP@driver{pdftex}}
 \DeclareOption{dvips!}{\def\CROP@driver{dvips}}
 \DeclareOption{nodriver}{\def\CROP@driver{none}}
+\DeclareOption{!}{\def\CROP@driver{none}}
 %    \end{macrocode}
+% \end{macro}
 % \end{macro}
 %
 %
@@ -897,10 +916,14 @@
 %
 %
 % \begin{macro}{\CROP@evaldriver}
+% If |\CROP@driver| wasn't already set, decide |\AtBeginDocument| which
+% graphics driver to use. A detected driver takes precedence over a
+% `suggested' one, but issue a warning if the user's choice is
+% ignored.
 %
 %    \begin{macrocode}
 \newcommand*\CROP@evaldriver{%
-    \ifx\CROP@driver\empty
+    \ifx\CROP@driver\@empty
         \PackageInfo{crop}{requested driver: `\CROP@reqdriver'}%
         \expandafter\ifx\csname pdfoutput\endcsname\relax\else
             \ifnum\pdfoutput=0\else
@@ -911,8 +934,8 @@
             \def\CROP@detdriver{vtex}%
         \fi
         \PackageInfo{crop}{detected driver: `\CROP@detdriver'}%
-        \ifx\CROP@reqdriver\empty\else
-            \ifx\CROP@reqdriver\empty\else
+        \ifx\CROP@reqdriver\@empty\else
+            \ifx\CROP@reqdriver\@empty\else
                 \ifx\CROP@reqdriver\CROP@detdriver\else
                     \PackageWarningNoLine{crop}{%
                         You requested the `\CROP@reqdriver' driver
@@ -926,7 +949,7 @@
                 \fi
             \fi
         \fi
-        \ifx\CROP@detdriver\empty
+        \ifx\CROP@detdriver\@empty
             \let\CROP@driver\CROP@reqdriver
         \else
             \let\CROP@driver\CROP@detdriver
@@ -949,10 +972,11 @@
 % \begin{macro}{\CROP@init@dvips}
 % \begin{macro}{\CROP@init@pdftex}
 % \begin{macro}{\CROP@init@vtex}
-% These options are automatically selected (via definition in |graphics.cfg|)
-% and can as well be chosen explicitly. They do nothing else than handing
-% the given printer paper size over to the \DVI\ driver. This wouldn't
-% be necessary if there were some sort of standard. Sigh \dots
+% \begin{macro}{\CROP@init@none}
+% These macros prepare the \CROP\ package for one of the supported
+% graphics drivers. They don't do anything spectacular, they just
+% select the proper \option{rotate} and \option{mirror} macro and
+% hand the physical paper size over to the driver program.
 %
 %    \begin{macrocode}
 \newcommand*\CROP@init@dvips{%
@@ -975,7 +999,11 @@
     \let\CROP@reflect\CROP@pdfreflect
     \let\CROP@rotate\CROP@pdfrotate
 }
+\newcommand*\CROP@init@none{%
+    \PackageInfo{crop}{not using any graphics driver}%
+}
 %    \end{macrocode}
+% \end{macro}
 % \end{macro}
 % \end{macro}
 % \end{macro}
@@ -994,11 +1022,11 @@
 % \begin{macro}{\CROP@opt@width}
 % \begin{macro}{\CROP@opt@height}
 % These options set different standard printing paper sizes, which
-% are needed for centering and as hint for the \program{dvips},
-% \program{pdftex} or \program{vtex} program.
-% Since the physical paper dimensions must not underlie
-% a possible scaling, |true| dimensions are taken. The \option{landscape}
-% option exchanges the |\hoffset| and |\voffset| values.
+% are needed for centering and as a hint for the \program{dvips},
+% \program{pdftex} or \program{vtex} program. Since the physical paper
+% dimensions must not underlie a possible scaling, |true| dimensions
+% are used. The \option{landscape} option exchanges the |\hoffset| and
+% |\voffset| values.
 %
 %    \begin{macrocode}
 \newcommand*\CROP@size[2]{\stockwidth#1 \stockheight#2 }
@@ -1038,8 +1066,8 @@
 %
 %
 % \begin{macro}{\CROP@center}
-% The \option{center} option sets |\voffset| and |\hoffset| so that the document
-% pages are centered on the printing paper sheet.
+% The \option{center} option sets |\voffset| and |\hoffset| so that the
+% document pages are centered on the printing paper sheet.
 %
 %    \begin{macrocode}
 \DeclareOption{center}{\AtBeginDocument{\CROP@center}}
@@ -1079,9 +1107,10 @@
 %
 %
 % \begin{macro}{\crop}
-% The |\crop| macro allows runtime option requests. Every argument of
-% the optional argument list is passed to the macro |\CROP@execopt|.
-% The options \option{cam} and \option{noaxes} are selected by default.
+% The |\crop| macro allows options to be used both in the preamble and
+% throughout the document. Every argument of the optional argument list
+% is passed to the macro |\CROP@execopt|. The options \option{cam} and
+% \option{noaxes} are selected by default.
 %
 %    \begin{macrocode}
 \newcommand*\crop[1][cam,noaxes]{%
@@ -1104,8 +1133,9 @@
 % Optional arguments (separated by an equal sign) are cut off and
 % stored in |\CROP@@|.
 % The macro tolerates even arguments for options that are not prepared
-% to handle arguments (e.\,g.~|cross=garbage|), or more than one argument
-% (e.\,g.~|mount2=1=garbage|). This is not a bug, it's a feature!
+% to handle arguments (e.\,g.~|cross=garbage|), or more than one
+% argument (e.\,g.~|mount2=1=garbage|). This is not a bug, it's
+% a feature! It makes the design quite simple.
 %
 %    \begin{macrocode}
 \newcommand*\CROP@execopt[1]{%
@@ -1113,7 +1143,7 @@
     \expandafter\CROP@#1==\@nil%
     \@ifundefined{CROP@opt@\CROP@}{%
         \PackageError{crop}{%
-            Requested option `#1' not provided
+            Requested option `#1' not provided%
         }{%
             Note that the `*center' options are obsolete. You have to
             request\MessageBreak e.g. [a4,center] instead of
@@ -1146,7 +1176,7 @@
         \let\CROP@urc#3
         \let\CROP@llc#4
         \let\CROP@lrc#5
-        \let\CROP@@@marks\CROP@marks
+%       \let\CROP@@@marks\CROP@marks        % \FIXME
     }%
 }
 %    \end{macrocode}
@@ -1166,8 +1196,7 @@
 % \begin{macro}{\CROP@@raxis}
 % \begin{macro}{\CROP@@upaxis}
 % \begin{macro}{\CROP@@loaxis}
-% The standard definitions for the \option{axes} option. The |\CROP@@vaxis|
-% macro must have zero height and depth.
+% The standard definitions for the \option{axes} option.
 %
 %    \begin{macrocode}
 \newcommand*\CROP@@laxis{%
@@ -1211,8 +1240,8 @@
 % \begin{macro}{\CROP@time}
 % \begin{macro}{\CROP@@info}
 % \begin{macro}{\CROP@opt@font}
-% This macro prints the jobname, the current date and time, the page number
-% and an index number at the top of the page.
+% This macro prints the jobname, the current date and time, the page
+% number and an index number at the top of the page.
 %
 %    \begin{macrocode}
 \newcommand*\CROP@time{}
@@ -1229,7 +1258,7 @@
     \def\x{\discretionary{}{}{\hbox{\kern.5em---\kern.5em}}}%
     \advance\paperwidth-20\p@
     \dimen@3pt
-    \ifx\CROP@pagecolor\empty
+    \ifx\CROP@pagecolor\@empty
     \else
         \advance\dimen@\CROP@overlap
     \fi
@@ -1271,12 +1300,13 @@
 %
 % \subsection{The marks}
 %
-% The following four macros provide different marks for the \option{cam}
-% mode. They do not touch the logical page and can, thus, be printed
-% on every single sheet.
+% The following four macros provide different marks for the
+% \option{cam} mode. These do not touch the logical page and can, thus,
+% be printed on every single sheet.
 %
 % \begin{macro}{\CROP@@ulc}
 % The \option{cam} mode corner mark for the upper left corner.
+%
 %    \begin{macrocode}
 \newcommand*\CROP@@ulc{%
     \begin{picture}(0,0)
@@ -1433,8 +1463,8 @@
 %
 %
 % \begin{macro}{\CROP@@frame}
-% The \option{frame} mode draws a simple frame around the document
-% page. The respective mark is designed to be used in the upper left
+% The \option{frame} mode draws a simple frame around the logical
+% page. The frame mark is designed to be used in the upper left
 % corner. Since graphics commands expect numbers without dimensions,
 % |\paperwidth| and \hbox{-|height|} are transformed to numbers
 % (representing printer's points). This is done by stripping off the
@@ -1529,7 +1559,7 @@
 %
 %
 % \begin{macro}{\CROP@shipadd}
-% This macro adds a \emph{page manipulation command} to the \emph{shiplist},
+% This macro adds a page manipulation command to the \emph{shiplist},
 % which gets every ready page as argument.
 %
 %    \begin{macrocode}
@@ -1551,14 +1581,17 @@
 %
 %
 % \begin{macro}{\CROP@kernel}
-% \begin{macro}{\CROP@userhook}
+% \begin{macro}{\CROP@user@a}
+% \begin{macro}{\CROP@user@b}
 % \begin{macro}{\CROP@marks}
+% \begin{macro}{\CROP@@@marks}
 % \begin{macro}{\CROP@opt@horigin}
 % \begin{macro}{\CROP@opt@vorigin}
-% |\CROP@kernel| essentially contains a |\vbox| with zero width and height.
-% The |\CROP@every| command---which normally equals |\relax|---allows to
-% insert commands that modify the behavior of the selected mode
-% (see the options \option{mount1} and \option{mount2}).
+% |\CROP@kernel| essentially contains a |\vbox| with zero width and
+% height. The |\CROP@hook| command---which normally equals
+% |\relax|---allows to insert commands that modify the behavior of the
+% selected mode (see the options \option{mount1} and \option{mount2}).
+% |\CROP@user@a| and |\CROP@user@b| are user definable hooks.
 %
 %    \begin{macrocode}
 \newcommand*\CROP@kernel{%
@@ -1569,7 +1602,8 @@
             \vbox to\paperheight{%
                 \let\protect\relax
                 \hsize\paperwidth
-                \CROP@every             % \FIXME
+                \CROP@hook
+                \CROP@user@a
                 \CROP@drawstockcolor
                 \CROP@drawpagecolor
                 \CROP@@@marks
@@ -1598,6 +1632,8 @@
 \newcommand*\CROP@opt@horigin{\let\CROP@horigin\CROP@@}
 \newcommand*\CROP@opt@vorigin{\let\CROP@vorigin\CROP@@}
 %    \end{macrocode}
+% \end{macro}
+% \end{macro}
 % \end{macro}
 % \end{macro}
 % \end{macro}
@@ -1694,12 +1730,12 @@
 %
 %    \begin{macrocode}
 \expandafter\newcommand\expandafter*\csname CROP@opt@mount1\endcsname{%
-    \let\CROP@every\relax
+    \let\CROP@hook\relax
 }
 \newcount\CROP@offset
 \expandafter\newcommand\expandafter*\csname CROP@opt@mount2\endcsname{%
-    \CROP@offset=\ifx\CROP@@\empty\z@\else\CROP@@\fi
-    \def\CROP@every{%
+    \CROP@offset=\ifx\CROP@@\@empty\z@\else\CROP@@\fi
+    \def\CROP@hook{%
         \count@\c@page
         \advance\count@\CROP@offset
         \ifodd\count@
@@ -1844,7 +1880,7 @@
     \expandafter\CROP@setmarkcolor\expandafter{\CROP@@}%
 }
 \newcommand*\CROP@drawstockcolor{%
-    \ifx\CROP@stockcolor\empty
+    \ifx\CROP@stockcolor\@empty
     \else
         \rlap{%
             \smash{%
@@ -1859,7 +1895,7 @@
     \fi
 }
 \newcommand*\CROP@drawpagecolor{%
-    \ifx\CROP@pagecolor\empty
+    \ifx\CROP@pagecolor\@empty
     \else
         \rlap{%
             \smash{%
@@ -2014,15 +2050,15 @@
 % \noindent
 % First of all |\CROP@offset| is set to the value of the (optional)
 % argument or zero.
-% Then |\CROP@every| is defined first to set |\count@| to the page number
+% Then |\CROP@hook| is defined first to set |\count@| to the page number
 % increased by this offset: $p=\mbox{pagenumber}+\mbox{offset}$.
 % \medbreak
 %
 % {\def\MacroFont{\small\ttfamily\itshape}%
 %\begin{verbatim}
 %\expandafter\newcommand\expandafter*\csname CROP@opt@mount4\endcsname
-%  {\CROP@offset=\ifx\CROP@@\empty\z@\else\CROP@@\fi
-%  \def\CROP@every{\count@\c@page
+%  {\CROP@offset=\ifx\CROP@@\@empty\z@\else\CROP@@\fi
+%  \def\CROP@hook{\count@\c@page
 %    \advance\count@\CROP@offset
 %\end{verbatim}
 %
