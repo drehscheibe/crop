@@ -78,6 +78,9 @@
 \newcommand*\program{\texttt}
 \newcommand*\person{\textsc}
 \newcommand*\CROP{\package{crop}}
+\newcommand*\PS{\textsc{\small PS}}
+\newcommand*\POSTSCRIPT{\textsc{PostScript}}
+\newcommand*\DVI{\textsc{\small DVI}}
 \newcommand*\FIXME{\message{<FIXME>}}
 %
 %
@@ -114,7 +117,7 @@
 % \fi
 %
 %
-% \CheckSum{854}
+% \CheckSum{851}
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -238,7 +241,7 @@
 %    These options declare the printing paper dimensions. They are mandatory
 %    if the \option{center} option is used and optional if one of the \option{dvips},
 %    \option{pdftex} and \option{vtex} options is used, in which case the paper size is
-%    passed to the respective option.
+%    passed to the respective \DVI\ device driver.
 %
 % \changes{v1.7}{2002/05/14}{width/height added}%
 % \item[\sffamily width, height]---
@@ -279,8 +282,8 @@
 %
 % \changes{v1.2}{1998/12/07}{mirror option added}
 % \item[\sffamily mirror]
-%    This option reflects the whole document, provided that the \emph{dvi} output
-%    driver handles PostScript |\special|'s. It uses the standard graphics interfaces,
+%    This option reflects the whole document, provided that the \DVI\ output
+%    driver handles \POSTSCRIPT\ |\special|'s. It uses the standard graphics interfaces,
 %    if the \package{graphics} package could be found or the \package{color} package is included,
 %    or a matching interface file such as |dvips.def|.
 %    If no interface is defined, the package uses its internal, less portable macros.
@@ -290,13 +293,13 @@
 %    Rotates the document by 180\(^\circ\) so that it appears upside-down.
 %    This may be useful to circumvent problems with printers, which do not print
 %    close enough to the lower paper edge due to their paper feed mechanism.
-%    This option relies on \textsc{PS}, just like the \option{mirror} option.
+%    This option relies on \PS, just like the \option{mirror} option.
 %
 % \changes{v1.2}{1998/12/07}{invert option added}
 % \item[\sffamily invert]
 %    Lets the whole document be printed white onto black background,
 %    if the \package{color} package can be loaded and the document is output with an
-%    output device that is capable of executing \textsc{PS} commands. All further color
+%    output device that is capable of executing \PS\ commands. All further color
 %    changing commands stated in the document are ignored. This option is ignored
 %    after a \option{notext} option request.
 %
@@ -345,14 +348,14 @@
 % \item[\sffamily off]
 %    This `option' makes only sense in connection with the |\crop| command
 %    (i.\,e.~at runtime). It disables all markings and is selected by
-%    default if the package is input without options requested.
+%    default if the package is input without requesting any of the marks.
 %
 % \changes{v1.7}{2002/05/14}{odd, even options added}%
 % \item[\sffamily odd, even]---
 %    Use these options to let the cropmarks be put on odd\slash even pages only.
 %    The marks must have been turned on before, using one of the options |cam|,
 %    |cross|, or |frame|, otherwise there will be no effect. Note that only
-%    the page number is evaluated. If you have two subsequent pages both with
+%    the page number is considered. If you have two subsequent pages both with
 %    page number 1 and give the |odd| option, then both pages will have
 %    marks.
 %
@@ -368,7 +371,7 @@
 % \item[\sffamily info, noinfo]---
 %    Show the page info consisting of filename, date, time, page number and page
 %    index on every sheet (see figure \ref{fig:marks}). The page index starts
-%    with \#1 and is incremented for every page info line, so that it is more
+%    with \#1 and is incremented with every page info line, so that it is more
 %    reliable than page numbers, which are not unique and may be negative or
 %    contain letters. It can also be seen as a cropmarks counter.
 %    This page information is enabled by default.
@@ -376,7 +379,7 @@
 % \changes{v1.6}{2001/11/16}{font option added}
 % \item[\sffamily font]
 %    The page info line uses |\normalfont| by default. If you are typesetting
-%    the document in non-latin glyphs or a decorative, but less readable font,
+%    the document in non-latin glyphs or a decorative, but less legible font,
 %    you may want to request a specific font for that info. Just assign
 %    a font switching command to the \option{font} option parameter. This command
 %    may take one argument (like |\textsf{}|) or stand alone (like |\small|).
@@ -389,7 +392,7 @@
 % \changes{v1.1}{1998/07/01}{mount options added}%
 % \item[\sffamily mount1, mount2]---
 %    If more than one logical page is to be mounted on a physical sheet,
-%    you normally wouldn't want marks to appear on the inner edges, where
+%    you normally don't want marks to appear on the inner edges, where
 %    the pages touch each other.
 %    The \option{mount2} mode prints only the outer marks.
 %    There's also a \option{mount1} mode that is selected by default.
@@ -446,9 +449,9 @@
 %     \begin{center}
 %       \vspace{.6in}
 %       \leavevmode
-%       \hbox{\paperwidth3.5in\CROP@@ulc\rlap{\CROP@@info}\hskip\paperwidth\CROP@@urc}
+%       \hbox{\paperwidth9cm\CROP@@ulc\rlap{\CROP@@info}\hskip\paperwidth\CROP@@urc}
 %       \vspace{.2in}
-%       \caption{That's what you see on top of a 3.5~inch wide document page when
+%       \caption{That's what you see on top of a 9~cm wide document page when
 %           \option{cam} mode is requested: the marks, jobname, date, time, page number and
 %           cropmarks index.}
 %       \label{fig:marks}
@@ -462,7 +465,7 @@
 %
 % Since all marks lie outside the logical page, the horizontal and vertical
 % offset are to be set properly. Otherwise the marks are likely to be cut
-% off by the \textsc{DVI} driver or the printer.
+% off by the \DVI\ driver or the printer.
 % Provided that you have declared the size of your printing paper, you can
 % use the |center| option to center every logical page on the respective sheet.
 % There's, however, no harm in centering an A4~page on
@@ -500,15 +503,15 @@
 % \bigskip\FIXME
 %
 % You get corner markings at every page shipped out after a \option{cam},
-% \option{cross}, or \option{frame} mode request until you turn things off by
+% \option{cross}, or \option{frame} mode request until you turn them off by
 % typing \DescribeMacro{\crop}|\crop[off]|, or the actual grouping level
 % ends.
 % ^^ASee figure \ref{fig:loading}.
 % Typing |\crop| without argument(s) is equivalent to typing
 % |\crop[cam,noaxes]|.
-% Axis marks appear only together with one of the above mentioned modes.
+% Axis marks appear only together with one of the modes as listed above.
 % If you only want one cover page for trimming, make sure that a page is
-% actually output in the scope of |\crop|, e.\,g.:
+% actually output in the scope of |\crop|, for example:
 %
 % \begin{example}
 % |\newpage|\\
@@ -588,13 +591,13 @@
 % |\usepackage[frame,weird,center]{crop}|\\
 % \end{example}
 %
-% If you don't need that format regularly, then you can declare the
-% dimensions optionally in the document:
+% If you don't need that format regularly or don't want to depend on a
+% |crop.cfg| file, then you might prefer to declare the dimensions in the document:
 %
 % \begin{example}
 % |\usepackage[frame,width=12truecm,height=34truecm,center]{crop}|\hspace*{-3cm}\\
 % \end{example}
-%
+% \null
 %
 %
 %
@@ -609,8 +612,8 @@
 % It takes as arguments: the name of a macro providing the page info
 % (optional; enclosed in brackets), four macro names to be assigned to
 % the upper left, the upper right, the lower left, and the lower right
-% corner (each representing a |picture| with zero width and height, or
-% |\relax|), and finally the mode name. The optional brackets may also
+% corner, each representing a |picture| with zero width and height, or
+% |\relax|, and finally the mode name. The optional brackets may also
 % be empty, if no page info is wanted, or contain the info code instead of
 % a macro name.
 %
@@ -746,10 +749,8 @@
 %
 % \subsection{Preamble}
 %
-% \begin{macro}{\CROP@Ginclude@graphics}
 % \begin{macro}{\CROP@driver}
 % \begin{macro}{\CROP@font}
-% \begin{macro}{\CROP@init}
 % The options \option{graphics} and \option{nographics} depend on the \package{graphics}
 % package, so we try to load it here. We don't complain now if it can't
 % be found, because we cannot say yet, if one of these options is used in
@@ -757,8 +758,7 @@
 % a device dependent graphics driver already loaded, that we can use.
 % This information can, of course, be overridden by the driver options.
 % The |\CROP@font| macro is by default empty and can be changed
-% via the \option{font} option. |\CROP@init| is a not yet used hook in
-% the redefined |\shipout| macro.
+% via the \option{font} option.
 %
 %    \begin{macrocode}
 %<*package>
@@ -777,10 +777,7 @@
     \fi
 }{}
 \newcommand*\CROP@font{}
-\newcommand*\CROP@init{}
 %    \end{macrocode}
-% \end{macro}
-% \end{macro}
 % \end{macro}
 % \end{macro}
 %
@@ -918,11 +915,9 @@
 % Every execution of this macro with an argument $n$ leads to the
 % execution of a macro |\CROP@opt@|$n$ or a warning if no such exists.
 % Optional arguments (separated by an equal sign) are cut off and
-% stored in |\CROP@@| before.
-%
-% \TeX{}nicians will recognize that the macro tolerates even
-% arguments for options that are not prepared to handle arguments
-% (e.\,g.~|cross=garbage|), or more than one argument
+% stored in |\CROP@@|.
+% The macro tolerates even arguments for options that are not prepared
+% to handle arguments (e.\,g.~|cross=garbage|), or more than one argument
 % (e.\,g.~|mount2=1=garbage|). This is not a bug, it's a feature!
 %
 % \changes{v1.1}{1998/07/01}{Parsing optional option arguments}%
@@ -1087,8 +1082,8 @@
 % \subsection{The marks}
 %
 % The following four macros provide different marks for the \option{cam}
-% mode. Since they do not affect the logical page by keeping distance
-% from its edges, they may be printed on every single output page.
+% mode. They do not touch the logical page and can, thus, be printed
+% on every single sheet.
 %
 % \begin{macro}{\CROP@@ulc}
 % The \option{cam} mode corner mark for the upper left corner.
@@ -1210,12 +1205,12 @@
 %
 %
 % \begin{macro}{\CROP@@cross}
-% This macro provides a two inch wide cross.
+% This macro provides a 4~cm wide cross.
 %
 %    \begin{macrocode}
 \newcommand*\CROP@@cross{%
     \begin{picture}(0,0)
-        \unitlength1in\thinlines
+        \unitlength2cm\thinlines
         \put(-1,0){\line(1,0){2}}
         \put(0,-1){\line(0,1){2}}
     \end{picture}%
@@ -1277,8 +1272,8 @@
 %
 %
 % \begin{macro}{\CROP@opt@frame}
-% Define the \option{frame} mode switch with only one mark. (The other
-% corners may |\relax|.)
+% Define the \option{frame} mode switch with only one mark. The other
+% corners may |\relax|.
 %
 %    \begin{macrocode}
 \cropdef\CROP@@frame\relax\relax\relax{frame}
@@ -1311,7 +1306,6 @@
 %    \begin{macrocode}
 \let\CROP@shipout\shipout
 \renewcommand*\shipout{
-    \CROP@init
     \afterassignment\CROP@ship
     \setbox\@cclv=%
 }
@@ -1345,7 +1339,7 @@
 % \begin{macro}{\CROP@shipadd}
 % \changes{v1.2}{1998/12/07}{`CROP@shipadd introduced}
 % This macro adds a \emph{page manipulation command} to the \emph{shiplist},
-% which gets every ready page as argument and may change it somehow.
+% which gets every ready page as argument.
 %
 %    \begin{macrocode}
 \newcommand*\CROP@shipadd[1]{%
@@ -1546,10 +1540,10 @@
 % \begin{macro}{\CROP@rotate}
 % \begin{macro}{\CROP@setps}
 % The \option{mirror} and \option{rotate} options add a macro to the \emph{shiplist,}
-% which then gets every output page and embeds it in a PostScript environment.
-% The \textsc{PS} commands are only interpreted by \textsc{PS}-aware output drivers
-% and do not affect the outcome on all other drivers. Raw \textsc{PS}
-% commands are output via the \package{graphics} package's PostScript interface |\Gin@PS@raw|,
+% which then gets every output page and embeds it in a \POSTSCRIPT\ environment.
+% The \PS\ commands are only interpreted by \PS-aware output drivers
+% and do not affect the outcome on all other drivers. Raw \PS\
+% commands are output via the \package{graphics} package's \POSTSCRIPT\ interface |\Gin@PS@raw|,
 % or the built-in |\CROP@ps|. The latter issues a warning, because it is
 % less portable.
 %
@@ -1669,11 +1663,9 @@
 % \begin{macro}{\CROP@opt@nographics}
 % \begin{macro}{\CROP@opt@graphics}
 % \changes{v1.5}{2001/10/07}{options `graphics' and `nographics' added}
-% The \option{nographics} option redefines the |\includegraphics| command from
-% the \package{graphics} package, so that it ignores all |\special| commands within.
-% This is a quite simple approach and it might produce unexpected results
-% in some rare cases. The \option{pdftex} option redefines |\SOUL@opt@nographics|
-% to simply output the picture in a |\phantom|.
+% The \option{nographics} option redefines the |\Ginclude@graphics| command from
+% the \package{graphics} package, so that it outputs its argument as a phantom.
+% This makes the image invisible but takes up the same amount of white space.
 % The \option{graphics} option re-enables graphics.
 %
 %    \begin{macrocode}
@@ -1709,8 +1701,8 @@
 % \changes{v1.7}{2002/05/14}{nodriver option implemented}
 % These options are automatically selected (via definition in |graphics.cfg|)
 % and can as well be chosen explicitly. They do nothing else than handing
-% the given printer paper size over to the \textsc{DVI} driver. This wouldn't
-% be necessary if there was some sort of standard. Sigh \dots
+% the given printer paper size over to the \DVI\ driver. This wouldn't
+% be necessary if there were some sort of standard. Sigh \dots
 %
 %    \begin{macrocode}
 \DeclareOption{vtex}{\def\CROP@driver{vtex}}
