@@ -1,5 +1,5 @@
 % \iffalse
-%% File: crop.dtx   Copyright (C) 1998--2000   Melchior FRANZ
+%% File: crop.dtx   Copyright (C) 1998--2001   Melchior FRANZ
 %% $Id$
 %<*preamble>
 %
@@ -23,7 +23,7 @@
 %%     date            = "7 October 2001",
 %%     filename        = "crop.dtx",
 %%     address         = "Melchior FRANZ
-%%                        Rieder Hauptstr. 52
+%%                        Rieder Hauptstrasse 52
 %%                        A-5212 SCHNEEGATTERN
 %%                        AUSTRIA",
 %%     telephone       = "++43 7746 3109",
@@ -60,6 +60,7 @@
 \begin{filecontents}{crop.ins}
 \def\batchfile{crop.ins}
 \input docstrip.tex
+\askforoverwritefalse
 \keepsilent
 \generate{\file{crop.sty}{\from{crop.dtx}{package}}}
 \endbatchfile
@@ -99,7 +100,7 @@
 % \fi
 %
 %
-% \CheckSum{744}
+% \CheckSum{752}
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -205,11 +206,12 @@
 %    |pdftex|. An error messages is issued otherwise.
 %
 % \changes{v1.1}{1998/07/01}{center options added}%
-% \changes{v1.5}{2001/10/07}{center options replaced}%
+% \changes{v1.5}{2001/10/07}{center options replaced by a separate center option}%
 % \item[\sffamily center]
-%    Corresponding to the standard classes' |paper| options there are
-%    \opt{center} options that allow to center the logical output page
-%    on the respective physical printer paper.
+%    This option centers the logical document page on the physical printer paper
+%    and requires therefore, that you declare the sheet size properly. Write
+%    e.\,g.~|\usepackage[cam,a4,center]{crop}| to center a document on ISO-A4 sheets,
+%    no matter for which paper they have originally been designed. 
 %
 % \item[\sffamily landscape]---
 %    Use this option in addition to the \opt{center} option if you want
@@ -218,11 +220,11 @@
 %
 % \changes{v1.5}{2001/10/07}{options `dvips' and `pdftex' added}%
 % \item[\sffamily dvips, pdftex]---
-%    \TeX\ doesn't care about your printing paper. It just typesets documents.
-%    If you are working with |dvips| or |pdftex| you may want to sepcify the
-%    dimensions of the paper you are planning to print on in your PostScript
-%    or PDF's documents. This requires you to choose also one of the paper size
-%    options mentioned above, of course.
+%    \TeX\ doesn't care about your printing paper, it just typesets documents.
+%    If you are working with |dvips| or |pdftex| you may want to pass the
+%    dimensions of the paper you are planning to print on to the respective
+%    program. This requires, of course, that you also choose one of the paper size
+%    options mentioned above (e.\,g.~|[letter,dvips]|).
 %
 % \changes{v1.2}{1998/12/07}{mirror option added}
 % \item[\sffamily mirror]
@@ -251,11 +253,13 @@
 %    Color printouts are often more expensive than black and white ones, while
 %    their text quality is sometimes reduced. Therefore it may be desirable to create
 %    two versions of a document, one with only text and one with only
-%    graphics. Now you can feed the concerned pages through a color printer
-%    and then through a mono laser printer, each pass using the
-%    matching document version. The \opt{graphicsoff} option suppresses every
-%    special command within |\includegraphics| commands. That's why it doesn't
-%    work with |pdftex|. The \mbox{\opt{textoff}} option `typesets' all text
+%    graphics. Now you can feed the concerned pages through a color printer and
+%    print the \opt{textoff} version, and then through a mono laser printer with the
+%    \opt{graphicsoff} version. The \mbox{\opt{graphicsoff}} option suppresses every
+%    special command within |\includegraphics| arguments and does therefore not work
+%    with |pdftex|. The \opt{graphicson} option turns graphics on again. You may
+%    want to surround just colored images by |\crop[graphicsoff]| and |\crop[]|.
+%    The \mbox{\opt{textoff}} option `typesets' all text
 %    in white color, but note that it is still there, so you can't save disk space
 %    with it.
 % \end{labeling}
@@ -587,6 +591,15 @@
 %
 % \section{The macros}
 %
+% \subsection{Conventional options}
+%
+% \begin{macro}{\CROP@requiregraphics}
+% The options \opt{graphicson} and \opt{graphicsoff} depend on the |graphics|
+% package, so we try to load it here. We don't complain now if it can't
+% be found, because we cannot say yet, if one of these options is used in
+% the document at all. Therefore we just prepare an error message for eventual
+% later use.
+%
 %    \begin{macrocode}
 %<*package>
 \NeedsTeXFormat{LaTeX2e}
@@ -594,7 +607,16 @@
 \newdimen\CROP@width  \CROP@width\z@
 \newdimen\CROP@height \CROP@height\z@
 \newcount\CROP@index  \CROP@index\z@
+\newcommand*\CROP@includegraphics{%
+  \PackageError{crop.sty}%
+  {Package file graphics.sty not found.}{The options
+  graphicsoff, and graphicson require the graphics package.}}
+\IfFileExists{graphics.sty}
+  {\RequirePackage{graphics}
+  \let\CROP@includegraphics\includegraphics}{}
 %    \end{macrocode}
+% \end{macro}
+%
 %
 %
 % \subsection{Conventional options}
@@ -1138,7 +1160,9 @@
 %
 %
 % \begin{macro}{\CROP@invert}
-% \begin{macro}{\CROP@nographics}
+% \begin{macro}{\CROP@incgrph}
+% \begin{macro}{\CROP@opt@graphicsoff}
+% \begin{macro}{\CROP@opt@graphicson}
 % The \opt{invert} option simply switches to black background
 % and white text, after which it disables all color
 % switching commands.
@@ -1161,18 +1185,19 @@
     \let\normalcolor\relax
   \fi
   \let\CROP@invert\relax}
-\DeclareOption{grphonly}{%
+\DeclareOption{textoff}{%
   \AtEndOfPackage{\RequirePackage{color}}%
   \AtBeginDocument{\CROP@invert{white}}}
-\DeclareOption{textonly}{%
-  \AtBeginDocument{\CROP@nographics}}
-\newcommand*\CROP@nographics{%
-  \let\CROP@graphics\includegraphics
+\newcommand*\CROP@incgrph{}
+\newcommand*\CROP@opt@graphicsoff{%
   \def\includegraphics##1##{\bgroup
     \let\special\@gobble\CROP@incgrph{##1}}%
-  \newcommand\CROP@incgrph[2]{\CROP@graphics##1{##2}\egroup}%
-  \let\CROP@nographics\undefined}
+  \def\CROP@incgrph##1##2{\CROP@includegraphics##1{##2}\egroup}}
+\newcommand*\CROP@opt@graphicson{%
+  \let\includegraphics\CROP@includegraphics}
 %    \end{macrocode}
+% \end{macro}
+% \end{macro}
 % \end{macro}
 % \end{macro}
 %
