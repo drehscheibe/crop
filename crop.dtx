@@ -122,6 +122,7 @@
 %
 \begin{document}
 \hfuzz.6pt
+\setcounter{tocdepth}{2}
 \DocInput{crop.dtx}
 \end{document}
 %</driver>
@@ -191,7 +192,8 @@
 %   geometry.sty compatibility; adopting `stockwidth/`stockheight}
 %
 % \changes{v1.8}{????/??/??}{removed all the `changes entries except those
-%   in the preamble (crop is in CVS since v1.4, anyway); ...}  \FIXME
+%   in the preamble (crop is in CVS since v1.4, anyway); rewrote kernel;
+%   added color support; fixed a nasty bug; better driver detection}
 %
 %
 %
@@ -727,7 +729,9 @@
 %
 %
 %
-% \subsection{Compatibility}
+% \subsection{Dependencies}
+%
+% \subsubsection{\package{latex.ltx}}
 %
 % The package works with all \LaTeXe\ standard classes (tested with
 % \LaTeXe\ 1997/12/01), it does not work with plain \TeX.
@@ -741,6 +745,17 @@
 % % all of which are expected to keep their current meaning in future
 % \LaTeXe\ releases. The \CROP\ package will, however, be supported
 % at least for some years, so you needn't worry about it.
+%
+%
+% \subsubsection{\package{color.sty}}
+% |\@declaredcolor|, |\current@color|, |\set@color|, |\set@page@color|
+%
+%
+%
+% \subsubsection{\package{graphics.sty}}
+% |\Ginclude@graphics|, |\Gin@driver|, |\Gin@PS@raw|
+%
+%
 %
 % \StopEventually{\addtocontents{toc}{\protect\end{multicols}}}
 %
@@ -773,7 +788,7 @@
 %    \begin{macrocode}
 %<*package>
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{crop}[2002/12/17 v1.7e cropmarks  (mf)]
+\ProvidesPackage{crop}[2002/12/17 v1.7f cropmarks  (mf)]
 \expandafter\ifx\csname stockwidth\endcsname\relax
     \newdimen\stockwidth
     \stockwidth\paperwidth
@@ -796,51 +811,22 @@
 %
 %
 %
-% \begin{macro}{\CROP@stockcolor}
-% \begin{macro}{\CROP@pagecolor}
-% \begin{macro}{\set@page@color}
-% \begin{macro}{\CROP@needscolor}
 % Here we try to load the \package{color} package and make sure that
 % the |\pagecolor| command doesn't actually set the color, but resorts
 % to storing the requested color. If the package can't be found, we
 % only prepare an error message for eventual later use.
 %
 %    \begin{macrocode}
-\let\CROP@stockcolor\empty
-\let\CROP@pagecolor\empty
-\newcommand*\CROP@defmarkcolor[1]{{%
-    \def\set@color{\global\let\CROP@markcolor\current@color}%
-    \@declaredcolor{#1}%
-}}
+\let\CROP@stockcolor\@empty
+\let\CROP@pagecolor\@empty
+\newif\ifCROP@color@
 \IfFileExists{color.sty}{%
     \RequirePackage{color}%
-    \renewcommand*\set@page@color{%
-        \global\let\CROP@stockcolor\current@color
-    }%
-    \AtBeginDocument{%
-        \def\set@page@color{%
-            \global\let\CROP@pagecolor\current@color
-        }%
-    }%
-    \CROP@defmarkcolor{black}%
-    \let\CROP@needscolor\relax
+    \CROP@color@true
 }{%
-    \newcommand*\CROP@needscolor{%
-        \PackageError{crop}{%
-            The `invert' and `notext' options require the\MessageBreak
-            `color' package, which doesn't seem to be installed%
-        }{%
-            Install the `color' package or don't use the `invert'
-            \MessageBreak or `notext' option.
-        }%
-        \let\CROP@needscolor\relax
-    }%
+    \CROP@color@false
 }
 %    \end{macrocode}
-% \end{macro}
-% \end{macro}
-% \end{macro}
-% \end{macro}
 %
 %
 %
@@ -1878,6 +1864,10 @@
 %
 % \subsection{Color handling}
 %
+% \begin{macro}{\CROP@stockcolor}
+% \begin{macro}{\CROP@pagecolor}
+% \begin{macro}{\set@page@color}
+% \begin{macro}{\CROP@needscolor}
 % \begin{macro}{\CROP@defmarkcolor}
 % \begin{macro}{\CROP@opt@color}
 % \begin{macro}{\CROP@drawstockcolor}
@@ -1890,6 +1880,33 @@
 % This is necessary to get good results on imprecise cutting machines.
 %
 %    \begin{macrocode}
+\newcommand*\CROP@defmarkcolor[1]{{%
+    \def\set@color{\global\let\CROP@markcolor\current@color}%
+    \@declaredcolor{#1}%
+}}
+\ifCROP@color@
+    \renewcommand*\set@page@color{%
+        \global\let\CROP@stockcolor\current@color
+    }%
+    \AtBeginDocument{%
+        \def\set@page@color{%
+            \global\let\CROP@pagecolor\current@color
+        }%
+    }%
+    \CROP@defmarkcolor{black}%
+    \let\CROP@needscolor\relax
+\else
+    \newcommand*\CROP@needscolor{%
+        \PackageError{crop}{%
+            The `invert' and `notext' options require the\MessageBreak
+            `color' package, which doesn't seem to be installed%
+        }{%
+            Install the `color' package or don't use the `invert'
+            \MessageBreak or `notext' option.
+        }%
+        \let\CROP@needscolor\relax
+    }%
+\fi
 \newcommand*\CROP@opt@color{%
     \CROP@needscolor
     \expandafter\CROP@defmarkcolor\expandafter{\CROP@@}%
@@ -1931,6 +1948,10 @@
 \def\CROP@overlap{3truemm}
 \newcommand*\CROP@opt@overlap{\let\CROP@overlap\CROP@@}
 %    \end{macrocode}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
 % \end{macro}
 % \end{macro}
 % \end{macro}
