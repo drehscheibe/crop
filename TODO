@@ -3,24 +3,19 @@
 + \lineskip added (fixes nasty bug)
 + new kernel with pictures for axis marks
 + redefine pagecolor
++ preset \stockwidth to \paperwidth
 
 
-- check if presetting \stockwidth to \paperwidth makes sense
-- fix info font (changes with base font under pdflatex)
 - use \reflectbox when processed with pdflatex
-- color pages even if none of cam/cross/frame is used
-  (do some \cropdef[]\relax\relax\relax\relax{empty} equivalent)
+- fix info font (changes with base font under pdflatex)
+- add user hooks
+- repair even/odd 
+
+
 
 
 consider this:
 --------------
-in d.c.t.t kam letztens mal wieder die Frage nach gespiegelten
-Seiten auf. Der Fragesteller wollte allerdings `pdfLaTeX'
-verwenden. Das geht mit `crop' derzeit nicht, da nur Postscript
-verwendet wird. Anbei eine kleine Testdatei (`mirr-test.zip'),
-die eine in meinen Augen bessere Möglichkeit andeutet. Nur andeutet;
-sie funktioniert natürlich nicht so richtig ;-(
-
 Ein anderes Problem ist mir dabei auch noch aufgefallen: Das
 Setzen des Satzspiegels muss vor dem Laden von `crop' geschehen
 (im Beispiel `\usepackage[...]{geometry}'). Es wäre zu
@@ -45,3 +40,53 @@ In `driver-test.txt' ist ein kurzer Ausschnitt aus einer noch
 privaten Klasse, der einen solchen Ablauf zeigt. In `geometry'
 wird es auch ähnlich gemacht.
 						(Rolf NIEPRASCHK)
+
+
+
+
+% Is the `dvips' driver loaded from `graphics' or `color'?
+\@ifundefined{Gin@driver}{}%
+{%
+  \ifx\Gin@driver\@empty\else
+    \filename@parse{\Gin@driver}\def\reserved@a{dvips}%
+    \ifx\filename@base\reserved@a\FL@dvipstrue\fi
+  \fi
+}
+
+
+% Are we using `pdfTeX'?
+\ifx\pdfoutput\undefined\else
+  \ifx\pdfoutput\relax\else
+    \ifcase\pdfoutput\else
+      \ClassInfo{fl}{generating code for pdfTeX}%
+      \setlength\pdfpagewidth{\paperwidth}%
+      \setlength\pdfpageheight{\paperheight}%
+      \FL@dvipsfalse
+    \fi
+  \fi
+\fi
+
+
+% Are we using `VTeX'?
+\ifx\VTeXversion\undefined\else
+  \ClassInfo{fl}{generating code for VTeX}%
+  \setlength\mediawidth{\paperwidth}
+  \setlength\mediaheight{\paperheight}
+  \ifcase\OpMode\relax% DVI
+  \or% PDF
+    \FL@dvipsfalse
+  \or% PS
+    \FL@dvipsfalse
+  \else
+    \ClassError{fl}
+      {VTeX in \string\OpMode =\the\OpMode is not supported}%
+      {Do not proceed!}
+  \fi
+\fi
+
+
+\ifFL@dvips
+  \ClassInfo{fl}{generating code for dvips}%
+  \special{papersize=\the\paperwidth,\the\paperheight}%
+\fi
+
