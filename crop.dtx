@@ -886,9 +886,7 @@
 %
 %
 % \begin{macro}{\CROP@reqdriver}
-% \begin{macro}{\CROP@driver}
-% Define options that suggest (\option{dvips}) or enforce
-% (\option{dvips!}) a graphics driver.
+% Define options that suggest \dots
 %
 %    \begin{macrocode}
 \let\CROP@reqdriver\@empty
@@ -896,6 +894,21 @@
 \DeclareOption{pdftex}{\def\CROP@reqdriver{pdftex}}
 \DeclareOption{pdflatex}{\def\CROP@reqdriver{pdftex}}
 \DeclareOption{dvips}{\def\CROP@reqdriver{dvips}}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+%
+%
+%^^A--------------------------------------------------------------------
+%
+%
+%
+%
+% \begin{macro}{\CROP@driver}
+% \dots\ or enforce a graphics driver. Note the exclamation points!
+%
+%    \begin{macrocode}
 \let\CROP@driver\@empty
 \DeclareOption{vtex!}{\def\CROP@driver{vtex}}
 \DeclareOption{pdftex!}{\def\CROP@driver{pdftex}}
@@ -904,7 +917,6 @@
 \DeclareOption{nodriver}{\def\CROP@driver{none}}
 \DeclareOption{!}{\def\CROP@driver{none}}
 %    \end{macrocode}
-% \end{macro}
 % \end{macro}
 %
 %
@@ -943,7 +955,7 @@
                         `\CROP@detdriver' driver works better in the
                         current\MessageBreak context. You can force
                         me to respect your decision\MessageBreak
-                        by adding an exclamation mark as in
+                        by adding an exclamation point as in
                         [\CROP@reqdriver!]%
                     }%
                 \fi
@@ -1581,10 +1593,11 @@
 %
 %
 % \begin{macro}{\CROP@kernel}
-% \begin{macro}{\CROP@user@a}
-% \begin{macro}{\CROP@user@b}
 % \begin{macro}{\CROP@marks}
 % \begin{macro}{\CROP@@@marks}
+% \begin{macro}{\CROP@setmarkcolor}
+% \begin{macro}{\CROP@user@a}
+% \begin{macro}{\CROP@user@b}
 % \begin{macro}{\CROP@opt@horigin}
 % \begin{macro}{\CROP@opt@vorigin}
 % |\CROP@kernel| essentially contains a |\vbox| with zero width and
@@ -1622,16 +1635,17 @@
     \vfill
     \CROP@llc\null\hfill\CROP@loedge\hfill\null\CROP@lrc
 }
+\let\CROP@@@marks\CROP@marks
 \newcommand*\CROP@setmarkcolor{%
     \let\current@color\CROP@markcolor
     \set@color
 }
 \let\CROP@user@a\relax
 \let\CROP@user@b\relax
-\let\CROP@@@marks\CROP@marks
 \newcommand*\CROP@opt@horigin{\let\CROP@horigin\CROP@@}
 \newcommand*\CROP@opt@vorigin{\let\CROP@vorigin\CROP@@}
 %    \end{macrocode}
+% \end{macro}
 % \end{macro}
 % \end{macro}
 % \end{macro}
@@ -1651,7 +1665,7 @@
 % \begin{macro}{\CROP@opt@off}
 % \begin{macro}{\CROP@opt@odd}
 % \begin{macro}{\CROP@opt@even}
-% These macros start and stop the kernel mechanism.
+% These macros start and stop the output of cropmarks.
 %
 %    \begin{macrocode}
 \newcommand*\CROP@opt@off{%
@@ -1681,8 +1695,6 @@
 % \begin{macro}{\CROP@opt@noinfo}
 % \begin{macro}{\CROP@opt@axes}
 % \begin{macro}{\CROP@opt@noaxes}
-% \begin{macro}{\CROP@uedge}
-% \begin{macro}{\CROP@ledge}
 % Enable and disable the output of axis marks and page info.
 %
 %    \begin{macrocode}
@@ -1707,8 +1719,6 @@
 % \end{macro}
 % \end{macro}
 % \end{macro}
-% \end{macro}
-% \end{macro}
 %
 %
 %
@@ -1723,10 +1733,9 @@
 % \begin{macro}{\CROP@opt@mount1}
 % \begin{macro}{\CROP@opt@mount2}
 % Since |\newcommand| doesn't allow macro names to contain non-letters,
-% we need a somewhat strange construction using |\csname|, |\endcsname|,
-% and |\expandafter|.
-% |\@namedef| would have worked, too, but it would not have made a check
-% for redefinitions.
+% we need a construction using |\csname|, |\endcsname|, and
+% |\expandafter|. |\@namedef| would have worked, too, but it would not
+% have made a check for redefinitions.
 %
 %    \begin{macrocode}
 \expandafter\newcommand\expandafter*\csname CROP@opt@mount1\endcsname{%
@@ -1764,14 +1773,16 @@
 % \subsection{Page manipulation}
 %
 % \begin{macro}{\CROP@reflect}
+% \begin{macro}{\CROP@pdfreflect}
 % \begin{macro}{\CROP@rotate}
-% The \option{mirror} and \option{rotate} options add a macro to the \emph{shiplist,}
-% which then gets every output page and embeds it in a \POSTSCRIPT\ environment.
-% The \PS\ commands are only interpreted by \PS-aware output drivers
-% and do not affect the outcome on all other drivers. Raw \PS\
-% commands are output via the \package{graphics} package's \POSTSCRIPT\ interface |\Gin@PS@raw|,
-% or the built-in |\CROP@ps|. The latter issues a warning, because it is
-% less portable.
+% \begin{macro}{\CROP@pdfrotate}
+% The \option{mirror} and \option{rotate} options add a macro to the
+% \emph{shiplist,} which then gets every output page and embeds it in
+% a \POSTSCRIPT\ environment (\option{dvips}) or lets the
+% \package{graphics} package reflect or rotate it (\option{pdftex}).
+% We could also use |\CROP@pdfreflect| and |\CROP@pdfrotate| for
+% the \option{dvips} mode. They would produce correct \PS\ documents,
+% the intermediate \DVI\ document, however, would be unreadable.
 %
 %    \begin{macrocode}
 \DeclareOption{mirror}{%
@@ -1849,6 +1860,8 @@
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
+% \end{macro}
+% \end{macro}
 %
 %
 %
@@ -1860,15 +1873,16 @@
 %
 % \subsection{Color handling}
 %
+% \begin{macro}{\CROP@defmarkcolor}
+% \begin{macro}{\CROP@opt@color}
+% \begin{macro}{\CROP@drawstockcolor}
+% \begin{macro}{\CROP@drawpagecolor}
 % \begin{macro}{\CROP@overlap}
 % \begin{macro}{\CROP@opt@overlap}
-% \begin{macro}{\CROP@background}
-% \begin{macro}{\CROP@setbgcolor}
-% \begin{macro}{\CROP@pagecolor}
-% \begin{macro}{\CROP@invert}
-% The \option{invert} option simply switches to black background
-% and white text, after which it disables all color
-% switching commands.
+% These macros care for the color of cropmarks and of the logical and
+% the physical page. The \option{overlap} value is the amount that
+% the logical page is drawn over the page boundaries on each side.
+% This is necessary to get good results on imprecise cutting machines.
 %
 %    \begin{macrocode}
 \newcommand*\CROP@defmarkcolor[1]{{%
@@ -1915,6 +1929,31 @@
 }
 \def\CROP@overlap{3truemm}
 \newcommand*\CROP@opt@overlap{\let\CROP@overlap\CROP@@}
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+%
+%
+%
+%
+%^^A--------------------------------------------------------------------
+%
+%
+%
+%
+% \begin{macro}{\CROP@invert}
+% The \option{invert} option simply switches to black background
+% and white text, after which it disables all color
+% switching commands. The \option{notext} option does the same
+% with white text on white background. The |\@gobble| on the last
+% line keeps \option{notext} from switching to white background
+% and breaking a prior \option{invert}.
+%
+%    \begin{macrocode}
 \DeclareOption{invert}{%
     \CROP@invert{black}%
     \let\CROP@setmarkcolor\relax
@@ -1937,11 +1976,6 @@
 }
 %    \end{macrocode}
 % \end{macro}
-% \end{macro}
-% \end{macro}
-% \end{macro}
-% \end{macro}
-% \end{macro}
 %
 %
 %
@@ -1955,10 +1989,11 @@
 %
 % \begin{macro}{\CROP@opt@nographics}
 % \begin{macro}{\CROP@opt@graphics}
-% The \option{nographics} option redefines the |\Ginclude@graphics| command from
-% the \package{graphics} package, so that it outputs its argument as a phantom.
-% This makes the image invisible but takes up the same amount of white space.
-% The \option{graphics} option re-enables graphics.
+% The \option{nographics} option redefines the |\Ginclude@graphics|
+% command from the \package{graphics} package, so that it outputs its
+% argument as a phantom. This makes the image invisible but takes up
+% the same amount of white space. The \option{graphics} option
+% re-enables graphics.
 %
 %    \begin{macrocode}
 \newcommand*\CROP@opt@nographics{%
@@ -1991,12 +2026,13 @@
 % load the local configuration file, and
 % process the requested options. Finally: Exit.
 %
-% Notice that we cannot simply use |\ExecuteOptions| to preselect options
-% \option{off}, \option{noaxes}, \option{info}, and \option{mount1}, because it does not accept
-% default options declared with |\DeclareOption*|. |\@nameuse| doesn't
-% complain if the command sequence is undefined. We let this only be
-% executed |\AtEndOfPackage|, because there are possibly commands from
-% the \option{center} option in the queue that have to be processed first.
+% Notice that we cannot simply use |\ExecuteOptions| to preselect
+% options \option{off}, \option{noaxes}, \option{info}, and
+% \option{mount1}, because it does not accept default options declared
+% with |\DeclareOption*|. |\@nameuse| doesn't complain if the command
+% sequence is undefined. We let this only be executed |\AtEndOfPackage|,
+% because there are possibly commands from the \option{center} option
+% in the queue that have to be processed first.
 %
 %    \begin{macrocode}
 \newcommand*\CROP@horigin{-1truein}
@@ -2056,10 +2092,11 @@
 %
 % {\def\MacroFont{\small\ttfamily\itshape}%
 %\begin{verbatim}
-%\expandafter\newcommand\expandafter*\csname CROP@opt@mount4\endcsname
-%  {\CROP@offset=\ifx\CROP@@\@empty\z@\else\CROP@@\fi
-%  \def\CROP@hook{\count@\c@page
-%    \advance\count@\CROP@offset
+%\expandafter\newcommand\expandafter*\csname CROP@opt@mount4\endcsname{%
+%    \CROP@offset=\ifx\CROP@@\@empty\z@\else\CROP@@\fi
+%    \def\CROP@hook{%
+%        \count@\c@page
+%        \advance\count@\CROP@offset
 %\end{verbatim}
 %
 % \noindent
@@ -2070,31 +2107,35 @@
 % `{\catcode`\|=12\texttt{||}}' the logical (inclusive) OR operator.
 %
 %\begin{verbatim}
-%    \ifodd\count@                         %% if (p % 4 == 1 || p % 4 == 3)
-%      \let\CROP@ulc\relax
-%      \let\CROP@llc\relax
-%      \let\CROP@ledge\relax
-%      \divide\count@2 \ifodd\count@       %%    if (p % 4 == 3)
-%        \let\CROP@urc\relax
-%        \let\CROP@info\relax
-%        \let\CROP@upedge\relax
-%      \else                               %%    if (p % 4 == 1)
-%        \let\CROP@lrc\relax
-%        \let\CROP@loedge\relax
-%      \fi
-%    \else                                 %% if (p % 4 == 0 || p % 4 == 2)
-%      \let\CROP@urc\relax
-%      \let\CROP@lrc\relax
-%      \let\CROP@redge\relax
-%      \divide\count@2 \ifodd\count@       %%    if (p % 4 == 2)
-%        \let\CROP@llc\relax
-%        \let\CROP@loedge\relax
-%      \else                               %%    if (p % 4 == 0)
-%        \let\CROP@ulc\relax
-%        \let\CROP@info\relax
-%        \let\CROP@upedge\relax
-%      \fi
-%    \fi}}
+%        \ifodd\count@                  %% if (p % 4 == 1 || p % 4 == 3)
+%            \let\CROP@ulc\relax
+%            \let\CROP@llc\relax
+%            \let\CROP@ledge\relax
+%            \divide\count@2
+%            \ifodd\count@              %%    if (p % 4 == 3)
+%                \let\CROP@urc\relax
+%                \let\CROP@info\relax
+%                \let\CROP@upedge\relax
+%            \else                      %%    if (p % 4 == 1)
+%                \let\CROP@lrc\relax
+%                \let\CROP@loedge\relax
+%            \fi
+%        \else                          %% if (p % 4 == 0 || p % 4 == 2)
+%            \let\CROP@urc\relax
+%            \let\CROP@lrc\relax
+%            \let\CROP@redge\relax
+%            \divide\count@2
+%            \ifodd\count@              %%    if (p % 4 == 2)
+%                \let\CROP@llc\relax
+%                \let\CROP@loedge\relax
+%            \else                      %%    if (p % 4 == 0)
+%                \let\CROP@ulc\relax
+%                \let\CROP@info\relax
+%                \let\CROP@upedge\relax
+%            \fi
+%        \fi
+%    }%
+%}
 %\end{verbatim}
 % }
 %
