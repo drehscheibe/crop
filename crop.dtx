@@ -92,6 +92,7 @@
 \newcommand*\POSTSCRIPT{\textsc{PostScript}}
 \newcommand*\FIXME{\marginpar{\Huge FIXME}\message{<FIXME>}}
 \newcommand*\BULLSHIT{\marginpar{\Huge BULLSHIT!}}
+\newcommand*\itemfont{\sffamily}
 %
 %
 \IfFileExists{crop.sty}
@@ -246,32 +247,32 @@
 % as arguments to the |\usepackage| command (e.\,g.~|\usepackage[frame]{crop}|).
 %
 % \begin{labeling}{\indent\indent}
-% \item[\sffamily a0, a1, a2, a3, a4, a5, a6,
+% \item[\itemfont a0, a1, a2, a3, a4, a5, a6,
 %    b0, b1, b2, b3, b4, b5, b6, letter, legal, executive]\hfill\break
 %    These options declare the printing paper dimensions. They are mandatory
 %    if the \option{center} option is used and optional if one of the \option{dvips},
 %    \option{pdftex} and \option{vtex} options is used, in which case the paper size is
 %    passed to the respective \DVI\ device driver.
 %
-% \item[\sffamily width, height]---
+% \item[\itemfont width, height]---
 %    Instead of using one of the pre-defined paper formats as described
 %    above, you can also set the paper dimensions directly. You can omit
 %    the `|true|' specifier if you don't plan to scale the document.
 %    Example: |\usepackage[cam,width=10truecm,height=13truecm]{crop}|
 %
-% \item[\sffamily center]
+% \item[\itemfont center]
 %    This option centers the logical document page on the physical printer paper
 %    and requires therefore, that you declare the sheet size properly. Write
 %    e.\,g.~|\usepackage[cam,a4,center]{crop}| to center a document of any size
 %    on \ISO\ sheets. If no paper size is chosen you get an error
 %    message, but you can proceed nevertheless.
 %
-% \item[\sffamily landscape]---
+% \item[\itemfont landscape]---
 %    Use this option in addition to the \option{center} option if you want
 %    to center a document on \emph{landscape oriented} paper. Note that it has nothing
 %    to do with the standard |landscape| option.
 %
-% \item[\sffamily dvips, pdftex, pdflatex, vtex, nodriver]---
+% \item[\itemfont dvips, pdftex, pdflatex, vtex, nodriver]---
 %    If you are working with \program{dvips}, \program{pdftex} or \program{vtex}
 %    you may want to pass the dimensions of the paper you are planning to print on to
 %    the respective program. Especially viewer programs like \program{gs} or \program{gv}
@@ -285,27 +286,27 @@
 %    with \TeX's |\mag| register is to be processed by \program{ghostscript}.
 %    \option{pdflatex} is a synonym for \option{pdftex}.
 %
-% \item[\sffamily mirror]
+% \item[\itemfont mirror]
 %    This option reflects the whole document, provided that the \DVI\ output
 %    driver handles \POSTSCRIPT\ |\special|'s. It uses the standard graphics interfaces,
 %    if the \package{graphics} package could be found or the \package{color} package is included,
 %    or a matching interface file such as |dvips.def|.
 %    If no interface is defined, the package uses its internal, less portable macros.
 %
-% \item[\sffamily rotate]
+% \item[\itemfont rotate]
 %    Rotates the document by 180\(^\circ\) so that it appears upside-down.
 %    This may be useful to circumvent problems with printers, which do not print
 %    close enough to the lower paper edge due to their paper feed mechanism.
 %    This option relies on \PS, just like the \option{mirror} option.
 %
-% \item[\sffamily invert]
+% \item[\itemfont invert]
 %    Lets the whole document be printed white onto black background,
 %    if the \package{color} package can be loaded and the document is output with an
 %    output device that is capable of executing \PS\ commands. All further color
 %    changing commands stated in the document are ignored. This option is ignored
 %    after a \option{notext} option request.
 %
-% \item[\sffamily notext]---
+% \item[\itemfont notext]---
 %    This option uses the \package{color} package to turn text to white
 %    color, after which all further color switching commands are disabled. This
 %    makes the text disappear from the printout, although it remains in the
@@ -328,30 +329,30 @@
 % document (e.\,g.~|\crop[frame]|).
 %
 % \begin{labeling}{\indent\indent}
-% \item[\sffamily cam]
+% \item[\itemfont cam]
 %    This mode provides four different marks (see figure \ref{fig:marks}),
 %    one for each corner, which show the logical paper edges without
 %    touching them and can thus be printed on every page. These
 %    marks are mainly thought for camera alignment. The |\crop| command
 %    selects this mode if no other mode is requested.
 %
-% \item[\sffamily cross]
+% \item[\itemfont cross]
 %    This mode provides four two inch wide crosses (see figure
 %    \ref{fig:marks}), one at each corner that touch the logical paper
 %    edge. That's the reason why they should be printed on an extra page
 %    to be used as a cover page while trimming the whole paper stack.
 %    (This is also the \emph{Red Cross} mode ;-)
 %
-% \item[\sffamily frame]
+% \item[\itemfont frame]
 %    This mode draws a frame around the logical page and is mainly thought
 %    for visualizing the document page dimensions.
 %
-% \item[\sffamily off]
+% \item[\itemfont off]
 %    This `option' makes only sense in connection with the |\crop| command
 %    (i.\,e.~at runtime). It disables all markings and is selected by
 %    default if the package is input without requesting any of the marks.
 %
-% \item[\sffamily odd, even]---
+% \item[\itemfont odd, even]---
 %    Use these options to let the cropmarks be put on odd\slash even pages only.
 %    The marks must have been turned on before, using one of the options |cam|,
 %    |cross|, or |frame|, otherwise there will be no effect. Note that only
@@ -359,7 +360,7 @@
 %    page number 1 and give the |odd| option, then both pages will have
 %    marks.
 %
-% \item[\sffamily axes, noaxes]---
+% \item[\itemfont axes, noaxes]---
 %    These options enable\slash disable the output of little marks which
 %    show the horizontal and vertical middle axis of the logical page and
 %    may be selected in addition to one of the above modes. These marks
@@ -367,7 +368,7 @@
 %    trimming, since they lie outside the logical page.
 %    These marks are disabled by default.
 %
-% \item[\sffamily info, noinfo]---
+% \item[\itemfont info, noinfo]---
 %    Show the page info consisting of filename, date, time, page number and page
 %    index on every sheet (see figure \ref{fig:marks}). The page index starts
 %    with \#1 and is incremented with every page info line, so that it is more
@@ -375,7 +376,7 @@
 %    contain letters. It can also be seen as a cropmarks counter.
 %    This page information is enabled by default.
 %
-% \item[\sffamily font]
+% \item[\itemfont font]
 %    The page info line uses |\normalfont| by default. If you are typesetting
 %    the document in non-latin glyphs or a decorative, but less legible font,
 %    you may want to request a specific font for that info. Just assign
@@ -386,7 +387,13 @@
 %    one: |\newcommand*\infofont[1]{\textcolor{blue}{\textsf{\small#1}}}|
 %    |\crop[font=infofont]|
 %
-% \item[\sffamily mount1, mount2]---
+% \item[\itemfont color]
+%    You can set the color of cropmarks, axes and info text with this
+%    option, if the \package{color} package could have been loaded.
+%    The option takes only color names, as in |[color=red]|. See
+%    the \package{color} package for how to define custom colors.
+%
+% \item[\itemfont mount1, mount2]---
 %    If more than one logical page is to be mounted on a physical sheet,
 %    you normally don't want marks to appear on the inner edges, where
 %    the pages touch each other.
@@ -399,7 +406,7 @@
 %    implement them yourself. (See a \option{mount4} suggestion on page
 %    \pageref{sec:mount4}.)
 %
-% \item[\sffamily horigin, vorigin]---
+% \item[\itemfont horigin, vorigin]---
 %    The top and left margin are by default 1~inch wide. This can be changed
 %    using the dimensions |\oddsidemargin|, |\evensidemargin| and
 %    |\topmargin|. It's more convenient, though, to let the |geometry| package
@@ -412,7 +419,7 @@
 %    As both |horigin| and |vorigin| are by default $-1$~inch, you would for
 %    example write |horigin=-.6in| to move the marks by 0.4~inch to the right.
 %
-% \item[\sffamily graphics, nographics]---
+% \item[\itemfont graphics, nographics]---
 %    \label{graphics}
 %    Color printouts are often more expensive than black and white ones, while
 %    their text quality is sometimes reduced. Therefore it may be desirable to create
@@ -494,7 +501,7 @@
 % ^^A         and anywhere in the document.}
 % ^^A\label{fig:loading}
 % ^^A\end{figure}
-% \bigskip\FIXME
+% ^^A%\bigskip\FIXME
 %
 % You get corner markings at every page shipped out after a \option{cam},
 % \option{cross}, or \option{frame} mode request until you turn them off by
@@ -514,6 +521,12 @@
 % \end{example}
 %
 %
+%
+%
+%
+% \subsection{Color handling}
+%
+% \FIXME
 %
 %
 %
@@ -635,6 +648,10 @@
 % |\cropdef[\funnyinfo]\relax\funnymarkA\relax\funnymarkB{funny}|
 % \end{example}
 %
+%
+% \FIXME userhooks, axes
+%
+%
 % \noindent
 % You can select your own mode by typing |\crop[funny]|.
 % Local definitions like these are ideally put into a local configuration
@@ -683,12 +700,12 @@
 % \begin{example}
 % |% let's use a different font for the predefined page|\\
 % |% information (we could also have written|\\
-% |% \newcommand*\CROP@font{\small\textsf})|\\
-% |\crop[font=\small\textsf]|\\
+% |% \newcommand*\CROP@font[1]{\textsf{#1}})|\\
+% |\crop[font=textsf]|\\
 % |\endinput|\\
 % {}
 % \end{example}
-% \BULLSHIT\FIXME
+%
 %
 %
 % \section{How the package works}
@@ -792,8 +809,9 @@
         \PackageError{crop}{%
             The `invert' and `notext' options require the `color'
             package,\MessageBreak which doesn't seem to be installed.
-        }{
-            The `crop' packes tries to load %\FIXME
+        }{%
+            Install the `color' package or don't use the `invert'
+            \MessageBreak or `notext' option.
         }%
         \let\CROP@needscolor\relax
     }%
@@ -878,10 +896,15 @@
     \ifx\CROP@reqdriver\empty\else
         \ifx\CROP@reqdriver\empty\else
             \ifx\CROP@reqdriver\CROP@detdriver\else
-                \PackageWarning{crop}{I feel like using the
-                    driver \CROP@detdriver\space rather than
-                    \CROP@reqdriver\space which you requested. :-P}%
-            \fi     % \FIXME wording
+                \PackageWarning{crop}{%
+                    You requested the `\CROP@reqdriver' driver
+                    but I think that the `\CROP@detdriver' works
+                    better in the current context. You can force
+                    me to respect your decision by additionally
+                    stating the `nodriver' option.
+                    e.g. [nodriver,pdftex]
+                }
+            \fi
         \fi
     \fi
     \ifx\CROP@detdriver\empty
@@ -1534,7 +1557,6 @@
                 \CROP@every             % \FIXME
                 \CROP@drawstockcolor
                 \CROP@drawpagecolor
-                \normalcolor
                 \CROP@@@marks
             }%
             \hss
