@@ -1921,63 +1921,6 @@
 %
 %
 %
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
-% \subsection{Compatibility stuff}
-%
-% \begin{macro}{\CROP@compat}
-% These options are just kept for compatibility reasons. They issue
-% a warning that will become an error message in the next
-% release. Finally they will be dropped altogether.
-%
-%    \begin{macrocode}
-\newcommand*\CROP@compat{%
-    \PackageWarning{crop}{%
-        center options like `a4center' are obsolete and
-        only\MessageBreak provided for compatibility reasons. They will
-        be removed\MessageBreak in future releases. Use the new options
-        `a4'\MessageBreak and `center' separately instead.
-    }
-}
-\DeclareOption{landscapecenter}{%
-    \CROP@compat\ExecuteOptions{landscape,center}
-}
-\DeclareOption{a4center}{%
-    \CROP@compat\ExecuteOptions{a4,center}
-}
-\DeclareOption{a5center}{%
-    \CROP@compat\ExecuteOptions{a5,center}
-}
-\DeclareOption{b5center}{%
-    \CROP@compat\ExecuteOptions{b5,center}
-}
-\DeclareOption{lettercenter}{%
-    \CROP@compat\ExecuteOptions{letter,center}
-}
-\DeclareOption{legalcenter}{%
-    \CROP@compat\ExecuteOptions{legal,center}
-}
-\DeclareOption{executivecenter}{%
-    \CROP@compat\ExecuteOptions{executive,center}
-}
-%    \end{macrocode}
-% \end{macro}
-%
-%
-%
-%
-%^^A--------------------------------------------------------------------
-%
-%
-%
-%
 % \subsection{Final settings}
 %
 % \begin{macro}{\CROP@horigin}
