@@ -921,10 +921,21 @@
     \let\CROP@evaldriver\relax
 }
 \AtBeginDocument{\CROP@evaldriver}
-\DeclareOption{nodriver}{%
-    \AtBeginDocument{%
-        \def\CROP@driver{}%
-    }%
+\expandafter\def\csname CROP@opt@vtex!\endcsname{%
+    \AtBeginDocument{\def\CROP@driver{}}%
+    \def\CROP@reqdirver{vtex}%
+}
+\expandafter\def\csname CROP@opt@pdftex!\endcsname{%
+    \AtBeginDocument{\def\CROP@driver{}}%
+    \def\CROP@reqdirver{pdftex}%
+}
+\expandafter\def\csname CROP@opt@pdflatex!\endcsname{%
+    \AtBeginDocument{\def\CROP@driver{}}%
+    \def\CROP@reqdirver{pdflatex}%
+}
+\expandafter\def\csname CROP@opt@dvips!\endcsname{%
+    \AtBeginDocument{\def\CROP@driver{}}%
+    \def\CROP@reqdirver{dvips}%
 }
 %    \end{macrocode}
 % \end{macro}
