@@ -1364,13 +1364,9 @@
 % The \opt{nographics} option redefines the |\includegraphics| command from
 % the |graphics| package, so that it ignores all |\special| commands within.
 % This is a quite simple approach and it might produce unexpected results
-% in some rare cases.
-% Furthermore it doesn't work with |pdftex|, because that doesn't use
-% |\special| to output graphics, but some non-standard \emph{primitives.}
-% Unfortunately we cannot disable those, because we wouldn't even get white
-% space for the left-out pictures then. This is of course no tragedy,
-% because the \textsc{PDF} format isn't the first choice for such tasks,
-% anyway. The \opt{graphics} option re-enables graphics.
+% in some rare cases. The \opt{pdftex} option redefines |\SOUL@opt@nographics|
+% to simply output the picture in a |\phantom|.
+% The \opt{graphics} option re-enables graphics.
 %
 %    \begin{macrocode}
 \newcommand*\CROP@incgrph{}
@@ -1446,7 +1442,7 @@
   \PackageInfo{crop}{using pdf(la)tex graphics driver}%
   \ifx\@undefined\pdfpagewidth
     \PackageWarning{crop}{implicit or explicit pdf(la)tex option
-    ignored:^^JThis isn't pdftex!	}%
+    ignored:^^JThis isn't pdftex!}%
   \else
     \ifdim\CROP@width=\z@\else
       \pdfpagewidth\CROP@width
