@@ -7,7 +7,6 @@
 + driver detection overhaul
 + use \reflectbox when processed with pdflatex
 + add user hooks (kernel, marks)
++ marks/bgnd color (pdflatex!)
 
-- fix marks/bgnd color (pdflatex!)
-- think about which actions to delay until \AtBeginDocument
-
+- check nodriver
