@@ -77,7 +77,26 @@
 %<*driver>
 \def\fileversion{1.9}
 \def\filedate{2003/05/20}
-\documentclass[draft]{ltxdoc}
+\documentclass{ltxdoc}
+%
+%
+%
+\ifx\makehyperref\CROPundefined
+    \newcommand*\texorpdfstring[2]{#1}
+\else   ^^A for "make hyper"
+    \usepackage{hyperref}
+    \hypersetup{
+        bookmarksopen,
+        colorlinks,
+        pdftitle={The crop package},
+        pdfauthor={Melchior FRANZ},
+        pdfsubject={${}$Id${}$},
+        pdfkeywords={crop marks, mirror, invert, center, }
+    }
+    \usepackage[pdftex]{graphicx,color}
+\fi
+%
+%
 %
 \newcommand*\option{\textsf}
 \newcommand*\package{\texttt}
