@@ -126,7 +126,7 @@
 % \fi
 %
 %
-% \CheckSum{853}
+% \CheckSum{914}
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -1398,6 +1398,7 @@
                     \dp\z@\z@
                     \wd\z@\z@
                     \box\z@
+                    \CROP@color    
                     \CROP@ulc
                     \CROP@uedge
                     \CROP@urc
@@ -1629,11 +1630,46 @@
 %
 % \begin{macro}{\CROP@invert}
 % \changes{v1.2}{1998/12/07}{option `invert' added}
+% \changes{v1.8}{2002/??/??}{background color handling added}
 % The \option{invert} option simply switches to black background
 % and white text, after which it disables all color
 % switching commands.
 %
 %    \begin{macrocode}
+\let\CROP@color\relax
+\let\CROP@setcolor\relax
+\AtBeginDocument{%
+    \ifx\pagecolor\@undefined
+    \else
+        \DeclareRobustCommand*\pagecolor[2][]{%
+            \def\CROP@a{white}%
+            \def\CROP@b{#2}%    
+            \ifx\CROP@a\CROP@b
+                \let\CROP@color\relax                
+            \else
+                \xdef\CROP@setcolor{%
+                    \noexpand\color\if$#1$\else[#1]\fi{#2}%
+                }%
+                \let\CROP@color\CROP@pagecolor
+            \fi
+        }%
+    \fi
+}
+\newcommand*\CROP@pagecolor{%
+    \rlap{%
+        \smash{%
+            \let\protect\relax
+            \CROP@setcolor
+            \dimen@=3truemm
+            \advance\paperwidth2\dimen@
+            \advance\paperheight2\dimen@
+            \raise\dimen@\hbox{%
+                \hskip-\dimen@
+                \vrule width\paperwidth height\z@ depth\paperheight
+            }%
+        }%
+    }%
+}
 \DeclareOption{invert}{%
     \AtEndOfPackage{\RequirePackage{color}}
     \AtBeginDocument{\CROP@invert{black}}
