@@ -570,7 +570,7 @@
 %% accessible in the whole document
 %\let\Time\CROP@time
 %
-%% let's use a different font for the page information
+%% let's use a different font for the predefined page information
 %\renewcommand*\CROP@font{\sffamily\small}
 %\endinput
 %\end{verbatim}
@@ -617,13 +617,13 @@
 %
 % \subsection{Preamble}
 %
-% \begin{macro}{\CROP@font}
 % \begin{macro}{\CROP@includegraphics}
+% \begin{macro}{\CROP@font}
 % The options \opt{graphics} and \opt{nographics} depend on the |graphics|
 % package, so we try to load it here. We don't complain now if it can't
 % be found, because we cannot say yet, if one of these options is used in
 % the document at all. Therefore we just prepare an error message for eventual
-% later use. The |\CROP@font| command is by default empty and may be
+% later use. The |\CROP@font| command is by default empty and can be
 % used to change the font for the page info line.
 %
 %    \begin{macrocode}
