@@ -1486,8 +1486,8 @@
             \vbox to\paperheight{%
                 \let\protect\relax
                 \hsize\paperwidth
+                \CROP@user@a
                 \CROP@setcolor
-                \CROP@userhook
                 \CROP@every
                 \CROP@background
                 \CROP@@@marks
@@ -1498,8 +1498,9 @@
     }%
     \color@endgroup
 }
-\let\CROP@userhook\relax
+\let\CROP@user@a\relax
 \newcommand*\CROP@marks{%
+    \CROP@user@b
     \CROP@@@info
     \CROP@ulc\null\hfill\CROP@upedge\hfill\null\CROP@urc
     \vfill
@@ -1507,6 +1508,7 @@
     \vfill
     \CROP@llc\null\hfill\CROP@loedge\hfill\null\CROP@lrc
 }
+\let\CROP@user@b\relax
 \let\CROP@@@marks\CROP@marks
 \newcommand*\CROP@opt@horigin{\let\CROP@horigin\CROP@@}
 \newcommand*\CROP@opt@vorigin{\let\CROP@vorigin\CROP@@}

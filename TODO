@@ -6,7 +6,8 @@
 + preset \stockwidth to \paperwidth
 + driver detection overhaul
 + use \reflectbox when processed with pdflatex
++ add user hooks (kernel, marks)
 
-- add user hooks
+- fix marks/bgnd color (pdflatex!)
 - think about which actions to delay until \AtBeginDocument
 
