@@ -3,18 +3,23 @@
 %% $Id$
 %<*preamble>
 %
+% on Unix/Linux just run "make" to get the style file and the documentation;
+% else generate the driver crop.ins (if you don't already have it):
 %
-%     (1)  run `crop.dtx' through LaTeX to get `crop.ins',
-%          (if you don't already have it)
+%     $ latex crop.dtx
 %
-%     (2)  run `crop.ins' through (La)TeX to get
-%          the package `crop.sty'
+% Now generate the style file:
 %
-%          [or use `docstrip', and extract `crop.sty' from `crop.dtx'
-%           using option `package']
+%     $ tex crop.ins
 %
-%     (3)  now run `crop.dtx' three times through LaTeX
-%          to get the documentation file `crop.dvi'
+% And finally to produce the documentation run LaTeX three times:
+%
+%     $ latex crop.dtx
+%     $
+%  
+%
+%
+%
 %
 %
 %% ====================================================================

@@ -16,8 +16,8 @@ either text or graphics output.
 
 
 author          = "Melchior FRANZ"
-version         = "1.6"
-date            = "16 November 2001"
+version         = "1.7"
+date            = "12 May 2002"
 address         = "Melchior FRANZ
                    Rieder Hauptstrasse 52
                    A-5212 SCHNEEGATTERN
@@ -42,16 +42,17 @@ in the file macros/latex/base/lppl.txt on any CTAN archive server.
 Extracting the package & processing the documentation
 =====================================================  
 
- (1)  run `crop.dtx' through LaTeX to get `crop.ins',
-      (if you don't already have it)
+on Unix/Linux just run "make" to get the style file and the documentation;
+else generate the driver crop.ins (if you don't already have it):
 
- (2)  run `crop.ins' through (La)TeX to get
-      the package `crop.sty'
+    $ latex crop.dtx
 
-      [or use `docstrip', and extract `crop.sty' from `crop.dtx'
-       using option `package']
+Now generate the style file:
 
- (3)  now run `crop.dtx' three times through LaTeX
-      to get the documentation file `crop.dvi'
+    $ tex crop.ins
 
+And finally to produce the documentation run LaTeX three times:
 
+    $ latex crop.dtx
+    $
+ 
