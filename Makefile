@@ -14,8 +14,17 @@ print: $(NAME).ps
 	@ read key
 	psbook $(NAME).ps|psnup -2|psselect -o -r|lpr
 
-%.ps: %.dvi 
+ps: $(NAME).ps
+
+%.ps: %.dvi
 	dvips $(DVIPSOPT) $< -o $@
+
+pdf: $(NAME).pdf
+
+%.pdf: %.dtx
+	pdflatex $<
+
+arc: archive
 
 archive: $(NAME).ins
 	@ tar -czf $(ARCHNAME) $(ARCHIVE) 
