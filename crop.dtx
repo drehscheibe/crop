@@ -1658,6 +1658,7 @@
 \AtBeginDocument{%
     \ifx\pagecolor\@undefined
     \else
+        \let\CROP@@pagecolor\pagecolor
         \DeclareRobustCommand*\pagecolor[2][]{%
             \def\CROP@{white}%
             \def\CROP@@{#2}%
@@ -1698,7 +1699,7 @@
             ignoring the `invert' and `notext' option
         }%
     \else
-        \pagecolor{#1}%
+        \CROP@@pagecolor{#1}%
         \color{white}%
         \newcommand\CROP@@color[2][]{}%
         \DeclareRobustCommand\color{\CROP@@color}%
