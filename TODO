@@ -4,12 +4,13 @@
 + new kernel with pictures for axis marks
 + redefine pagecolor
 + preset \stockwidth to \paperwidth
++ driver detection overhaul
++ use \reflectbox when processed with pdflatex
 
 
-- use \reflectbox when processed with pdflatex
 - fix info font (changes with base font under pdflatex)
 - add user hooks
-- repair even/odd 
+- repair even/odd
 
 
 
