@@ -7,12 +7,6 @@
 + driver detection overhaul
 + use \reflectbox when processed with pdflatex
 
-
-? repair even/odd
-? fix info (possibly broken due to recent changes)
-? fix info font (changes with base font under pdflatex)
-
-
 - add user hooks
 - think about which actions to delay until \AtBeginDocument
 

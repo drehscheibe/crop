@@ -827,9 +827,7 @@
 %
 %    \begin{macrocode}
 \newcommand*\CROP@evaldriver{%
-%   \PackageWarning{crop}{requested driver: \CROP@reqdriver}%
-    \message{^^J}%
-    \message{HHHH requested driver: \CROP@reqdriver^^J}%
+    \PackageInfo{crop}{requested driver: \CROP@reqdriver}%
     \expandafter\ifx\csname pdfoutput\endcsname\relax\else
         \ifnum\pdfoutput=0\else
             \def\CROP@detdriver{pdftex}%
@@ -838,8 +836,7 @@
     \expandafter\ifx\csname VTeXversion\endcsname\relax\else
         \def\CROP@detdriver{vtex}%
     \fi
-%   \PackageWarning{crop}{detected driver: \CROP@detdriver}%
-    \message{HHHH detected driver: \CROP@detdriver^^J}%
+    \PackageInfo{crop}{detected driver: \CROP@detdriver}%
     \ifx\CROP@reqdriver\empty\else
         \ifx\CROP@reqdriver\empty\else
             \ifx\CROP@reqdriver\CROP@detdriver\else
@@ -1174,7 +1171,6 @@
         \vskip\dimen@
     }%
 }}
-\let\CROP@info\relax %% \FIXME the whole info stuff is rather bogus now!
 \newcommand*\CROP@opt@font{\let\CROP@font\CROP@@}
 %    \end{macrocode}
 % \end{macro}
@@ -1471,6 +1467,7 @@
 %
 %
 % \begin{macro}{\CROP@kernel}
+% \begin{macro}{\CROP@user}
 % \begin{macro}{\CROP@marks}
 % \begin{macro}{\CROP@opt@horigin}
 % \begin{macro}{\CROP@opt@vorigin}
@@ -1489,9 +1486,10 @@
             \vbox to\paperheight{%
                 \let\protect\relax
                 \hsize\paperwidth
+%               \CROP@setcolor
+                \CROP@user
                 \CROP@every
-                \CROP@color
-                \CROP@@@info
+                \CROP@background
                 \CROP@@@marks
             }%
             \hss
@@ -1500,7 +1498,9 @@
     }%
     \color@endgroup
 }
+\let\CROP@user\relax
 \newcommand*\CROP@marks{%
+    \CROP@@@info
     \CROP@ulc\null\hfill\CROP@upedge\hfill\null\CROP@urc
     \vfill
     \CROP@ledge\hfill\CROP@redge
@@ -1511,6 +1511,7 @@
 \newcommand*\CROP@opt@horigin{\let\CROP@horigin\CROP@@}
 \newcommand*\CROP@opt@vorigin{\let\CROP@vorigin\CROP@@}
 %    \end{macrocode}
+% \end{macro}
 % \end{macro}
 % \end{macro}
 % \end{macro}
@@ -1529,17 +1530,15 @@
 % \begin{macro}{\CROP@opt@even}
 % These macros start and stop the kernel mechanism.
 %
-% \FIXME: fix opt@odd/even!! 
 %    \begin{macrocode}
 \newcommand*\CROP@opt@off{%
-    \let\CROP@@@info\relax
-    \let\CROP@@@marks\relax
+    \let\CROP@@@marks\vfil
 }
 \newcommand*\CROP@opt@odd{%
-    \def\CROP@@@marks{\ifodd\c@page\CROP@marks\fi}%
+    \def\CROP@@@marks{\ifodd\c@page\CROP@marks\else\vfil\fi}%
 }
 \newcommand*\CROP@opt@even{%
-    \def\CROP@@@marks{\ifodd\c@page\else\CROP@marks\fi}%
+    \def\CROP@@@marks{\ifodd\c@page\vfil\else\CROP@marks\fi}%
 }
 %    \end{macrocode}
 % \end{macro}
@@ -1656,7 +1655,6 @@
     \AtBeginDocument{\CROP@shipadd\CROP@reflect\CROP@setps}
 }
 \newcommand*\CROP@reflect[1]{%
-    \message{HHHH normal reflect^^J}%
     \vbox to\z@{%
         \vskip\CROP@vorigin
         \hb@xt@\z@{%
@@ -1673,7 +1671,6 @@
     \CROP@ps{grestore}%
 }
 \newcommand*\CROP@pdfreflect[1]{%
-    \message{HHHH pdfreflect^^J}%
     \leavevmode
     \dimen0\CROP@horigin
     \kern2\dimen0
@@ -1691,7 +1688,6 @@
     \AtBeginDocument{\CROP@shipadd\CROP@rotate\CROP@setps}
 }
 \newcommand*\CROP@rotate[1]{%
-    \message{HHHH normal rotate^^J}%
     \hb@xt@\z@{%
         \hskip\CROP@horigin
         \vbox to\z@{%
@@ -1712,7 +1708,6 @@
     \CROP@ps{grestore}%
 }
 \newcommand*\CROP@pdfrotate[1]{%
-    \message{HHHH pdfrotate^^J}%
     \dimen0\CROP@vorigin
     \kern2\dimen0
     \leavevmode
@@ -1754,7 +1749,7 @@
 % \subsection{Color handling}
 %
 % \begin{macro}{\CROP@overlap}
-% \begin{macro}{\CROP@color}
+% \begin{macro}{\CROP@background}
 % \begin{macro}{\CROP@setcolor}
 % \begin{macro}{\CROP@pagecolor}
 % \begin{macro}{\CROP@invert}
@@ -1764,22 +1759,25 @@
 %
 %    \begin{macrocode}
 \def\CROP@overlap{3truemm}
-\let\CROP@color\relax
+\let\CROP@background\relax
 \let\CROP@setcolor\relax
 \AtBeginDocument{%
-    \ifx\pagecolor\@undefined
+    \ifx\color\@undefined
+        \let\CROP@setcolor\relax               %\FIXME
     \else
+        \let\CROP@@color\color
+        \def\CROP@setcolor{\CROP@@color{black}}%     %\FIXME
         \let\CROP@@pagecolor\pagecolor
         \DeclareRobustCommand*\pagecolor[2][]{%
             \def\CROP@{white}%
             \def\CROP@@{#2}%
             \ifx\CROP@\CROP@@
-                \global\let\CROP@color\relax
+                \global\let\CROP@background\relax
             \else
                 \xdef\CROP@setcolor{%
                     \noexpand\color\if$#1$\else[#1]\fi{#2}%
                 }%
-                \let\CROP@color\CROP@pagecolor
+                \let\CROP@background\CROP@pagecolor
             \fi
         }%
     \fi
@@ -1811,11 +1809,12 @@
         }%
     \else
         \CROP@@pagecolor{#1}%
-        \color{white}%
-        \newcommand\CROP@@color[2][]{}%
-        \DeclareRobustCommand\color{\CROP@@color}%
-        \DeclareRobustCommand\pagecolor{\CROP@@color}%
-        \DeclareRobustCommand\textcolor{\CROP@@color}%
+        \CROP@@color{white}%
+        \def\CROP@setcolor{\CROP@@color{white}}%
+        \newcommand\CROP@@@color[2][]{}%
+        \DeclareRobustCommand\color{\CROP@@@color}%
+        \DeclareRobustCommand\pagecolor{\CROP@@@color}%
+        \DeclareRobustCommand\textcolor{\CROP@@@color}%
         \let\normalcolor\relax
     \fi
     \let\CROP@invert\relax
