@@ -256,10 +256,11 @@
 % \begin{labeling}{\indent\indent}
 % \item[\itemfont a0, a1, a2, a3, a4, a5, a6,
 %    b0, b1, b2, b3, b4, b5, b6, letter, legal, executive]\hfill\break
-%    These options declare the printing paper dimensions. They are mandatory
-%    if the \option{center} option is used and optional if one of the \option{dvips},
-%    \option{pdftex} and \option{vtex} options is used, in which case the paper size is
-%    passed to the respective \DVI\ device driver.
+%    These options declare the printing paper dimensions. One of them should be
+%    specified if the \option{center} option or one of the options \option{dvips},
+%    \option{pdftex} and \option{vtex} is used. The size options do not
+%    declare the logical document page size! See section~\ref{sec:custom-logical}
+%    for how to achieve this.
 %
 % \item[\itemfont width, height]---
 %    Instead of using one of the pre-defined paper formats as described
@@ -271,8 +272,7 @@
 %    This option centers the logical document page on the physical printer paper
 %    and therefore requires that you declare the sheet size properly. Write,
 %    for example, |\usepackage[cam,a4,center]{crop}| to center a document of any size
-%    on \ISO\ sheets. You'll get an error message, if you didn't specify a paper size,
-%    but you can proceed nevertheless.
+%    on \ISO\ sheets.
 %
 % \item[\itemfont landscape]---
 %    Use this option in addition to the \option{center} option if you want
@@ -281,11 +281,12 @@
 %
 % \item[\itemfont dvips, pdftex, pdflatex, vtex, nodriver]---
 %    If you are working with \program{dvips}, \program{pdftex} or \program{vtex}
-%    you may want to pass the dimensions of the paper you are planning to print on to
-%    the respective program. Especially viewer programs like \program{gs} or \program{gv}
-%    make use of this \emph{bounding box} information. Unfortunately, this can't be
-%    done in a generic way---there's no standard. Furthermore, there are different
-%    routines used for rotation and reflection, depending on the output driver.
+%    you may want to pass the dimensions of the paper that you are planning to print on to
+%    the respective driver program. Especially viewer programs like \program{gs}
+%    or \program{gv} make use of this \emph{bounding box} information. Unfortunately,
+%    this can't be done in a generic way---there's no standard. Furthermore, there
+%    are different routines used for rotation and reflection, depending on the
+%    output driver.
 %
 %    The \CROP\ package tries to find out by itself, which driver to use.
 %    You find its choice mentioned in the log file. Additionally, you can
@@ -323,7 +324,7 @@
 %    makes the text disappear from the printout, although it remains in the
 %    output file. See the description of the options \option{nographics} and
 %    \option{graphics} on page~\pageref{graphics} for an explanation.
-%    This option is ignored after an \option{invert} option request.
+%    This option is ignored if option \option{invert} was also requested.
 % \end{labeling}
 %
 %
@@ -341,16 +342,16 @@
 % \begin{labeling}{\indent\indent}
 % \item[\itemfont cam]
 %    This mode provides four different marks (see figure \ref{fig:marks}),
-%    one for each corner, which show the logical paper edges without
+%    one for each corner. They indicate the logical paper edges without
 %    touching them and can thus be printed on every page. These
 %    marks are mainly thought for camera alignment. The |\crop| command
 %    selects this mode if no other mode is requested.
 %
 % \item[\itemfont cross]
 %    This mode provides four two inch wide crosses (see figure
-%    \ref{fig:marks}), one at each corner that touch the logical paper
-%    edge. That's the reason why they should be printed on an extra page
-%    to be used as a cover page while trimming the whole paper stack.
+%    \ref{fig:marks}), one at each corner, that touch the logical paper
+%    edge. That's why they should be printed on an extra page
+%    that will be used as a cover page while trimming the whole paper stack.
 %    (This is also the \emph{Red Cross} mode ;-)
 %
 % \item[\itemfont frame]
@@ -551,6 +552,7 @@
 %
 %
 % \subsection{Custom document page size}
+% \label{sec:custom-logical}
 %
 % The \CROP\ package respects any page layout that you specify by means of
 % \LaTeX\ dimensions. The following example uses the |geometry| package,
@@ -794,7 +796,7 @@
 % \begin{macro}{\CROP@font}
 % Make sure that |\stockwidth| and |\stockheight| are |\dimen|
 % registers that hold the physical paper size. They are initially set
-% to the papersize, but will be changed by the size options.
+% to the paper size, but will be changed by the size options.
 % These registers are also used\slash provided by the \package{memoir}
 % class and the \package{hyperref} package.
 % The |\CROP@font| macro is by default empty and can be changed
