@@ -126,7 +126,7 @@
 % \fi
 %
 %
-% \CheckSum{924}
+% \CheckSum{916}
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -968,6 +968,7 @@
         \let\CROP@urc#3
         \let\CROP@llc#4
         \let\CROP@lrc#5
+        \let\CROP@@@marks\CROP@marks
     }%
 }
 %    \end{macrocode}
@@ -1371,6 +1372,7 @@
 %
 %
 % \begin{macro}{\CROP@kernel}
+% \begin{macro}{\CROP@marks}
 % \begin{macro}{\CROP@opt@horigin}
 % \begin{macro}{\CROP@opt@vorigin}
 % \changes{v1.1}{1998/07/01}{`CROP@every inserted}%
@@ -1395,11 +1397,7 @@
                 \CROP@every
                 \CROP@color
                 \CROP@@@info
-                \CROP@ulc\null\hfill\CROP@upedge\hfill\null\CROP@urc
-                \vfill
-                \CROP@ledge\hfill\CROP@redge
-                \vfill
-                \CROP@llc\null\hfill\CROP@loedge\hfill\null\CROP@lrc
+                \CROP@@@marks
             }%
             \hss
         }%
@@ -1407,9 +1405,18 @@
     }%
     \color@endgroup
 }
+\let\CROP@@@marks\CROP@marks
+\newcommand*\CROP@marks{%
+    \CROP@ulc\null\hfill\CROP@upedge\hfill\null\CROP@urc
+    \vfill
+    \CROP@ledge\hfill\CROP@redge
+    \vfill
+    \CROP@llc\null\hfill\CROP@loedge\hfill\null\CROP@lrc
+}
 \newcommand*\CROP@opt@horigin{\let\CROP@horigin\CROP@@}
 \newcommand*\CROP@opt@vorigin{\let\CROP@vorigin\CROP@@}
 %    \end{macrocode}
+% \end{macro}
 % \end{macro}
 % \end{macro}
 % \end{macro}
@@ -1427,18 +1434,12 @@
 % \begin{macro}{\CROP@opt@even}
 % These macros start and stop the kernel mechanism.
 %
-% \FIXME: fix opt@odd/even!!
+% \FIXME: fix opt@odd/even!! \FIXME the whole info stuff is bogus now!
 %    \begin{macrocode}
+\let\CROP@info\relax           %% \FIXME
 \newcommand*\CROP@opt@off{%
     \let\CROP@@@info\relax
-    \let\CROP@ulc\relax
-    \let\CROP@upedge\relax
-    \let\CROP@urc\relax
-    \let\CROP@ledge\relax
-    \let\CROP@redge\relax
-    \let\CROP@llc\relax
-    \let\CROP@loedge\relax
-    \let\CROP@lrc\relax
+    \let\CROP@@@marks\relax
 }
 \newcommand*\CROP@opt@odd{%
     \def\CROP@@@ship{\ifodd\c@page\CROP@kernel\fi}%
