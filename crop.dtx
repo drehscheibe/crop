@@ -126,7 +126,7 @@
 % \fi
 %
 %
-% \CheckSum{913}
+% \CheckSum{931}
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -1337,7 +1337,7 @@
     \lineskip\z@
     \lineskiplimit\z@
     \baselineskip\z@
-    \CROP@@@ship
+    \CROP@kernel
     \box\@cclv
 }
 \newcommand*\CROP@@ship{%
@@ -1433,17 +1433,24 @@
 %
 %
 %
-% \begin{macro}{\CROP@@@ship}
-% \begin{macro}{\CROP@on}
 % \begin{macro}{\CROP@opt@off}
 % \begin{macro}{\CROP@opt@odd}
 % \begin{macro}{\CROP@opt@even}
 % These macros start and stop the kernel mechanism.
 %
+% \FIXME: fix opt@odd/even!!
 %    \begin{macrocode}
-\newcommand*\CROP@@@ship{}
-\newcommand*\CROP@on{\let\CROP@@@ship\CROP@kernel}
-\newcommand*\CROP@opt@off{\let\CROP@@@ship\relax}
+\newcommand*\CROP@opt@off{%
+    \let\CROP@@@info\relax
+    \let\CROP@ulc\relax
+    \let\CROP@upedge\relax
+    \let\CROP@urc\relax
+    \let\CROP@ledge\relax
+    \let\CROP@redge\relax
+    \let\CROP@llc\relax
+    \let\CROP@loedge\relax
+    \let\CROP@lrc\relax
+}
 \newcommand*\CROP@opt@odd{%
     \def\CROP@@@ship{\ifodd\c@page\CROP@kernel\fi}%
 }
@@ -1451,8 +1458,6 @@
     \def\CROP@@@ship{\ifodd\c@page\else\CROP@kernel\fi}%
 }
 %    \end{macrocode}
-% \end{macro}
-% \end{macro}
 % \end{macro}
 % \end{macro}
 % \end{macro}
