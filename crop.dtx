@@ -160,12 +160,12 @@
 % \changes{v1.5}{2001/10/07}{*center options replaced by `center' and paper size
 %   options; options `dvips', `pdftex', `graphics', `nographics', `notext',
 %   `color', `horigin' and `vorigin' added; new info line with time stamp;
-%   some of the improvements were suggested by Cpt. Leszek Flis}
+%   some of the improvements were suggested by Cpt. Leszek \textsc{FLIS}}
 %
 % \changes{v1.6}{2001/11/16}{font option added; dvips/pdftex/vtex options
 %   changed; nographics enabled for pdftex; fixed a nasty bug that
-%	  disallowed setting the physical paper size in the config file -- thanks
-%   to Stefan \textsc{Becuwe} for reporting this.}
+%   disallowed setting the physical paper size in the config file---thanks
+%   to Stefan \textsc{BECUWE} for reporting this.}
 %
 %
 %
@@ -342,7 +342,7 @@
 % \changes{v1.6}{2001/11/16}{font option added}
 % \item[\sffamily font]
 %    The page info line uses |\normalfont| by default. If you are typesetting
-%    the document in foreign glyphs or a decorative, but less readable font,
+%    the document in non-latin glyphs or a decorative, but less readable font,
 %    you may want to request a specific font for that info. Just assign
 %    a font switching command to the \opt{font} option parameter. This command
 %    may take one argument (like |\textsf{}|) or stand alone (like |\small|).
@@ -1373,11 +1373,11 @@
 \newcommand*\CROP@opt@nographics{%
   \def\includegraphics##1##{\bgroup
     \let\special\@gobble
-		\CROP@incgrph{##1}
-	}%	
-	\def\CROP@incgrph##1##2{%
-		\CROP@includegraphics##1{##2}\egroup
-	}%
+    \CROP@incgrph{##1}
+  }%  
+  \def\CROP@incgrph##1##2{%
+    \CROP@includegraphics##1{##2}\egroup
+  }%
 }
 \newcommand*\CROP@opt@graphics{%
   \let\includegraphics\CROP@includegraphics}
@@ -1579,5 +1579,5 @@
 % }
 %
 % ^^A \PrintChanges
+% ^^A vim:ts=2:sw=2:et
 % \Finale                                               ^^A.E.I.O.U.^^
-% ^^A vim:ts=2:sw=2:noet
