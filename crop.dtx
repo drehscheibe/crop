@@ -126,7 +126,7 @@
 % \fi
 %
 %
-% \CheckSum{925}
+% \CheckSum{933}
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -702,7 +702,7 @@
 % |\endinput|\\
 % {}
 % \end{example}
-%
+% \marginpar{\Huge BULLSHIT!}\FIXME
 %
 %
 % \section{How the package works}
@@ -772,8 +772,14 @@
 %<*package>
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{crop}[2002/05/14 v1.7 cropmarks  (mf)]
-\ifx\stockwidth\@undefined  \newdimen\stockwidth  \stockwidth\z@\fi
-\ifx\stockheight\@undefined \newdimen\stockheight \stockheight\z@\fi
+\expandafter\ifx\csname stockwidth\endcsname\relax
+    \newdimen\stockwidth
+    \stockwidth\paperwidth
+\fi
+\expandafter\ifx\csname stockheight\endcsname\relax
+    \newdimen\stockheight
+    \stockheight\paperheight
+\fi
 \newcount\CROP@index  \CROP@index\z@
 \newcommand*\CROP@driver{}
 \IfFileExists{graphics.sty}{%
@@ -1307,7 +1313,7 @@
 % \begin{macro}{\CROP@@ship}
 % \changes{v1.1}{1998/07/01}{kernel re-implemented completely new}%
 % \changes{v1.2}{1998/12/07}{`CROP@shiplist added, `CROP@@ship changed}
-% \changes{v1.8}{2002/??/??}{`lineskip added ... doh!}%
+% \changes{v1.8}{2002/??/??}{`base/lineskip/limit added ... doh!}%
 %
 % These macros redefine the \TeX\ primitive |\shipout| to insert the
 % contents of the macro |\CROP@@@ship| on top of the box which contains
@@ -1328,6 +1334,8 @@
 }
 \newcommand*\CROP@shiplist{%
     \lineskip\z@
+    \lineskiplimit\z@
+    \baselineskip\z@
     \CROP@@@ship
     \box\@cclv
 }
