@@ -113,7 +113,7 @@
 % \fi
 %
 %
-% \CheckSum{862}
+% \CheckSum{865}
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -849,7 +849,8 @@
         \advance\voffset-\paperheight
         \voffset.5\voffset
         \hoffset\stockwidth
-        \advance\hoffset-\paperwidth\hoffset.5\hoffset
+        \advance\hoffset-\paperwidth
+        \hoffset.5\hoffset
     \fi
 }
 %    \end{macrocode}
@@ -1681,11 +1682,13 @@
 % \begin{macro}{\CROP@init@pdftex}
 % \begin{macro}{\CROP@init@vtex}
 % \changes{v1.6}{2001/11/16}{driver options re-implemented}
+% \changes{v1.7}{2002/05/12}{nodriver option implemented}
 %    \begin{macrocode}
-\DeclareOption{vtex}{\renewcommand*\CROP@driver{vtex}}
-\DeclareOption{pdftex}{\renewcommand*\CROP@driver{pdftex}}
-\DeclareOption{pdflatex}{\renewcommand*\CROP@driver{pdftex}}
-\DeclareOption{dvips}{\renewcommand*\CROP@driver{dvips}}
+\DeclareOption{vtex}{\def\CROP@driver{vtex}}
+\DeclareOption{pdftex}{\def\CROP@driver{pdftex}}
+\DeclareOption{pdflatex}{\def\CROP@driver{pdftex}}
+\DeclareOption{dvips}{\def\CROP@driver{dvips}}
+\DeclareOption{nodriver}{\def\CROP@driver{}}
 \newcommand*\CROP@init@dvips{%
     \PackageInfo{crop}{using dvips graphics driver}%
     \AtBeginDocument{%    
