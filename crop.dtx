@@ -816,7 +816,7 @@
         \renewcommand*\set@page@color{%
             \global\let\CROP@pagecolor\current@color
         }%
-        \CROP@setmarkcolor{black}%
+        \CROP@defmarkcolor{black}%
     }%
     \let\CROP@needscolor\relax
 }{%
@@ -1176,7 +1176,7 @@
         \let\CROP@urc#3
         \let\CROP@llc#4
         \let\CROP@lrc#5
-%       \let\CROP@@@marks\CROP@marks        % \FIXME
+        \let\CROP@@@marks\CROP@marks
     }%
 }
 %    \end{macrocode}
@@ -1614,7 +1614,7 @@
     }%
 }
 \newcommand*\CROP@marks{%
-    \CROP@setmarkcolorxxxxx         % \FIXME
+    \CROP@setmarkcolor
     \CROP@user@b
     \CROP@ulc\null\hfill\CROP@@@info\CROP@upedge\hfill\null\CROP@urc
     \vfill
@@ -1622,7 +1622,7 @@
     \vfill
     \CROP@llc\null\hfill\CROP@loedge\hfill\null\CROP@lrc
 }
-\newcommand*\CROP@setmarkcolorxxxxx{%
+\newcommand*\CROP@setmarkcolor{%
     \let\current@color\CROP@markcolor
     \set@color
 }
@@ -1871,13 +1871,13 @@
 % switching commands.
 %
 %    \begin{macrocode}
-\newcommand*\CROP@setmarkcolor[1]{{%
+\newcommand*\CROP@defmarkcolor[1]{{%
     \def\set@color{\global\let\CROP@markcolor\current@color}%
     \color{#1}%
 }}
 \newcommand*\CROP@opt@color{%
     \CROP@needscolor
-    \expandafter\CROP@setmarkcolor\expandafter{\CROP@@}%
+    \expandafter\CROP@defmarkcolor\expandafter{\CROP@@}%
 }
 \newcommand*\CROP@drawstockcolor{%
     \ifx\CROP@stockcolor\@empty
@@ -1917,7 +1917,7 @@
 \newcommand*\CROP@opt@overlap{\let\CROP@overlap\CROP@@}
 \DeclareOption{invert}{%
     \CROP@invert{black}%
-    \let\CROP@setmarkcolorxxxxx\relax
+    \let\CROP@setmarkcolor\relax
 }
 \DeclareOption{notext}{%
     \CROP@invert{white}%
