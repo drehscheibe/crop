@@ -108,7 +108,7 @@
 % \fi
 %
 %
-% \CheckSum{836}
+% \CheckSum{866}
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -501,7 +501,7 @@
 % \begin{example}
 % |\documentclass{article}|\\
 % |\usepackage[cam,a4,center,dvips]{crop}|\\
-% |\usepackage{geometry}|
+% |\usepackage[dvips=false,pdftex=false,vtex=false]{geometry}|
 % \end{example}
 %
 % \indent
@@ -699,6 +699,7 @@
 % \begin{macro}{\CROP@includegraphics}
 % \begin{macro}{\CROP@driver}
 % \begin{macro}{\CROP@font}
+% \begin{macro}{\CROP@init}
 % The options \opt{graphics} and \opt{nographics} depend on the |graphics|
 % package, so we try to load it here. We don't complain now if it can't
 % be found, because we cannot say yet, if one of these options is used in
@@ -712,23 +713,30 @@
 %<*package>
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{crop}[2001/11/16 v1.6 cropmarks  (mf)]
-\ifx\stockwidth\@undefined  \newdimen\stockwidth  \stockwidth\z@  \fi
-\ifx\stockheight\@undefined \newdimen\stockheight \stockheight\z@ \fi
+\ifx\stockwidth\@undefined  \newdimen\stockwidth  \stockwidth\z@  \else\FIXME\fi
+\ifx\stockheight\@undefined \newdimen\stockheight \stockheight\z@ \else\FIXME\fi
 \newcount\CROP@index  \CROP@index\z@
-\newcommand*\CROP@includegraphics{%
-    \PackageError{crop}{Package file `graphics.sty' not found.}{The options
-  `nographics' and `graphics' require the graphics package.}}
+\newcommand*\CROP@Ginclude@graphics{%
+    \PackageError{crop}{%
+        Package file `graphics.sty' not found.
+    }{%
+        The options `nographics' and `graphics' require the graphics
+        package.
+    }%
+}
 \newcommand*\CROP@driver{}
 \IfFileExists{graphics.sty}{%
-  \RequirePackage{graphics}%
-  \let\CROP@includegraphics\includegraphics
-  \ifx\Gin@driver\@empty\else
-      \filename@parse{\Gin@driver}%
-      \edef\CROP@driver{\filename@base}%
-  \fi
+    \RequirePackage{graphics}%
+    \let\CROP@Ginclude@graphics\Ginclude@graphics
+    \ifx\Gin@driver\@empty\else
+        \filename@parse{\Gin@driver}%
+        \edef\CROP@driver{\filename@base}%
+    \fi
 }{}
 \newcommand*\CROP@font{}
+\newcommand*\CROP@init{}
 %    \end{macrocode}
+% \end{macro}
 % \end{macro}
 % \end{macro}
 % \end{macro}
@@ -754,7 +762,8 @@
 %    \begin{macrocode}
 \newcommand*\CROP@size[2]{\stockwidth#1 \stockheight#2 }
 \DeclareOption{landscape}{%
-  \def\CROP@size#1#2{\stockheight#1 \stockwidth#2 }}
+    \def\CROP@size#1#2{\stockheight#1 \stockwidth#2 }
+}
 \DeclareOption{a0}{\CROP@size{841truemm}{1189truemm}}
 \DeclareOption{a1}{\CROP@size{595truemm}{841truemm}}
 \DeclareOption{a2}{\CROP@size{420truemm}{595truemm}}
@@ -772,6 +781,10 @@
 \DeclareOption{letter}{\CROP@size{8.5truein}{11truein}}
 \DeclareOption{legal}{\CROP@size{8.5truein}{14truein}}
 \DeclareOption{executive}{\CROP@size{7.25truein}{10.5truein}}
+\newcommand\CROP@opt@stockwidth{\global\stockwidth\CROP@@}
+\newcommand\CROP@opt@stockheight{\global\stockheight\CROP@@}
+\let\CROP@opt@width\CROP@opt@stockwidth
+\let\CROP@opt@height\CROP@opt@stockheight
 %    \end{macrocode}
 % \end{macro}
 %
@@ -790,17 +803,20 @@
 %    \begin{macrocode}
 \DeclareOption{center}{\AtEndOfPackage{\CROP@center}}
 \newcommand*\CROP@center{%
-  \ifdim\stockwidth=\z@
-    \PackageError{crop}{no printing paper size selected}{%
-      you have to select a paper size before you can use %
-      the `center' option
-    }%
-  \else
-    \voffset\stockheight
-    \advance\voffset-\paperheight\voffset.5\voffset
-    \hoffset\stockwidth
-    \advance\hoffset-\paperwidth\hoffset.5\hoffset
-  \fi
+    \ifdim\stockwidth=\z@
+        \PackageError{crop}{%
+            no printing paper size selected
+        }{%
+            you have to select a paper size before you can use %
+            the `center' option
+        }%
+    \else
+        \voffset\stockheight
+        \advance\voffset-\paperheight
+        \voffset.5\voffset
+        \hoffset\stockwidth
+        \advance\hoffset-\paperwidth\hoffset.5\hoffset
+    \fi
 }
 %    \end{macrocode}
 % \end{macro}
@@ -836,7 +852,8 @@
 %
 %    \begin{macrocode}
 \newcommand*\crop[1][cam,noaxes]{%
-  \@for\CROP@@:=#1\do{\CROP@execopt\CROP@@}}
+    \@for\CROP@@:=#1\do{\CROP@execopt\CROP@@}%
+}
 %    \end{macrocode}
 % \end{macro}
 %
@@ -867,13 +884,20 @@
 %
 %    \begin{macrocode}
 \newcommand*\CROP@execopt[1]{%
-  \def\CROP@##1=##2=##3\@nil{\def\CROP@{##1}\def\CROP@@{##2}}%
-  \expandafter\CROP@#1==\@nil%
-  \@ifundefined{CROP@opt@\CROP@}%
-    {\PackageError{crop}{Requested option `#1' not provided}%
-    {Note that the `*center' options are obsolete. You have to
-     request\MessageBreak e.g. [a4,center] instead of [a4center].}}%
-    {\@nameuse{CROP@opt@\CROP@}}}
+    \def\CROP@##1=##2=##3\@nil{\def\CROP@{##1}\def\CROP@@{##2}}%
+    \expandafter\CROP@#1==\@nil%
+    \@ifundefined{CROP@opt@\CROP@}{%
+        \PackageError{crop}{%
+            Requested option `#1' not provided
+        }{%
+            Note that the `*center' options are obsolete. You have to
+            request\MessageBreak e.g. [a4,center] instead of
+            [a4center].
+        }%
+    }{%
+        \@nameuse{CROP@opt@\CROP@}%
+    }%
+}
 %    \end{macrocode}
 % \end{macro}
 %
@@ -892,13 +916,15 @@
 %
 %    \begin{macrocode}
 \newcommand*\cropdef[6][\CROP@@info]{%
-  \@namedef{CROP@opt@#6}{%
-    \CROP@on
-    \def\CROP@info{#1}%
-    \let\CROP@ulc#2
-    \let\CROP@urc#3
-    \let\CROP@llc#4
-    \let\CROP@lrc#5}}
+    \@namedef{CROP@opt@#6}{%
+        \CROP@on
+        \def\CROP@info{#1}%
+        \let\CROP@ulc#2
+        \let\CROP@urc#3
+        \let\CROP@llc#4
+        \let\CROP@lrc#5
+    }%
+}
 %    \end{macrocode}
 % \end{macro}
 %
@@ -920,19 +946,33 @@
 %
 %    \begin{macrocode}
 \newcommand*\CROP@@vaxis{%
-  \hfil
-  \setbox\z@\hbox{\vtop{\hrule\@height12\p@\@depth-2\p@\@width.4\p@
-    \vskip\paperheight\vskip4\p@
-    \hrule\@height\z@\@depth10\p@\@width.4\p@}}%
-  \ht\z@\z@ \dp\z@\z@ \box\z@
-  \hfil}
-\newcommand*\CROP@@haxis{%
-  \vfil
-  \hb@xt@\paperwidth{%
-    \llap{\vrule\@height.2\p@\@depth.2\p@\@width10\p@\hskip2\p@}%
     \hfil
-    \rlap{\hskip2\p@\vrule\@height.2\p@\@depth.2\p@\@width10\p@}}%
-  \vfil}
+    \setbox\z@\hbox{%
+        \vtop{%
+            \hrule\@height12\p@\@depth-2\p@\@width.4\p@
+            \vskip\paperheight
+            \vskip4\p@
+            \hrule\@height\z@\@depth10\p@\@width.4\p@
+        }%
+    }%
+    \ht\z@\z@
+    \dp\z@\z@
+    \box\z@
+    \hfil
+}
+\newcommand*\CROP@@haxis{%
+    \vfil
+    \hb@xt@\paperwidth{%
+        \llap{%
+            \vrule\@height.2\p@\@depth.2\p@\@width10\p@\hskip2\p@
+        }%
+        \hfil
+        \rlap{%
+            \hskip2\p@\vrule\@height.2\p@\@depth.2\p@\@width10\p@
+        }%
+    }%
+    \vfil
+}
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
@@ -955,16 +995,35 @@
 %
 %    \begin{macrocode}
 \newcommand*\CROP@time{}
-{\count@\time \divide\time60 \count\@ne\time
-\multiply\time60 \advance\count@-\time
-\xdef\CROP@time{\the\count\@ne:\two@digits{\count@}}}
-\newcommand*\CROP@@info{{\global\advance\CROP@index\@ne
-  \def\x{\discretionary{}{}{\hbox{\kern.5em---\kern.5em}}}%
-  \hskip10\p@\advance\paperwidth-20\p@
-  \raise8\p@\vbox to\z@{\centering\hsize\paperwidth\vss
-  \normalfont\let\protect\relax\CROP@font{%
-  ``\jobname''\x\the\year/\the\month/\the\day\x\CROP@time\x
-  page\kern.5em\thepage\x\#\the\CROP@index\strut}}}}
+\bgroup
+    \count@\time
+    \divide\time60
+    \count\@ne\time
+    \multiply\time60
+    \advance\count@-\time
+    \xdef\CROP@time{\the\count\@ne:\two@digits{\count@}}
+\egroup
+\newcommand*\CROP@@info{{%
+    \global\advance\CROP@index\@ne
+    \def\x{\discretionary{}{}{\hbox{\kern.5em---\kern.5em}}}%
+    \hskip10\p@
+    \advance\paperwidth-20\p@
+    \raise8\p@\vbox to\z@{%
+        \centering
+        \hsize\paperwidth
+        \vss
+        \normalfont
+        \let\protect\relax
+        \CROP@font{%
+            ``\jobname''\x
+            \the\year/\the\month/\the\day\x
+            \CROP@time\x
+            page\kern.5em\thepage\x
+            \#\the\CROP@index
+            \strut
+        }%
+    }%
+}}
 \newcommand*\CROP@opt@font{\let\CROP@font\CROP@@}
 %    \end{macrocode}
 % \end{macro}
@@ -988,14 +1047,16 @@
 % The \opt{cam} mode corner mark for the upper left corner.
 %    \begin{macrocode}
 \newcommand*\CROP@@ulc{%
-  \begin{picture}(0,0)\unitlength\p@\thinlines
-  \put(-30,0){\circle{10}}
-  \put(-30,-5){\line(0,1){10}}
-  \put(-35,0){\line(1,0){30}}
-  \put(0,30){\circle{10}}
-  \put(-5,30){\line(1,0){10}}
-  \put(0,35){\line(0,-1){30}}
-  \end{picture}}
+    \begin{picture}(0,0)
+        \unitlength\p@\thinlines
+        \put(-30,0){\circle{10}}
+        \put(-30,-5){\line(0,1){10}}
+        \put(-35,0){\line(1,0){30}}
+        \put(0,30){\circle{10}}
+        \put(-5,30){\line(1,0){10}}
+        \put(0,35){\line(0,-1){30}}
+    \end{picture}%
+}
 %    \end{macrocode}
 % \end{macro}
 %
@@ -1012,14 +1073,16 @@
 %
 %    \begin{macrocode}
 \newcommand*\CROP@@urc{%
-  \begin{picture}(0,0)\unitlength\p@\thinlines
-  \put(30,0){\circle{10}}
-  \put(30,-5){\line(0,1){10}}
-  \put(35,0){\line(-1,0){30}}
-  \put(0,30){\circle{10}}
-  \put(-5,30){\line(1,0){10}}
-  \put(0,35){\line(0,-1){30}}
-  \end{picture}}
+    \begin{picture}(0,0)
+        \unitlength\p@\thinlines
+        \put(30,0){\circle{10}}
+        \put(30,-5){\line(0,1){10}}
+        \put(35,0){\line(-1,0){30}}
+        \put(0,30){\circle{10}}
+        \put(-5,30){\line(1,0){10}}
+        \put(0,35){\line(0,-1){30}}
+    \end{picture}%
+}
 %    \end{macrocode}
 % \end{macro}
 %
@@ -1036,14 +1099,16 @@
 %
 %    \begin{macrocode}
 \newcommand*\CROP@@llc{%
-  \begin{picture}(0,0)\unitlength\p@\thinlines
-  \put(-30,0){\circle{10}}
-  \put(-30,-5){\line(0,1){10}}
-  \put(-35,0){\line(1,0){30}}
-  \put(0,-30){\circle{10}}
-  \put(-5,-30){\line(1,0){10}}
-  \put(0,-35){\line(0,1){30}}
-  \end{picture}}
+    \begin{picture}(0,0)
+        \unitlength\p@\thinlines
+        \put(-30,0){\circle{10}}
+        \put(-30,-5){\line(0,1){10}}
+        \put(-35,0){\line(1,0){30}}
+        \put(0,-30){\circle{10}}
+        \put(-5,-30){\line(1,0){10}}
+        \put(0,-35){\line(0,1){30}}
+    \end{picture}%
+}
 %    \end{macrocode}
 % \end{macro}
 %
@@ -1060,14 +1125,16 @@
 %
 %    \begin{macrocode}
 \newcommand*\CROP@@lrc{%
-  \begin{picture}(0,0)\unitlength\p@\thinlines
-  \put(30,0){\circle{10}}
-  \put(30,-5){\line(0,1){10}}
-  \put(35,0){\line(-1,0){30}}
-  \put(0,-30){\circle{10}}
-  \put(-5,-30){\line(1,0){10}}
-  \put(0,-35){\line(0,1){30}}
-  \end{picture}}
+    \begin{picture}(0,0)
+        \unitlength\p@\thinlines
+        \put(30,0){\circle{10}}
+        \put(30,-5){\line(0,1){10}}
+        \put(35,0){\line(-1,0){30}}
+        \put(0,-30){\circle{10}}
+        \put(-5,-30){\line(1,0){10}}
+        \put(0,-35){\line(0,1){30}}
+    \end{picture}%
+}
 %    \end{macrocode}
 % \end{macro}
 %
@@ -1100,10 +1167,12 @@
 %
 %    \begin{macrocode}
 \newcommand*\CROP@@cross{%
-  \begin{picture}(0,0)\unitlength1in\thinlines
-    \put(-1,0){\line(1,0){2}}
-    \put(0,-1){\line(0,1){2}}
-  \end{picture}}
+    \begin{picture}(0,0)
+        \unitlength1in\thinlines
+        \put(-1,0){\line(1,0){2}}
+        \put(0,-1){\line(0,1){2}}
+    \end{picture}%
+}
 %    \end{macrocode}
 % \end{macro}
 %
@@ -1141,12 +1210,14 @@
 %
 %    \begin{macrocode}
 \newcommand*\CROP@@frame{%
-  \begin{picture}(0,0)\unitlength\p@\thinlines
-    \put(0,0){\line(1,0){\strip@pt\paperwidth}}
-    \put(0,0){\line(0,-1){\strip@pt\paperheight}}
-    \put(\strip@pt\paperwidth,0){\line(0,-1){\strip@pt\paperheight}}
-    \put(0,-\strip@pt\paperheight){\line(1,0){\strip@pt\paperwidth}}
-  \end{picture}}
+    \begin{picture}(0,0)
+        \unitlength\p@\thinlines
+        \put(0,0){\line(1,0){\strip@pt\paperwidth}}
+        \put(0,0){\line(0,-1){\strip@pt\paperheight}}
+        \put(\strip@pt\paperwidth,0){\line(0,-1){\strip@pt\paperheight}}
+        \put(0,-\strip@pt\paperheight){\line(1,0){\strip@pt\paperwidth}}
+    \end{picture}%
+}
 %    \end{macrocode}
 % \end{macro}
 %
@@ -1191,11 +1262,23 @@
 %
 %    \begin{macrocode}
 \let\CROP@shipout\shipout
-\renewcommand*\shipout{\afterassignment\CROP@ship\setbox\@cclv=}
+\renewcommand*\shipout{
+    \CROP@init
+    \afterassignment\CROP@ship
+    \setbox\@cclv=%
+}
 \newcommand*\CROP@ship{%
-  \ifvoid\@cclv\expandafter\aftergroup\fi\CROP@@ship}
-\newcommand*\CROP@shiplist{\CROP@@@ship\box\@cclv}
-\newcommand*\CROP@@ship{\CROP@shipout\vbox{\CROP@shiplist}}
+    \ifvoid\@cclv
+        \expandafter\aftergroup
+    \fi
+    \CROP@@ship
+}
+\newcommand*\CROP@shiplist{%
+    \CROP@@@ship\box\@cclv
+}
+\newcommand*\CROP@@ship{%
+    \CROP@shipout\vbox{\CROP@shiplist}%
+}
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
@@ -1216,10 +1299,12 @@
 % which gets every ready page as argument and may change it somehow. 
 %
 %    \begin{macrocode}
-\newcommand*\CROP@shipadd[1]{\begingroup
-  \toks@\expandafter{\expandafter#1\expandafter{\CROP@shiplist}}%
-  \xdef\CROP@shiplist{\the\toks@}%
-  \endgroup}
+\newcommand*\CROP@shipadd[1]{%
+    \bgroup
+        \toks@\expandafter{\expandafter#1\expandafter{\CROP@shiplist}}%
+        \xdef\CROP@shiplist{\the\toks@}%
+    \egroup
+}
 %    \end{macrocode}
 % \end{macro}
 %
@@ -1244,20 +1329,37 @@
 % (see the options \opt{mount1} and \opt{mount2}).
 %
 %    \begin{macrocode}
-\newcommand*\CROP@kernel{\color@setgroup
-  \vbox to\z@{\vskip\CROP@vorigin
-    \hb@xt@\z@{\hskip\CROP@horigin
-      \CROP@every
-      \vbox to\paperheight{%
-        \hb@xt@\paperwidth{%
-          \setbox\z@\hbox{\normalfont\CROP@@@info}%
-          \ht\z@\z@ \dp\z@\z@ \wd\z@\z@ \box\z@
-          \CROP@ulc\CROP@uedge\CROP@urc}%
-        \CROP@ledge
-        \hb@xt@\paperwidth{%
-          \CROP@llc\hfil\CROP@lrc}}%
-    \hss}%
-  \vss}\color@endgroup}
+\newcommand*\CROP@kernel{%
+    \color@setgroup
+    \vbox to\z@{%
+        \vskip\CROP@vorigin
+        \hb@xt@\z@{%
+            \hskip\CROP@horigin
+            \CROP@every
+            \vbox to\paperheight{%
+                \hb@xt@\paperwidth{%
+                    \setbox\z@\hbox{\normalfont\CROP@@@info}%
+                    \ht\z@\z@
+                    \dp\z@\z@
+                    \wd\z@\z@
+                    \box\z@
+                    \CROP@ulc
+                    \CROP@uedge
+                    \CROP@urc
+                }%
+                \CROP@ledge
+                \hb@xt@\paperwidth{%
+                    \CROP@llc
+                    \hfil
+                    \CROP@lrc
+                }%
+            }%
+            \hss
+        }%
+        \vss
+    }%
+    \color@endgroup
+}
 \newcommand*\CROP@opt@horigin{\let\CROP@horigin\CROP@@}
 \newcommand*\CROP@opt@vorigin{\let\CROP@vorigin\CROP@@}
 %    \end{macrocode}
@@ -1282,6 +1384,12 @@
 \newcommand*\CROP@@@ship{}
 \newcommand*\CROP@on{\let\CROP@@@ship\CROP@kernel}
 \newcommand*\CROP@opt@off{\let\CROP@@@ship\relax}
+\newcommand*\CROP@opt@odd{%
+    \def\CROP@@@ship{\ifodd\c@page\CROP@kernel\fi}%
+}
+\newcommand*\CROP@opt@even{%
+    \def\CROP@@@ship{\ifodd\c@page\else\CROP@kernel\fi}%
+}
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
@@ -1309,11 +1417,13 @@
 \newcommand*\CROP@opt@info{\def\CROP@@@info{\CROP@info}}
 \newcommand*\CROP@opt@noinfo{\let\CROP@@@info\relax}
 \newcommand*\CROP@opt@axes{%
-  \let\CROP@uedge\CROP@@vaxis
-  \let\CROP@ledge\CROP@@haxis}
+    \let\CROP@uedge\CROP@@vaxis
+    \let\CROP@ledge\CROP@@haxis
+}
 \newcommand*\CROP@opt@noaxes{%
-  \let\CROP@uedge\hfil
-  \let\CROP@ledge\vfil}
+    \let\CROP@uedge\hfil
+    \let\CROP@ledge\vfil
+}
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
@@ -1342,18 +1452,25 @@
 % for redefinitions.
 %
 %    \begin{macrocode}
-\expandafter\newcommand\expandafter*\csname CROP@opt@mount1\endcsname
-  {\let\CROP@every\relax}
+\expandafter\newcommand\expandafter*\csname CROP@opt@mount1\endcsname{%
+    \let\CROP@every\relax
+}
 \newcount\CROP@offset
-\expandafter\newcommand\expandafter*\csname CROP@opt@mount2\endcsname
-  {\CROP@offset=\ifx\CROP@@\empty\z@\else\CROP@@\fi
-  \def\CROP@every{\count@\c@page
-    \advance\count@\CROP@offset
-    \ifodd\count@
-      \let\CROP@ulc\relax\let\CROP@llc\relax
-    \else
-      \let\CROP@urc\relax\let\CROP@lrc\relax\let\CROP@info\relax
-    \fi}}
+\expandafter\newcommand\expandafter*\csname CROP@opt@mount2\endcsname{%
+    \CROP@offset=\ifx\CROP@@\empty\z@\else\CROP@@\fi
+    \def\CROP@every{%
+        \count@\c@page
+        \advance\count@\CROP@offset
+        \ifodd\count@
+            \let\CROP@ulc\relax
+            \let\CROP@llc\relax
+        \else
+            \let\CROP@urc\relax
+            \let\CROP@lrc\relax
+            \let\CROP@info\relax
+        \fi
+    }%
+}
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
@@ -1384,32 +1501,57 @@
 %
 %    \begin{macrocode}
 \DeclareOption{mirror}{%
-  \AtBeginDocument{\CROP@shipadd\CROP@reflect\CROP@setps}}
+    \AtBeginDocument{\CROP@shipadd\CROP@reflect\CROP@setps}
+}
 \newcommand*\CROP@reflect[1]{%
-  \vbox to\z@{\vskip\CROP@vorigin\hb@xt@\z@{\hskip\CROP@horigin
-    \CROP@ps{gsave currentpoint}\kern\paperwidth
-    \CROP@ps{currentpoint}\hss}\vss}%
-  \CROP@ps{translate -1 1 scale neg exch neg exch translate}%
-  \vbox{#1}%
-  \CROP@ps{grestore}}
+    \vbox to\z@{%
+        \vskip\CROP@vorigin
+        \hb@xt@\z@{
+            \hskip\CROP@horigin
+            \CROP@ps{gsave currentpoint}%
+            \kern\paperwidth
+            \CROP@ps{currentpoint}%
+            \hss
+        }%
+        \vss
+    }%
+    \CROP@ps{translate -1 1 scale neg exch neg exch translate}%
+    \vbox{#1}%
+    \CROP@ps{grestore}%
+}
 \DeclareOption{rotate}{%
-  \AtBeginDocument{\CROP@shipadd\CROP@rotate\CROP@setps}}
+    \AtBeginDocument{\CROP@shipadd\CROP@rotate\CROP@setps}
+}
 \newcommand*\CROP@rotate[1]{%
-  \hb@xt@\z@{\hskip\CROP@horigin\vbox to\z@{\vskip\CROP@vorigin
-    \CROP@ps{gsave currentpoint}\kern\paperheight
-    \hb@xt@\z@{\kern\paperwidth\CROP@ps{currentpoint}\hss}\vss}\hss}%
-  \CROP@ps{translate 180 rotate neg exch neg exch translate}%
-  \vbox{#1}%
-  \CROP@ps{grestore}}
+    \hb@xt@\z@{%
+        \hskip\CROP@horigin
+        \vbox to\z@{%
+            \vskip\CROP@vorigin
+            \CROP@ps{gsave currentpoint}%
+            \kern\paperheight
+            \hb@xt@\z@{%
+                \kern\paperwidth
+                \CROP@ps{currentpoint}%
+                \hss
+            }%
+            \vss
+        }%
+        \hss
+    }%
+    \CROP@ps{translate 180 rotate neg exch neg exch translate}%
+    \vbox{#1}%
+    \CROP@ps{grestore}%
+}
 \newcommand*\CROP@setps{%
-  \ifx\Gin@PS@raw\@undefined
-    \PackageWarning{crop}{internal PostScript interface used}%
-    \newcommand*\CROP@ps[1]{\special{ps: ##1}}%
-  \else
-    \PackageInfo{crop}{graphics/color PostScript interface used}{}%
-    \let\CROP@ps\Gin@PS@raw
-  \fi
-  \let\CROP@setps\relax}
+    \ifx\Gin@PS@raw\@undefined
+        \PackageWarning{crop}{internal PostScript interface used}%
+        \newcommand*\CROP@ps[1]{\special{ps: ##1}}%
+    \else
+        \PackageInfo{crop}{graphics/color PostScript interface used}{}%
+        \let\CROP@ps\Gin@PS@raw
+    \fi
+    \let\CROP@setps\relax
+}
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
@@ -1431,25 +1573,30 @@
 %
 %    \begin{macrocode}
 \DeclareOption{invert}{%
-  \AtEndOfPackage{\RequirePackage{color}}%
-  \AtBeginDocument{\CROP@invert{black}}}
+    \AtEndOfPackage{\RequirePackage{color}}
+    \AtBeginDocument{\CROP@invert{black}}
+}
 \newcommand*\CROP@invert[1]{%
-  \ifx\color\@undefined
-    \PackageWarning{crop}%
-      {The `color' package could not be loaded, so I'm\MessageBreak
-       ignoring the `invert' and `notext' option}%
-  \else
-    \pagecolor{#1}\color{white}%
-    \newcommand\CROP@color[2][]{}%
-    \DeclareRobustCommand\color{\CROP@color}%
-    \DeclareRobustCommand\pagecolor{\CROP@color}%
-    \DeclareRobustCommand\textcolor{\CROP@color}%
-    \let\normalcolor\relax
-  \fi
-  \let\CROP@invert\relax}
+    \ifx\color\@undefined
+        \PackageWarning{crop}{%
+            The `color' package could not be loaded, so I'm\MessageBreak
+            ignoring the `invert' and `notext' option
+        }%
+    \else
+        \pagecolor{#1}%
+        \color{white}%
+        \newcommand\CROP@color[2][]{}%
+        \DeclareRobustCommand\color{\CROP@color}%
+        \DeclareRobustCommand\pagecolor{\CROP@color}%
+        \DeclareRobustCommand\textcolor{\CROP@color}%
+        \let\normalcolor\relax
+    \fi
+    \let\CROP@invert\relax
+}
 \DeclareOption{notext}{%
-  \AtEndOfPackage{\RequirePackage{color}}%
-  \AtBeginDocument{\CROP@invert{white}}}
+    \AtEndOfPackage{\RequirePackage{color}}
+    \AtBeginDocument{\CROP@invert{white}}
+}
 %    \end{macrocode}
 % \end{macro}
 %
@@ -1465,7 +1612,6 @@
 %
 % \begin{macro}{\CROP@opt@nographics}
 % \begin{macro}{\CROP@opt@graphics}
-% \begin{macro}{\CROP@incgrph}
 % \changes{v1.5}{2001/10/07}{options `graphics' and `nographics' added}
 % The \opt{nographics} option redefines the |\includegraphics| command from
 % the |graphics| package, so that it ignores all |\special| commands within.
@@ -1475,20 +1621,17 @@
 % The \opt{graphics} option re-enables graphics.
 %
 %    \begin{macrocode}
-\newcommand*\CROP@incgrph{}
 \newcommand*\CROP@opt@nographics{%
-  \def\includegraphics##1##{\bgroup
-    \let\special\@gobble
-    \CROP@incgrph{##1}
-  }%  
-  \def\CROP@incgrph##1##2{%
-    \CROP@includegraphics##1{##2}\egroup
-  }%
-}
+    \renewcommand*\Ginclude@graphics[1]{%
+        \phantom{%
+            \CROP@Ginclude@graphics{##1}%
+        }%
+    }%
+}%
 \newcommand*\CROP@opt@graphics{%
-  \let\includegraphics\CROP@includegraphics}
+    \let\Ginclude@graphics\CROP@Ginclude@graphics
+}
 %    \end{macrocode}
-% \end{macro}
 % \end{macro}
 % \end{macro}
 %
@@ -1510,38 +1653,42 @@
 \DeclareOption{pdflatex}{\renewcommand*\CROP@driver{pdftex}}
 \DeclareOption{dvips}{\renewcommand*\CROP@driver{dvips}}
 \newcommand*\CROP@init@dvips{%
-  \PackageInfo{crop}{using dvips graphics driver}%
-  \ifdim\stockwidth=\z@\else
-    \special{papersize=\the\stockwidth,\the\stockheight}%
-  \fi
+    \PackageInfo{crop}{using dvips graphics driver}%
+    \AtBeginDocument{%    
+        \ifdim\stockwidth=\z@
+        \else
+            \special{papersize=\the\stockwidth,\the\stockheight}%
+        \fi
+    }%
 }
 \newcommand*\CROP@init@pdftex{%
-  \PackageInfo{crop}{using pdf(la)tex graphics driver}%
-  \ifx\@undefined\pdfpagewidth
-    \PackageWarning{crop}{implicit or explicit pdf(la)tex option
-    ignored:^^JThis isn't pdftex!}%
-  \else
-    \ifdim\stockwidth=\z@\else
-      \pdfpagewidth\stockwidth
-      \pdfpageheight\stockheight
+    \PackageInfo{crop}{using pdf(la)tex graphics driver}%
+    \ifx\@undefined\pdfpagewidth
+        \PackageWarning{crop}{implicit or explicit pdf(la)tex option
+        ignored:^^JThis isn't pdftex!}%
+    \else
+        \AtBeginDocument{%
+            \ifdim\stockwidth=\z@
+            \else
+                \pdfpagewidth\stockwidth
+                \pdfpageheight\stockheight
+            \fi
+        }%
     \fi
-    \renewcommand*\CROP@opt@nographics{%
-      \renewcommand\includegraphics[2][]{%
-        \phantom{\CROP@includegraphics[####1]{####2}}
-      }%
-    }%
-  \fi
 }
 \newcommand*\CROP@init@vtex{%
-  \PackageInfo{crop}{using vtex graphics driver}%
-  \ifdim\stockwidth=\z@\else
-    \ifx\@undefined\mediawidth
-      \PackageWarning{crop}{implicit or explicit vtex option
-      ignored:^^JThis isn't vtex!}%
-    \else
-      \mediawidth\stockwidth \mediaheight\stockheight
+    \PackageInfo{crop}{using vtex graphics driver}%
+    \ifdim\stockwidth=\z@\else
+        \ifx\@undefined\mediawidth
+            \PackageWarning{crop}{implicit or explicit vtex option
+            ignored:^^JThis isn't vtex!}%
+        \else
+            \AtBeginDocument{%
+                \mediawidth\stockwidth
+                \mediaheight\stockheight
+            }%
+        \fi
     \fi
-  \fi
 }
 %    \end{macrocode}
 % \end{macro}
@@ -1564,25 +1711,35 @@
 % releases. Finally they might be dropped altogether.
 %
 %    \begin{macrocode}
-\newcommand*\CROP@compat{\PackageWarning{crop}{center options like
-  `a4center' are obsolete and only\MessageBreak provided for
-  compatibility reasons. They will be removed\MessageBreak in future
-  releases. Use the new options `a4'\MessageBreak and
-  `center' separately instead.}}
+\newcommand*\CROP@compat{%
+    \PackageWarning{crop}{%
+        center options like `a4center' are obsolete and
+        only\MessageBreak provided for compatibility reasons. They will
+        be removed\MessageBreak in future releases. Use the new options
+        `a4'\MessageBreak and `center' separately instead.
+    }
+}
 \DeclareOption{landscapecenter}{%
-  \CROP@compat\ExecuteOptions{landscape,center}}
+    \CROP@compat\ExecuteOptions{landscape,center}
+}
 \DeclareOption{a4center}{%
-  \CROP@compat\ExecuteOptions{a4,center}}
+    \CROP@compat\ExecuteOptions{a4,center}
+}
 \DeclareOption{a5center}{%
-  \CROP@compat\ExecuteOptions{a5,center}}
+    \CROP@compat\ExecuteOptions{a5,center}
+}
 \DeclareOption{b5center}{%
-  \CROP@compat\ExecuteOptions{b5,center}}
+    \CROP@compat\ExecuteOptions{b5,center}
+}
 \DeclareOption{lettercenter}{%
-  \CROP@compat\ExecuteOptions{letter,center}}
+    \CROP@compat\ExecuteOptions{letter,center}
+}
 \DeclareOption{legalcenter}{%
-  \CROP@compat\ExecuteOptions{legal,center}}
+    \CROP@compat\ExecuteOptions{legal,center}
+}
 \DeclareOption{executivecenter}{%
-  \CROP@compat\ExecuteOptions{executive,center}}
+    \CROP@compat\ExecuteOptions{executive,center}
+}
 %    \end{macrocode}
 % \end{macro}
 %
@@ -1615,8 +1772,9 @@
 \newcommand*\CROP@horigin{-1truein}
 \newcommand*\CROP@vorigin{-1truein}
 \crop[off,noaxes,info,mount1]
-\InputIfFileExists{crop.cfg}%
-  {\PackageInfo{crop}{Local config file crop.cfg used}}{}
+\InputIfFileExists{crop.cfg}{%
+    \PackageInfo{crop}{Local config file crop.cfg used}
+}{}
 \ProcessOptions
 \AtEndOfPackage{\@nameuse{CROP@init@\CROP@driver}}
 \endinput
