@@ -1,5 +1,5 @@
 % \iffalse
-%% File: crop.dtx   Copyright (C) 1998--2001   Melchior FRANZ
+%% File: crop.dtx  Copyright (C) 1998, 1999, 2000, 2001 Melchior FRANZ
 %% $Id$
 %<*preamble>
 %
@@ -163,7 +163,9 @@
 %   some of the improvements were suggested by Cpt. Leszek Flis}
 %
 % \changes{v1.6}{2001/11/16}{font option added; dvips/pdftex/vtex options
-%   changed; nographics enabled for pdftex}
+%   changed; nographics enabled for pdftex; fixed a nasty bug that
+%	  disallowed setting the physical paper size in the config file -- thanks
+%   to Stefan \textsc{Becuwe} for reporting this.}
 %
 %
 %
@@ -186,6 +188,9 @@
 % \end{abstract}
 %
 %
+%
+%
+%
 % {\setlength\parskip{0pt}\tableofcontents}
 % \addtocontents{toc}{\protect\begin{multicols}{2}}
 %
@@ -200,6 +205,9 @@
 % For trimming a whole paper stack or ligning up the single pages on
 % printing plates for photographical duplication a set of corner marks
 % is required.
+%
+%
+%
 %
 %
 % \section{How to use the package}
@@ -233,13 +241,17 @@
 %    to do with the standard |landscape| option.
 %
 % \changes{v1.5}{2001/10/07}{options `dvips', `pdftex' and `vtex' added}%
-% \item[\sffamily dvips, pdftex, vtex]---
+% \changes{v1.6}{2001/11/16}{option `pdflatex' added}%
+% \item[\sffamily dvips, pdftex, pdflatex, vtex]---
 %    If you are working with |dvips|, |pdftex| or |vtex| you may want to pass the
 %    dimensions of the paper you are planning to print on to the respective
 %    program. Especially viewer programs like |gs| or |gv| make use of that
 %    \emph{bounding box} information.
 %    This requires, of course, that you also choose one of the paper size
 %    options mentioned above (e.\,g.~|[letter,dvips]|). Furthermore, the 
+%    \opt{pdftex} option is necessary to make the \opt{(no)graphics} options
+%    work together with the |pdftex| program. \opt{pdflatex} is a synonym for
+%    \opt{pdftex}.
 %
 % \changes{v1.2}{1998/12/07}{mirror option added}
 % \item[\sffamily mirror]
@@ -273,6 +285,8 @@
 %    \opt{graphics} on page~\pageref{graphics} for an explanation.
 %    This option is ignored after an \opt{invert} option request.
 % \end{labeling}
+%
+%
 %
 %
 %
@@ -489,18 +503,24 @@
 % \begin{example}
 % |\documentclass{article}|\\
 % |\usepackage[cam,a4,center,dvips]{crop}|\\
-% |\usepackage{geometry}|\\
+% |\usepackage{geometry}|
+% \end{example}
 %
+% \indent
+% \begin{example}
 % |\geometry{%|\\
 % |   paperwidth=4.71875in,|\\
 % |   paperheight=4.75in,|\\
 % |   margin=2em,|\\
 % |   bottom=1.5em,|\\
-% |   nohead}|\\
+% |   nohead}|
+% \end{example}
 %
+% \indent
+% \begin{example}
 % |\begin{document}|\\
 % |...|\\
-% |\end{document}|\\
+% |\end{document}|
 % \end{example}
 %
 % Note that the geometry parameters can also be stated as options to
@@ -654,7 +674,7 @@
 % |\@ifundefined|, |\@height|, |\@depth|, |\filename@base|
 % |\@width|, |\z@|, |\@ne|, |\z@skip|, |\p@|,
 % |\c@page|, |\@namedef|, |\@nameuse|, |\strip@pt|, |\two@digits|, 
-% |\count@|, |\dimen@|, |\@for|, |\@empty| and |\@undefined|, 
+% |\count@|, |\dimen@|, |\@for|, |\@empty|, |\@gobble| and |\@undefined|, 
 % % all of which are expected to keep their current meaning in future
 % \LaTeXe\ releases. The \texttt{crop} package will, however, be supported 
 % at least for some years, so you needn't worry about it.
@@ -664,18 +684,23 @@
 %
 %
 %
+%
+%
 % \section{The macros}
 %
 % \subsection{Preamble}
 %
 % \begin{macro}{\CROP@includegraphics}
+% \begin{macro}{\CROP@driver}
 % \begin{macro}{\CROP@font}
 % The options \opt{graphics} and \opt{nographics} depend on the |graphics|
 % package, so we try to load it here. We don't complain now if it can't
 % be found, because we cannot say yet, if one of these options is used in
-% the document at all. Therefore we just prepare an error message for eventual
-% later use. The |\CROP@font| command is by default empty and can be
-% used to change the font for the page info line.
+% the document at all. Then we try to be clever and look if there's
+% a device dependent graphics driver already loaded, that we can use.
+% This information can, of course, be overridden by the driver options.
+% The |\CROP@font| macr is by default empty and can be changed
+% via the \opt{font} option.
 %
 %    \begin{macrocode}
 %<*package>
@@ -701,13 +726,16 @@
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
+% \end{macro}
+%
+%
+%
 %
 %
 %
 % \subsection{Size options}
 % \changes{v1.3}{1999/03/07}{the center options are processed `AtBeginDocument}
 %
-% \begin{macro}{\CROP@checksize}
 % \begin{macro}{\CROP@size}
 % These options set different standard printing paper sizes, which
 % are needed for centering and as hint for the |dvips|, |pdftex| or |vtex| program.
@@ -738,13 +766,14 @@
 \DeclareOption{executive}{\CROP@size{7.25truein}{10.5truein}}
 %    \end{macrocode}
 % \end{macro}
-% \end{macro}
 %
 %
 %
-% The first option sets |\voffset| and |\hoffset| so that the document
-% pages are centered on the printing paper sheet. The other options
-% just pass the paper dimensions to the respective programs.
+%
+%
+% \begin{macro}{\CROP@center}
+% The \opt{center} option sets |\voffset| and |\hoffset| so that the document
+% pages are centered on the printing paper sheet.
 %
 %    \begin{macrocode}
 \DeclareOption{center}{\AtEndOfPackage{\CROP@center}}
@@ -762,6 +791,10 @@
   \fi
 }
 %    \end{macrocode}
+% \end{macro}
+%
+%
+%
 %
 %
 %
@@ -774,6 +807,8 @@
 %    \end{macrocode}
 %
 %
+%
+%
 % \begin{macro}{\crop}
 % The |\crop| macro allows runtime option requests. Every argument of
 % the optional argument list is passed to the macro |\CROP@execopt|.
@@ -784,6 +819,8 @@
   \@for\CROP@@:=#1\do{\CROP@execopt\CROP@@}}
 %    \end{macrocode}
 % \end{macro}
+%
+%
 %
 %
 %
@@ -818,6 +855,8 @@
 %
 %
 %
+%
+%
 % \begin{macro}{\cropdef}
 % \changes{v1.1a}{1998/10/20}{`CROP@info is `def'ed now}%
 % The |\cropdef| macro defines a mode switch (see section
@@ -834,6 +873,8 @@
     \let\CROP@lrc#5}}
 %    \end{macrocode}
 % \end{macro}
+%
+%
 %
 %
 %
@@ -866,13 +907,15 @@
 %
 %
 %
+%
+%
 % \begin{macro}{\CROP@time}
 % \begin{macro}{\CROP@@info}
 % This macro prints the jobname, the current date and time, the page number
 % and an index number at the top of the page. 
 % \changes{v1.3}{1999/03/07}{killed `uppercase; (devotion to LINUX)} 
 % \changes{v1.5}{2001/10/07}{complete rewrite: time and line breaking added} 
-% \changes{v1.6}{????/??/??}{font option added}
+% \changes{v1.6}{2001/11/16}{font option added}
 %
 %    \begin{macrocode}
 \newcommand*\CROP@time{}
@@ -890,6 +933,8 @@
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
+%
+%
 %
 %
 %
@@ -916,6 +961,8 @@
 % \end{macro}
 %
 %
+%
+%
 % \begin{macro}{\CROP@@urc}
 % The \opt{cam} mode corner mark for the upper right corner.
 %
@@ -932,6 +979,8 @@
 %    \end{macrocode}
 % \end{macro}
 %
+%
+%
 % \begin{macro}{\CROP@@llc}
 % The \opt{cam} mode corner mark for the lower left corner.
 %
@@ -947,6 +996,8 @@
   \end{picture}}
 %    \end{macrocode}
 % \end{macro}
+%
+%
 %
 % \begin{macro}{\CROP@@lrc}
 % The \opt{cam} mode corner mark for the lower right corner.
@@ -965,6 +1016,8 @@
 % \end{macro}
 %
 %
+%
+%
 % \begin{macro}{\CROP@opt@cam}
 % Define the \opt{cam} mode switch with four different marks.
 %
@@ -972,6 +1025,8 @@
 \cropdef\CROP@@ulc\CROP@@urc\CROP@@llc\CROP@@lrc{cam}
 %    \end{macrocode}
 % \end{macro}
+%
+%
 %
 %
 %
@@ -989,6 +1044,9 @@
 % \end{macro}
 %
 %
+%
+%
+%
 % \begin{macro}{\CROP@opt@cross}
 % Define the \opt{cross} mode switch with four times the same mark.
 %
@@ -996,6 +1054,8 @@
 \cropdef\CROP@@cross\CROP@@cross\CROP@@cross\CROP@@cross{cross}
 %    \end{macrocode}
 % \end{macro}
+%
+%
 %
 %
 %
@@ -1021,6 +1081,8 @@
 %
 %
 %
+%
+%
 % \begin{macro}{\CROP@opt@frame}
 % Define the \opt{frame} mode switch with only one mark. (The other
 % corners may |\relax|.)
@@ -1029,6 +1091,7 @@
 \cropdef\CROP@@frame\relax\relax\relax{frame}
 %    \end{macrocode}
 % \end{macro}
+%
 %
 %
 %
@@ -1063,6 +1126,8 @@
 %
 %
 %
+%
+%
 % \begin{macro}{\CROP@shipadd}
 % \changes{v1.2}{1998/12/07}{`CROP@shipadd introduced}
 % This macro adds a \emph{page manipulation command} to the \emph{shiplist},
@@ -1075,6 +1140,8 @@
   \endgroup}
 %    \end{macrocode}
 % \end{macro}
+%
+%
 %
 %
 %
@@ -1114,6 +1181,8 @@
 %
 %
 %
+%
+%
 % \begin{macro}{\CROP@@@ship}
 % \begin{macro}{\CROP@on}
 % \begin{macro}{\CROP@opt@off}
@@ -1127,6 +1196,8 @@
 % \end{macro}
 % \end{macro}
 % \end{macro}
+%
+%
 %
 %
 %
@@ -1163,6 +1234,8 @@
 %
 %
 %
+%
+%
 % \subsection{Mounting}
 %
 % \begin{macro}{\CROP@opt@mount1}
@@ -1189,6 +1262,8 @@
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
+%
+%
 %
 %
 %
@@ -1245,6 +1320,8 @@
 %
 %
 %
+%
+%
 % \begin{macro}{\CROP@invert}  
 % \changes{v1.2}{1998/12/07}{option `invert' added}
 % The \opt{invert} option simply switches to black background
@@ -1274,6 +1351,8 @@
   \AtBeginDocument{\CROP@invert{white}}}
 %    \end{macrocode}
 % \end{macro}
+%
+%
 %
 %
 %
@@ -1353,7 +1432,7 @@
 % \begin{macro}{\CROP@init@dvips}
 % \begin{macro}{\CROP@init@pdftex}
 % \begin{macro}{\CROP@init@vtex}
-% \changes{v1.2}{1998/12/07}{option `invert' added}
+% \changes{v1.6}{2001/11/16}{driver options re-implemented}
 %    \begin{macrocode}
 \DeclareOption{vtex}{\renewcommand*\CROP@driver{vtex}}
 \DeclareOption{pdftex}{\renewcommand*\CROP@driver{pdftex}}
@@ -1406,15 +1485,18 @@
 %
 % \begin{macro}{\CROP@horigin}
 % \begin{macro}{\CROP@vorigin}
+% \changes{v1.1}{1998/07/01}{Load optional configuration file `crop.cfg'}%
+% \changes{v1.6}{2001/11/16}{Execute graphics driver specific settings}%
 % Switch off marks and axes, set one page per sheet, 
 % load the local configuration file, and 
 % process the requested options. Finally: Exit.
 %
 % Notice that we cannot simply use |\ExecuteOptions| to preselect options
 % \opt{off}, \opt{noaxes}, \opt{info}, and \opt{mount1}, because it does not accept
-% default options declared with |\DeclareOption*|.
-% \changes{v1.1}{1998/07/01}{Load optional configuration file `crop.cfg'}%
-% \changes{v1.6}{2001/11/16}{Execute graphics driver specific settings}%
+% default options declared with |\DeclareOption*|. |\@nameuse| doesn't
+% complain if the command sequence is undefined. We let this only be
+% executed |\AtEndOfPackage|, because there are possibly commands from
+% the \opt{center} option in the queue that have to be processed first.
 %
 %    \begin{macrocode}
 \newcommand*\CROP@horigin{-1truein}
