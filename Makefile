@@ -1,7 +1,8 @@
 # $Id$
+
 NAME=crop
-ARCHNAME=$(NAME).tar.gz
-ARCHIVE=$(NAME).dtx Makefile $(NAME).txt $(NAME).ins
+ARCHIVE_NAME=$(NAME).tar.gz
+ARCHIVE_CONTENTS=$(NAME).dtx Makefile $(NAME).txt $(NAME).ins
 MAKEIDXOPT=
 DVIPSOPT= #-Pcmz -Pamz
 DEP=$(NAME).sty
@@ -27,16 +28,16 @@ pdf: $(NAME).pdf
 arc: archive
 
 archive: $(NAME).ins
-	@ tar -czf $(ARCHNAME) $(ARCHIVE) 
-	@ echo $(ARCHNAME):
+	@ tar -czf $(ARCHIVE_NAME) $(ARCHIVE_CONTENTS)
+	@ echo $(ARCHIVE_NAME):
 	@ echo ====================
-	@ tar -tzf $(ARCHNAME)
+	@ tar -tzf $(ARCHIVE_NAME)
 
 clean: 
 	rm -f $(NAME).{log,toc,lot,lof,idx,ilg,ind,aux,blg,bbl,dvi,ins}
 
 distclean: clean
-	rm -f $(NAME).{ps,pdf,sty} $(ARCHNAME)
+	rm -f $(NAME).{ps,pdf,sty} $(ARCHIVE_NAME)
 
 
 REFWARN = 'Rerun to get cross-references'
