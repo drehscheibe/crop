@@ -1,6 +1,7 @@
 % \iffalse
 %% File: crop.dtx Copyright (C) 1998--2002 Melchior FRANZ
 %% $Id$
+%% $Version: 1.8 $
 %<*preamble>
 %
 % on Unix/Linux just run "make" to get the style file and the documentation;
@@ -245,9 +246,10 @@
 % \section{How to use the package}
 %
 % \subsection{Conventional options}
+% \label{sec:conventional}
 %
 % These options may only be used in the preamble and have to be stated
-% as arguments to the |\usepackage| command (e.\,g.~|\usepackage[frame]{crop}|).
+% as arguments to the |\usepackage| command (as in |\usepackage[frame]{crop}|).
 %
 % \begin{labeling}{\indent\indent}
 % \item[\itemfont a0, a1, a2, a3, a4, a5, a6,
@@ -259,62 +261,65 @@
 %
 % \item[\itemfont width, height]---
 %    Instead of using one of the pre-defined paper formats as described
-%    above, you can also set the paper dimensions directly. You can omit
+%    above, you can also set the physical paper dimensions directly. You may omit
 %    the `|true|' specifier if you don't plan to scale the document.
 %    Example: |\usepackage[cam,width=10truecm,height=13truecm]{crop}|
 %
 % \item[\itemfont center]
 %    This option centers the logical document page on the physical printer paper
-%    and requires therefore, that you declare the sheet size properly. Write
-%    e.\,g.~|\usepackage[cam,a4,center]{crop}| to center a document of any size
-%    on \ISO\ sheets. If no paper size is chosen you get an error
-%    message, but you can proceed nevertheless.
+%    and therefore requires that you declare the sheet size properly. Write,
+%    for example, |\usepackage[cam,a4,center]{crop}| to center a document of any size
+%    on \ISO\ sheets. You'll get an error message, if you didn't specify a paper size,
+%    but you can proceed nevertheless.
 %
 % \item[\itemfont landscape]---
 %    Use this option in addition to the \option{center} option if you want
-%    to center a document on \emph{landscape oriented} paper. Note that it has nothing
-%    to do with the standard |landscape| option.
+%    to center a document on \emph{landscape oriented} paper. It has nothing
+%    to do with \LaTeX's |landscape| document class option.
 %
 % \item[\itemfont dvips, pdftex, pdflatex, vtex, nodriver]---
 %    If you are working with \program{dvips}, \program{pdftex} or \program{vtex}
 %    you may want to pass the dimensions of the paper you are planning to print on to
 %    the respective program. Especially viewer programs like \program{gs} or \program{gv}
-%    make use of that \emph{bounding box} information.
-%    This requires, of course, that you also choose one of the paper size
-%    options mentioned above (e.\,g.~|[letter,dvips]|).
-%    If none of the driver options is given, \CROP\ automatically
-%    uses the \package{graphics} driver that your installation suggests
-%    (see the |graphics.cfg| file). The \option{nodriver}
-%    option suppresses this automatism. This is, for example, required if a document scaled
-%    with \TeX's |\mag| register is to be processed by \program{ghostscript}.
+%    make use of this \emph{bounding box} information. Unfortunately, this can't be
+%    done in a generic way---there's no standard. Furthermore, there are different
+%    routines used for rotation and reflection, depending on the output driver.
+%
+%    The \CROP\ package tries to find out by itself, which driver to use.
+%    You find its choice mentioned in the log file. Additionally, you can
+%    suggest (|[dvips]|) or enforce (|[dvips!]|) one of the drivers. In the
+%    latter case you only have to add an exclamation point to the driver
+%    option. The difference is, that a suggestion may get overruled by the
+%    package. Assume you have asked for |[dvips]|, but run the document file
+%    throuh \program{pdflatex}. In this case \CROP\ will automatically use
+%    the \option{pdflatex} driver. You can also force \CROP\ not to use any
+%    of the drivers by requesting the \option{nodriver} option.
 %    \option{pdflatex} is a synonym for \option{pdftex}.
 %
 % \item[\itemfont mirror]
-%    This option reflects the whole document, provided that the \DVI\ output
-%    driver handles \POSTSCRIPT\ |\special|'s. It uses the standard graphics interfaces,
-%    if the \package{graphics} package could be found or the \package{color} package is included,
-%    or a matching interface file such as |dvips.def|.
-%    If no interface is defined, the package uses its internal, less portable macros.
+%    This option reflects the whole document, provided that the output driver
+%    is supported by the \package{graphics} package. It doesn't have any
+%    effect on the \DVI\ file.
 %
 % \item[\itemfont rotate]
 %    Rotates the document by 180\(^\circ\) so that it appears upside-down.
 %    This may be useful to circumvent problems with printers, which do not print
 %    close enough to the lower paper edge due to their paper feed mechanism.
-%    This option relies on \PS, just like the \option{mirror} option.
 %
 % \item[\itemfont invert]
 %    Lets the whole document be printed white onto black background,
-%    if the \package{color} package can be loaded and the document is output with an
-%    output device that is capable of executing \PS\ commands. All further color
-%    changing commands stated in the document are ignored. This option is ignored
-%    after a \option{notext} option request.
+%    if the \package{color} package can be loaded and the document is output with a
+%    device that is capable of displaying colors. All further color
+%    changing commands stated in the document are disabled.
+%    This option doesn't invert pictures, nor does it really swap
+%    text and paper color. Red text on green will still become white
+%    text on black. \option{invert} is stronger than \option{notext}.
 %
 % \item[\itemfont notext]---
 %    This option uses the \package{color} package to turn text to white
 %    color, after which all further color switching commands are disabled. This
 %    makes the text disappear from the printout, although it remains in the
-%    output file. Note that neither cropmarks nor the info line are shown. 
-%    See the description of the options \option{nographics} and
+%    output file. See the description of the options \option{nographics} and
 %    \option{graphics} on page~\pageref{graphics} for an explanation.
 %    This option is ignored after an \option{invert} option request.
 % \end{labeling}
@@ -328,8 +333,8 @@
 % \subsection{Runtime options}
 %
 % These options may be used in the preamble like the `conventional' options
-% (see above), but also as arguments to the |\crop| command everywhere in the
-% document (e.\,g.~|\crop[frame]|).
+% (see section~\ref{sec:conventional}), but also as optional arguments to the
+% |\crop| command everywhere in the document (as in |\crop[frame]|).
 %
 % \begin{labeling}{\indent\indent}
 % \item[\itemfont cam]
@@ -357,27 +362,27 @@
 %
 % \item[\itemfont odd, even]---
 %    Use these options to let the cropmarks be put on odd\slash even pages only.
-%    The marks must have been turned on before, using one of the options |cam|,
-%    |cross|, or |frame|, otherwise there will be no effect. Note that only
-%    the page number is considered. If you have two subsequent pages both with
-%    page number 1 and give the |odd| option, then both pages will have
-%    marks.
+%    They automatically turn on \option{cam} marks if no other marks have been
+%    requested. Note that only the page number is considered. If you have
+%    two subsequent pages both with page number~1 and ask for the \option{odd}
+%    option, then both pages will have marks.
 %
 % \item[\itemfont axes, noaxes]---
-%    These options enable\slash disable the output of little marks which
-%    show the horizontal and vertical middle axis of the logical page and
-%    may be selected in addition to one of the above modes. These marks
+%    These options enable\slash disable the output of little marks that
+%    show the logical page's horizontal and vertical middle axis and
+%    may be selected in addition to one of the main modes. These marks
 %    might be needed for punching. Notice that they are lost after
 %    trimming, since they lie outside the logical page.
 %    These marks are disabled by default.
 %
 % \item[\itemfont info, noinfo]---
-%    Show the page info consisting of filename, date, time, page number and page
-%    index on every sheet (see figure \ref{fig:marks}). The page index starts
-%    with \#1 and is incremented with every page info line, so that it is more
+%    Print the page information consisting of filename, date, time, page number and page
+%    index on every sheet (see figure~\ref{fig:marks}). The page index starts
+%    with \#1 and is incremented with every page info line, hence being more
 %    reliable than page numbers, which are not unique and may be negative or
 %    contain letters. It can also be seen as a cropmarks counter.
-%    This page information is enabled by default.
+%    This page information is enabled by default. Pages without cropmarks
+%    aren't counted.
 %
 % \item[\itemfont font]
 %    The page info line uses |\normalfont| by default. If you are typesetting
@@ -392,7 +397,7 @@
 %
 % \item[\itemfont color]
 %    You can set the color of cropmarks, axes and info text with this
-%    option, if the \package{color} package could have been loaded.
+%    option, if the \package{color} package could be loaded.
 %    The option takes only color names, as in |[color=red]|. See
 %    the \package{color} package for how to define custom colors.
 %
@@ -400,8 +405,8 @@
 %    If more than one logical page is to be mounted on a physical sheet,
 %    you normally don't want marks to appear on the inner edges, where
 %    the pages touch each other.
-%    The \option{mount2} mode prints only the outer marks.
-%    There's also a \option{mount1} mode that is selected by default.
+%    The \option{mount2} option prints only the outer marks.
+%    There's also a \option{mount1} option that is selected by default.
 %    These commands take a number as an optional argument serving
 %    as a page offset. Type |mount2| or |mount2=0| for odd pages right
 %    and |mount2=1| for odd pages left. Since further modes are likely
@@ -424,13 +429,13 @@
 %
 % \item[\itemfont graphics, nographics]---
 %    \label{graphics}
-%    Color printouts are often more expensive than black and white ones, while
+%    Color printouts are often more expensive than black-and-white ones, while
 %    their text quality is sometimes reduced. Therefore it may be desirable to create
 %    two versions of a document, one with only text and one with only
-%    graphics. Now you can feed the concerned pages through a color printer to
-%    print the \option{notext} version, and then through a mono laser printer with the
+%    graphics. Now you can feed the concerned pages to a color printer to
+%    print the \option{notext} version, and then to a mono laser printer with the
 %    \option{nographics} version. The \option{graphics} option turns graphics on again. You may
-%    want to mark up every colored picture so that you can decide in the preamble,
+%    want to mark up all colored pictures so that you can decide in the preamble,
 %    whether they shall be printed or not.
 %
 % \begin{example}[.86\textwidth]^^A
@@ -504,14 +509,15 @@
 % ^^A         and anywhere in the document.}
 % ^^A\label{fig:loading}
 % ^^A\end{figure}
-% ^^A%\bigskip\FIXME
+% \bigskip^^A\FIXME
 %
+% \noindent
 % You get corner markings at every page shipped out after a \option{cam},
 % \option{cross}, or \option{frame} mode request until you turn them off by
 % typing \DescribeMacro{\crop}|\crop[off]|, or the actual grouping level
 % ends.
 % ^^ASee figure \ref{fig:loading}.
-% Typing |\crop| without argument(s) is equivalent to typing
+% Typing |\crop| without argument is equivalent to typing
 % |\crop[cam,noaxes]|.
 % Axis marks appear only together with one of the modes as listed above.
 % If you only want one cover page for trimming, make sure that a page is
@@ -2059,7 +2065,7 @@
 %    \begin{macrocode}
 \newcommand*\CROP@horigin{-1truein}
 \newcommand*\CROP@vorigin{-1truein}
-\crop[off,noaxes,info,mount1]
+\crop[cam,off,noaxes,info,mount1]
 \InputIfFileExists{crop.cfg}{%
     \PackageInfo{crop}{Local config file crop.cfg used}
 }{}
