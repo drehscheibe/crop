@@ -90,7 +90,7 @@
 \newcommand*\A{\versal{A4}}
 \newcommand*\ISO{\versal{ISO-A4}}
 \newcommand*\POSTSCRIPT{\textsc{PostScript}}
-\newcommand*\FIXME{\message{<FIXME>}}
+\newcommand*\FIXME{\marginpar{\Huge FIXME}\message{<FIXME>}}
 \newcommand*\BULLSHIT{\marginpar{\Huge BULLSHIT!}}
 %
 %
@@ -1173,7 +1173,7 @@
         \vskip\dimen@
     }%
 }}
-\let\CROP@info\relax   %% \FIXME the whole info stuff is rather bogus now!
+\let\CROP@info\relax %% \FIXME the whole info stuff is rather bogus now!
 \newcommand*\CROP@opt@font{\let\CROP@font\CROP@@}
 %    \end{macrocode}
 % \end{macro}
@@ -1499,7 +1499,6 @@
     }%
     \color@endgroup
 }
-\let\CROP@@@marks\CROP@marks
 \newcommand*\CROP@marks{%
     \CROP@ulc\null\hfill\CROP@upedge\hfill\null\CROP@urc
     \vfill
@@ -1507,6 +1506,7 @@
     \vfill
     \CROP@llc\null\hfill\CROP@loedge\hfill\null\CROP@lrc
 }
+\let\CROP@@@marks\CROP@marks
 \newcommand*\CROP@opt@horigin{\let\CROP@horigin\CROP@@}
 \newcommand*\CROP@opt@vorigin{\let\CROP@vorigin\CROP@@}
 %    \end{macrocode}
@@ -1535,10 +1535,10 @@
     \let\CROP@@@marks\relax
 }
 \newcommand*\CROP@opt@odd{%
-    \def\CROP@@@ship{\ifodd\c@page\CROP@kernel\fi}%
+    \def\CROP@@@marks{\ifodd\c@page\CROP@marks\fi}%
 }
 \newcommand*\CROP@opt@even{%
-    \def\CROP@@@ship{\ifodd\c@page\else\CROP@kernel\fi}%
+    \def\CROP@@@marks{\ifodd\c@page\else\CROP@marks\fi}%
 }
 %    \end{macrocode}
 % \end{macro}
