@@ -89,6 +89,15 @@
   \leftmargin\labelwidth\advance\leftmargin\labelsep
   \def\makelabel##1{\textbf{##1}\hfil}}}{\endlist}
 %
+%
+\newenvironment{example}[1][.9\textwidth]
+  {\par\medskip\begin{tabular}{p{#1}l}}
+  {\end{tabular}\noindentafter\medbreak}
+%
+\makeatletter
+\newcommand*\noindentafter{\@nobreaktrue\everypar{{\setbox\z@\lastbox}}}    
+\makeatother
+%
 % ^^A \RecordChanges
 %
 \begin{document}
@@ -99,7 +108,7 @@
 % \fi
 %
 %
-% \CheckSum{778}
+% \CheckSum{779}
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -362,16 +371,15 @@
 %    want to mark up every colored picture so that you can decide in the preamble,
 %    whether they shall be printed or not.
 %
-%\begin{verbatim}
-%%\newcommand*\colorgraphics{}                    % print them
-%\newcommand*\colorgraphics{\crop[nographics]}    % don't
-%...
-%{\colorgraphics
-%\includegraphics{...}
-%\caption{...}
-%}
-%\end{verbatim}
-%
+% \begin{example}[.86\textwidth]^^A
+% |%\newcommand*\colorgraphics{}                 % print them|\\
+% |\newcommand*\colorgraphics{\crop[nographics]} % don't|\\
+% |...|\\
+% |{\colorgraphics|\\
+% |\includegraphics{...}|\\
+% |\caption{...}|\\
+% |}|
+% \end{example}
 % \end{labeling}
 %
 %
@@ -446,10 +454,12 @@
 % Axis marks appear only together with one of the above mentioned modes.
 % If you only want one cover page for trimming, make sure that a page is
 % actually output in the scope of |\crop|, e.\,g.:
-%\begin{verbatim}
-%\newpage
-%{\crop[cross,axes]\mbox{}\newpage}
-%\end{verbatim}
+%
+% \begin{example}
+% |\newpage|\\
+% |{\crop[cross,axes]\mbox{}\newpage}|\\
+% {}
+% \end{example}
 %
 %
 %
@@ -467,22 +477,22 @@
 % uses the |geometry| package, which I strongly recommend. Let's assume you want to print a 
 % CD~booklet ($4\,^{23}\!/_{32} \times 4\,^3\!/_4$~inch) on \textsc{ISO-A4} paper:
 %
-%\begin{verbatim}
-%\documentclass{article}
-%\usepackage[cam,a4,center,dvips]{crop}
-%\usepackage{geometry}
+% \begin{example}
+% |\documentclass{article}|\\
+% |\usepackage[cam,a4,center,dvips]{crop}|\\
+% |\usepackage{geometry}|\\
 %
-%\geometry{%
-%   paperwidth=4.71875in,
-%   paperheight=4.75in,
-%   margin=2em,
-%   bottom=1.5em,
-%   nohead} 
+% |\geometry{%|\\
+% |   paperwidth=4.71875in,|\\
+% |   paperheight=4.75in,|\\
+% |   margin=2em,|\\
+% |   bottom=1.5em,|\\
+% |   nohead}|\\
 %
-%\begin{document}
-%...
-%\end{document}
-%\end{verbatim}
+% |\begin{document}|\\
+% |...|\\
+% |\end{document}|\\
+% \end{example}
 %
 % Note that the geometry parameters can also be stated as options to
 % the |\usepackage{geometry}| command. For further help see the 
@@ -500,15 +510,16 @@
 % shall describe the paper width. Don't forget to request |true| dimensions,
 % otherwise you will get really weird results with scaled documents.
 %
-%\begin{verbatim}
-%\DeclareOption{weird}{\CROP@size{123truemm}{456truemm}}
-%\end{verbatim}
+% \begin{example}
+% |\DeclareOption{weird}{\CROP@size{123truemm}{456truemm}}|
+% \end{example}
 %
 % Now you can use your new printing paper format like the pre-defined ones.
 %
-%\begin{verbatim}
-%\usepackage[frame,weird,center]{crop}
-%\end{verbatim}
+% \begin{example}
+% |\usepackage[frame,weird,center]{crop}|\\
+% {}
+% \end{example}
 %
 %
 %
@@ -526,23 +537,29 @@
 % be empty, if no page info is wanted, or contain the info code instead of
 % a macro name.
 %
-%\begin{verbatim}
-%\newcommand*\funnymarkA{%         % a little x
-%  \begin{picture}(0,0)
-%    \thinlines\unitlength1pt
-%    \put(-5,-5){\line(1,1){10}}
-%    \put(-5,5){\line(1,-1){10}}
-%  \end{picture}}
+% \begin{example}
+% |\newcommand*\funnymarkA{%         % a little x|\\
+% |  \begin{picture}(0,0)|\\
+% |    \thinlines\unitlength1pt|\\
+% |    \put(-5,-5){\line(1,1){10}}|\\
+% |    \put(-5,5){\line(1,-1){10}}|\\
+% |  \end{picture}}|
+% \end{example}
 %
-%\newcommand*\funnymarkB{%         % a bullet
-%  \begin{picture}(0,0)
-%    \unitlength1pt
-%    \put(0,0){\circle*{5}}
-%  \end{picture}}
+% \indent
+% \begin{example}
+% |\newcommand*\funnymarkB{%         % a bullet|\\
+% |  \begin{picture}(0,0)|\\
+% |    \unitlength1pt|\\
+% |    \put(0,0){\circle*{5}}|\\
+% |  \end{picture}}|\\
+% \end{example}
 %
-%\newcommand*\funnyinfo{funny page info}
-%\cropdef[\funnyinfo]\relax\funnymarkA\relax\funnymarkB{funny}
-%\end{verbatim}
+% \indent
+% \begin{example}[.91\textwidth]
+% |\newcommand*\funnyinfo{funny page info}|\\
+% |\cropdef[\funnyinfo]\relax\funnymarkA\relax\funnymarkB{funny}|
+% \end{example}
 %
 % \noindent
 % You can select your own mode by typing |\crop[funny]|.
@@ -563,29 +580,40 @@
 % required configuration files, too! That's how such a file
 % could look like:                                                                                                           
 %
-%\begin{verbatim}
-%% define a new printing paper size
-%\DeclareOption{special}{\CROP@size{22truecm}{37truecm}}
+% \begin{example}
+% |% define a new printing paper size|\\
+% |\DeclareOption{special}{\CROP@size{22truecm}{37truecm}}|
+% \end{example}
 %
-%% introduce an option `oldinfo', which restores the page information
-%% that was used in older package releases
-%\newcommand*\CROP@opt@oldinfo{%
-%  \renewcommand*\CROP@@info{%
-%    \hskip\paperwidth\hskip12\p@
-%    \raise12\p@\hbox{\vbox{%
-%      \hbox{``\jobname''\strut}%
-%      \hbox{\the\year/\the\month/\the\day\strut}%
-%      \hbox{page \thepage\strut}}}}}
+% \indent
+% \begin{example}
+% |% introduce an option `oldinfo', which restores the page|\\
+% |% information that was used in older package releases|\\
+% |\newcommand*\CROP@opt@oldinfo{%|\\
+% |\renewcommand*\CROP@@info{%|\\
+% |  \hskip\paperwidth\hskip12\p@|\\
+% |  \raise12\p@\hbox{\vbox{%|\\
+% |    \hbox{``\jobname''\strut}%|\\
+% |    \hbox{\the\year/\the\month/\the\day\strut}%|\\
+% |    \hbox{page \thepage\strut}}}}}|
+% \end{example}
 %
-%% make the internal time string (used in the page information)
-%% accessible in the whole document
-%\let\Time\CROP@time
+% \indent
+% \begin{example}
+% |% make the internal time string (used in the page|\\
+% |% information) accessible in the whole document|\\
+% |\let\Time\CROP@time|
+% \end{example}
 %
-%% let's use a different font for the predefined page information
-%\crop[font=\small\textsf]
-%% (we could also have written \newcommand*\CROP@font{\small\textsf})
-%\endinput
-%\end{verbatim}
+% \indent
+% \begin{example}
+% |% let's use a different font for the predefined page|\\
+% |% information (we could also have written|\\
+% |% \newcommand*\CROP@font{\small\textsf})|\\
+% |\crop[font=\small\textsf]|\\
+% |\endinput|\\
+% {}
+% \end{example}
 %
 %
 %
@@ -712,7 +740,11 @@
 \DeclareOption{dvips}{\CROP@checksize
   \AtBeginDvi{\special{papersize=\the\CROP@width,\the\CROP@height}}}
 \DeclareOption{pdftex}{\ifx\@undefined\pdfpagewidth\else\CROP@checksize
-  \AtBeginDocument{\pdfpagewidth\CROP@width \pdfpageheight\CROP@height}%
+  \AtBeginDocument{\pdfpagewidth\CROP@width \pdfpageheight\CROP@height
+    \renewcommand*\CROP@opt@nographics{%
+      \renewcommand\includegraphics[2][]{%
+        \phantom{\CROP@includegraphics[##1]{##2}}}}%
+  }%
   \fi}
 \DeclareOption{vtex}{\ifx\@undefined\mediawidth\else\CROP@checksize
   \AtBeginDocument{\mediawidth\CROP@width \mediaheight\CROP@height}\fi}
@@ -1253,9 +1285,8 @@
 %    \begin{macrocode}
 \newcommand*\CROP@incgrph{}
 \newcommand*\CROP@opt@nographics{%
-  \def\includegraphics##1##{\bgroup
-    \let\special\@gobble\CROP@incgrph{##1}}%
-  \def\CROP@incgrph##1##2{\CROP@includegraphics##1{##2}\egroup}}
+  \renewcommand\includegraphics[2][]{%
+    \CROP@includegraphics[##1]{\let\special\relax##2}}}
 \newcommand*\CROP@opt@graphics{%
   \let\includegraphics\CROP@includegraphics}
 %    \end{macrocode}
