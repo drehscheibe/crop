@@ -5,5 +5,5 @@
 - fresh checkout and compile
 - tag RELEASE (cvs tag RELEASE_1_*)
 - set release state (cvs admin -sRel)
-- check out freshly (other release state isn't set in the files)
+- check out freshly (otherwise release state isn't set in the files)
 - make archive
