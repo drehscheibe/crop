@@ -1,5 +1,5 @@
 % \iffalse
-%% File: crop.dtx Copyright (C) 1998,1999,2000,2001,2002 Melchior FRANZ
+%% File: crop.dtx Copyright (C) 1998--2002 Melchior FRANZ
 %% $Id$
 %<*preamble>
 %
@@ -91,7 +91,7 @@
 \newcommand*\ISO{\versal{ISO-A4}}
 \newcommand*\POSTSCRIPT{\textsc{PostScript}}
 \newcommand*\FIXME{\message{<FIXME>}}
-%
+\newcommand*\BULLSHIT{\marginpar{\Huge BULLSHIT!}}
 %
 %
 \IfFileExists{crop.sty}
@@ -188,7 +188,8 @@
 % \changes{v1.7}{2002/05/14}{odd/even/width/height options added; better
 %   geometry.sty compatibility; adopting `stockwidth/`stockheight}
 %
-% \changes{v1.8}{????/??/??}{???}
+% \changes{v1.8}{????/??/??}{removed all the `changes entries except those
+%   in the preamble (crop is in CVS since v1.4, anyway); ...}  \FIXME
 %
 %
 %
@@ -245,7 +246,6 @@
 % as arguments to the |\usepackage| command (e.\,g.~|\usepackage[frame]{crop}|).
 %
 % \begin{labeling}{\indent\indent}
-% \changes{v1.5}{2001/10/07}{paper size options added}%
 % \item[\sffamily a0, a1, a2, a3, a4, a5, a6,
 %    b0, b1, b2, b3, b4, b5, b6, letter, legal, executive]\hfill\break
 %    These options declare the printing paper dimensions. They are mandatory
@@ -253,15 +253,12 @@
 %    \option{pdftex} and \option{vtex} options is used, in which case the paper size is
 %    passed to the respective \DVI\ device driver.
 %
-% \changes{v1.7}{2002/05/14}{width/height added}%
 % \item[\sffamily width, height]---
 %    Instead of using one of the pre-defined paper formats as described
 %    above, you can also set the paper dimensions directly. You can omit
 %    the `|true|' specifier if you don't plan to scale the document.
 %    Example: |\usepackage[cam,width=10truecm,height=13truecm]{crop}|
 %
-% \changes{v1.1}{1998/07/01}{center options added}%
-% \changes{v1.5}{2001/10/07}{center options replaced by a separate center option}%
 % \item[\sffamily center]
 %    This option centers the logical document page on the physical printer paper
 %    and requires therefore, that you declare the sheet size properly. Write
@@ -274,8 +271,6 @@
 %    to center a document on \emph{landscape oriented} paper. Note that it has nothing
 %    to do with the standard |landscape| option.
 %
-% \changes{v1.5}{2001/10/07}{options `dvips', `pdftex', `vtex' and `nodriver' added}%
-% \changes{v1.6}{2001/11/16}{option `pdflatex' added}%
 % \item[\sffamily dvips, pdftex, pdflatex, vtex, nodriver]---
 %    If you are working with \program{dvips}, \program{pdftex} or \program{vtex}
 %    you may want to pass the dimensions of the paper you are planning to print on to
@@ -290,7 +285,6 @@
 %    with \TeX's |\mag| register is to be processed by \program{ghostcript}.
 %    \option{pdflatex} is a synonym for \option{pdftex}.
 %
-% \changes{v1.2}{1998/12/07}{mirror option added}
 % \item[\sffamily mirror]
 %    This option reflects the whole document, provided that the \DVI\ output
 %    driver handles \POSTSCRIPT\ |\special|'s. It uses the standard graphics interfaces,
@@ -298,14 +292,12 @@
 %    or a matching interface file such as |dvips.def|.
 %    If no interface is defined, the package uses its internal, less portable macros.
 %
-% \changes{v1.4}{2000/02/02}{rotate option added}
 % \item[\sffamily rotate]
 %    Rotates the document by 180\(^\circ\) so that it appears upside-down.
 %    This may be useful to circumvent problems with printers, which do not print
 %    close enough to the lower paper edge due to their paper feed mechanism.
 %    This option relies on \PS, just like the \option{mirror} option.
 %
-% \changes{v1.2}{1998/12/07}{invert option added}
 % \item[\sffamily invert]
 %    Lets the whole document be printed white onto black background,
 %    if the \package{color} package can be loaded and the document is output with an
@@ -313,7 +305,6 @@
 %    changing commands stated in the document are ignored. This option is ignored
 %    after a \option{notext} option request.
 %
-% \changes{v1.5}{2001/10/07}{notext option added}
 % \item[\sffamily notext]---
 %    This option uses the \package{color} package to turn text to white
 %    color, after which all further color switching commands are disabled. This
@@ -360,7 +351,6 @@
 %    (i.\,e.~at runtime). It disables all markings and is selected by
 %    default if the package is input without requesting any of the marks.
 %
-% \changes{v1.7}{2002/05/14}{odd, even options added}%
 % \item[\sffamily odd, even]---
 %    Use these options to let the cropmarks be put on odd\slash even pages only.
 %    The marks must have been turned on before, using one of the options |cam|,
@@ -377,7 +367,6 @@
 %    trimming, since they lie outside the logical page.
 %    These marks are disabled by default.
 %
-% \changes{v1.4}{2000/02/02}{info/noinfo options added}
 % \item[\sffamily info, noinfo]---
 %    Show the page info consisting of filename, date, time, page number and page
 %    index on every sheet (see figure \ref{fig:marks}). The page index starts
@@ -386,7 +375,6 @@
 %    contain letters. It can also be seen as a cropmarks counter.
 %    This page information is enabled by default.
 %
-% \changes{v1.6}{2001/11/16}{font option added}
 % \item[\sffamily font]
 %    The page info line uses |\normalfont| by default. If you are typesetting
 %    the document in non-latin glyphs or a decorative, but less legible font,
@@ -398,7 +386,6 @@
 %    one: |\newcommand*\infofont[1]{\textcolor{blue}{\textsf{\small#1}}}|
 %    |\crop[font=infofont]|
 %
-% \changes{v1.1}{1998/07/01}{mount options added}%
 % \item[\sffamily mount1, mount2]---
 %    If more than one logical page is to be mounted on a physical sheet,
 %    you normally don't want marks to appear on the inner edges, where
@@ -412,7 +399,6 @@
 %    implement them yourself. (See a \option{mount4} suggestion on page
 %    \pageref{sec:mount4}.)
 %
-% \changes{v1.5}{2001/10/07}{options horigin and vorigin added}%
 % \item[\sffamily horigin, vorigin]---
 %    The top and left margin are by default 1~inch wide. This can be changed
 %    using the dimensions |\oddsidemargin|, |\evensidemargin| and
@@ -426,7 +412,6 @@
 %    As both |horigin| and |vorigin| are by default $-1$~inch, you would for
 %    example write |horigin=-.6in| to move the marks by 0.4~inch to the right.
 %
-% \changes{v1.5}{2001/10/07}{options `graphics' and `nographics' added}
 % \item[\sffamily graphics, nographics]---
 %    \label{graphics}
 %    Color printouts are often more expensive than black and white ones, while
@@ -703,7 +688,7 @@
 % |\endinput|\\
 % {}
 % \end{example}
-% \marginpar{\Huge BULLSHIT!}\FIXME
+% \BULLSHIT\FIXME
 %
 %
 % \section{How the package works}
@@ -891,8 +876,6 @@
 % \begin{macro}{\CROP@init@dvips}
 % \begin{macro}{\CROP@init@pdftex}
 % \begin{macro}{\CROP@init@vtex}
-% \changes{v1.6}{2001/11/16}{driver options re-implemented}
-% \changes{v1.7}{2002/05/14}{nodriver option implemented}
 % These options are automatically selected (via definition in |graphics.cfg|)
 % and can as well be chosen explicitly. They do nothing else than handing
 % the given printer paper size over to the \DVI\ driver. This wouldn't
@@ -933,8 +916,6 @@
 %
 %
 % \subsection{Size options}
-% \changes{v1.3}{1999/03/07}{the center options are processed `AtBeginDocument}
-% \changes{v1.7}{2002/05/14}{width and height options added}
 %
 % \begin{macro}{\CROP@size}
 % \begin{macro}{\CROP@opt@width}
@@ -1053,8 +1034,6 @@
 % to handle arguments (e.\,g.~|cross=garbage|), or more than one argument
 % (e.\,g.~|mount2=1=garbage|). This is not a bug, it's a feature!
 %
-% \changes{v1.1}{1998/07/01}{Parsing optional option arguments}%
-%
 %    \begin{macrocode}
 \newcommand*\CROP@execopt[1]{%
     \def\CROP@##1=##2=##3\@nil{\def\CROP@{##1}\def\CROP@@{##2}}%
@@ -1083,7 +1062,6 @@
 %
 %
 % \begin{macro}{\cropdef}
-% \changes{v1.1a}{1998/10/20}{`CROP@info is `def'ed now}%
 % The |\cropdef| macro defines a mode switch (see section
 % \ref{sec:cropdef}).
 %
@@ -1115,7 +1093,6 @@
 % \begin{macro}{\CROP@@raxis}
 % \begin{macro}{\CROP@@upaxis}
 % \begin{macro}{\CROP@@loaxis}
-% \changes{v1.1a}{1998/10/20}{`smash replaced}%
 % The standard definitions for the \option{axes} option. The |\CROP@@vaxis|
 % macro must have zero height and depth.
 %
@@ -1163,9 +1140,6 @@
 % \begin{macro}{\CROP@opt@font}
 % This macro prints the jobname, the current date and time, the page number
 % and an index number at the top of the page.
-% \changes{v1.3}{1999/03/07}{killed `uppercase; (devotion to LINUX)}
-% \changes{v1.5}{2001/10/07}{complete rewrite: time and line breaking added}
-% \changes{v1.6}{2001/11/16}{font option added}
 %
 %    \begin{macrocode}
 \newcommand*\CROP@time{}
@@ -1430,9 +1404,6 @@
 % \begin{macro}{\CROP@ship}
 % \begin{macro}{\CROP@shiplist}
 % \begin{macro}{\CROP@@ship}
-% \changes{v1.1}{1998/07/01}{kernel re-implemented completely new}%
-% \changes{v1.2}{1998/12/07}{`CROP@shiplist added, `CROP@@ship changed}
-% \changes{v1.8}{2002/??/??}{`base/lineskip/limit added ... doh!}%
 %
 % These macros redefine the \TeX\ primitive |\shipout| to insert the
 % contents of the macro |\CROP@@@ship| on top of the box which contains
@@ -1477,7 +1448,6 @@
 %
 %
 % \begin{macro}{\CROP@shipadd}
-% \changes{v1.2}{1998/12/07}{`CROP@shipadd introduced}
 % This macro adds a \emph{page manipulation command} to the \emph{shiplist},
 % which gets every ready page as argument.
 %
@@ -1503,10 +1473,6 @@
 % \begin{macro}{\CROP@marks}
 % \begin{macro}{\CROP@opt@horigin}
 % \begin{macro}{\CROP@opt@vorigin}
-% \changes{v1.1}{1998/07/01}{`CROP@every inserted}%
-% \changes{v1.1a}{1998/10/20}{`smash replaced}%
-% \changes{v1.2}{1998/12/07}{color support added}%
-% \changes{v1.5}{2001/10/07}{variable origin added}%
 % |\CROP@kernel| essentially contains a |\vbox| with zero width and height.
 % The |\CROP@every| command---which normally equals |\relax|---allows to
 % insert commands that modify the behavior of the selected mode
@@ -1673,10 +1639,6 @@
 %
 % \subsection{Page manipulation}
 %
-% \changes{v1.2}{1998/12/07}{option `mirror' added}
-% \changes{v1.4}{2000/02/02}{option `rotate' added}
-% \changes{v1.5}{2001/10/07}{origin support added}
-%
 % \begin{macro}{\CROP@reflect}
 % \begin{macro}{\CROP@rotate}
 % \begin{macro}{\CROP@setps}
@@ -1795,8 +1757,6 @@
 % \begin{macro}{\CROP@setcolor}
 % \begin{macro}{\CROP@pagecolor}
 % \begin{macro}{\CROP@invert}
-% \changes{v1.2}{1998/12/07}{option `invert' added}
-% \changes{v1.8}{2002/??/??}{background color handling added}
 % The \option{invert} option simply switches to black background
 % and white text, after which it disables all color
 % switching commands.
@@ -1882,7 +1842,6 @@
 %
 % \begin{macro}{\CROP@opt@nographics}
 % \begin{macro}{\CROP@opt@graphics}
-% \changes{v1.5}{2001/10/07}{options `graphics' and `nographics' added}
 % The \option{nographics} option redefines the |\Ginclude@graphics| command from
 % the \package{graphics} package, so that it outputs its argument as a phantom.
 % This makes the image invisible but takes up the same amount of white space.
@@ -1972,8 +1931,6 @@
 %
 % \begin{macro}{\CROP@horigin}
 % \begin{macro}{\CROP@vorigin}
-% \changes{v1.1}{1998/07/01}{Load optional configuration file `crop.cfg'}%
-% \changes{v1.6}{2001/11/16}{Execute graphics driver specific settings}%
 % Switch off marks and axes, set one page per sheet,
 % load the local configuration file, and
 % process the requested options. Finally: Exit.
