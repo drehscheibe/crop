@@ -1,12 +1,2 @@
-1.8:
-
-+ \lineskip added (fixes nasty bug)
-+ new kernel with pictures for axis marks
-+ redefine pagecolor
-+ preset \stockwidth to \paperwidth
-+ driver detection overhaul
-+ use \reflectbox when processed with pdflatex
-+ add user hooks (kernel, marks)
-+ marks/bgnd color (pdflatex!)
-+ dropped compatibility options
+1.9:
 
