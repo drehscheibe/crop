@@ -16,7 +16,7 @@
 %
 %     $ latex crop.dtx
 %     $
-%  
+%
 %
 %
 %
@@ -126,7 +126,7 @@
 % \fi
 %
 %
-% \CheckSum{933}
+% \CheckSum{934}
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -188,6 +188,7 @@
 % \changes{v1.7}{2002/05/14}{odd/even/width/height options added; better
 %   geometry.sty compatibility; adopting `stockwidth/`stockheight}
 %
+% \changes{v1.8}{????/??/??}{???}
 %
 %
 %
@@ -457,7 +458,7 @@
 %     \begin{center}
 %       \vspace{1.5cm}
 %       \leavevmode
-%       \hbox{\paperwidth9cm\CROP@@ulc\rlap{\CROP@@info}\hskip\paperwidth\CROP@@urc}
+%       \hbox to9cm{\CROP@@ulc\hss\CROP@@info\hss\CROP@@urc}
 %       \vspace{.5cm}
 %       \caption{That's what you see on top of a 9~cm wide document page when
 %           \option{cam} mode is requested: the marks, jobname, date, time, page number and
@@ -1061,11 +1062,9 @@
 \newcommand*\CROP@@info{{%
     \global\advance\CROP@index\@ne
     \def\x{\discretionary{}{}{\hbox{\kern.5em---\kern.5em}}}%
-    \hskip10\p@
     \advance\paperwidth-20\p@
     \dimen@\CROP@overlap
-    \advance\dimen@6\p@
-    \raise\dimen@\vbox to\z@{%
+    \vbox to\z@{%
         \centering
         \hsize\paperwidth
         \vss
@@ -1079,6 +1078,7 @@
             \#\the\CROP@index
             \strut
         }%
+        \vskip\dimen@
     }%
 }}
 \newcommand*\CROP@opt@font{\let\CROP@font\CROP@@}
@@ -1399,25 +1399,17 @@
         \vskip\CROP@vorigin
         \hb@xt@\z@{%
             \hskip\CROP@horigin
-            \CROP@every
             \vbox to\paperheight{%
-                \hb@xt@\paperwidth{%
-                    \setbox\z@\hbox{\normalfont\CROP@@@info}%
-                    \ht\z@\z@
-                    \dp\z@\z@
-                    \wd\z@\z@
-                    \box\z@
-                    \CROP@color    
-                    \CROP@ulc
-                    \CROP@uedge
-                    \CROP@urc
-                }%
-                \CROP@ledge
-                \hb@xt@\paperwidth{%
-                    \CROP@llc
-                    \hfil
-                    \CROP@lrc
-                }%
+                \let\protect\relax
+                \hsize\paperwidth
+                \CROP@every
+                \CROP@color
+                \CROP@@@info
+                \CROP@ulc\hfill\CROP@upedge\hfill\CROP@urc
+                \vfill
+                \CROP@ledge\hfill\CROP@redge
+                \vfill
+                \CROP@llc\hfill\CROP@loedge\hfill\CROP@lrc
             }%
             \hss
         }%
@@ -1425,6 +1417,10 @@
     }%
     \color@endgroup
 }
+\let\CROP@upedge\CROP@@cross
+\let\CROP@ledge\CROP@@cross
+\let\CROP@redge\CROP@@cross
+\let\CROP@loedge\CROP@@cross
 \newcommand*\CROP@opt@horigin{\let\CROP@horigin\CROP@@}
 \newcommand*\CROP@opt@vorigin{\let\CROP@vorigin\CROP@@}
 %    \end{macrocode}
