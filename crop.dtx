@@ -1485,7 +1485,7 @@
             \vbox to\paperheight{%
                 \let\protect\relax
                 \hsize\paperwidth
-                \CROP@user@a
+                \CROP@stockcolor
                 \CROP@setcolor
                 \CROP@every
                 \CROP@background
@@ -1783,6 +1783,16 @@
             \fi
         }%
     \fi
+}
+\def\CROP@stockcolor{%
+    \rlap{%
+        \smash{%
+            \raise\voffset\hbox{%
+                \hskip-\hoffset
+                \vrule width\stockwidth height\z@ depth\stockheight
+            }%
+        }%
+    }%
 }
 \newcommand*\CROP@pagecolor{%
     \rlap{%
