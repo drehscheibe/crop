@@ -1,7 +1,7 @@
 % \iffalse
 %% File: crop.dtx Copyright (C) 1998--2003 Melchior FRANZ
 %% $Id$
-%% $Version: 1.8 $
+%% $Version: 1.9 $
 %<*preamble>
 %
 %
@@ -28,8 +28,8 @@
 %% ====================================================================
 %%  @LaTeX-package-file{
 %%     author          = "Melchior FRANZ",
-%%     version         = "1.8",
-%%     date            = "10 May 2003",
+%%     version         = "1.9",
+%%     date            = "20 May 2003",
 %%     filename        = "crop.dtx",
 %%     address         = "Melchior FRANZ
 %%                        Rieder Hauptstrasse 52
@@ -41,7 +41,7 @@
 %%     keywords        = "cropmarks, frame, mirror, rotate, invert",
 %%     supported       = "yes",
 %%     docstring       = "This document describes the crop package, which
-%%                        provides different forms of cropmarks for
+%%                        provides different forms of crop marks for
 %%                        trimming paper stacks, for camera alignment and
 %%                        for visualizing the page dimensions.
 %%                        There are options for centering the page with
@@ -75,8 +75,8 @@
 %
 %
 %<*driver>
-\def\fileversion{1.8}
-\def\filedate{2003/05/10}
+\def\fileversion{1.9}
+\def\filedate{2003/05/20}
 \documentclass[draft]{ltxdoc}
 %
 \newcommand*\option{\textsf}
@@ -93,8 +93,8 @@
 \newcommand*\POSTSCRIPT{\textsc{PostScript}}
 \newcommand*\CROP{\package{crop}}
 % (the following two are for development versions ONLY!   :-)
-\newcommand*\FIXME{\marginpar{\Huge FIXME}\message{<FIXME>}}
-\newcommand*\BS{\marginpar{\Huge BULLSHIT!}}
+\newcommand*\FIXME{\marginpar{\Huge FIXME}\message{<FIXME>}\shop\stop}
+\newcommand*\BS{\marginpar{\Huge BULLSHIT!}\show\stop}
 %
 %
 \IfFileExists{crop.sty}
@@ -130,7 +130,7 @@
 % \fi
 %
 %
-% \CheckSum{1059}
+% \CheckSum{1063}
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -154,13 +154,13 @@
 % \title{The \CROP\ package}
 %
 % \author{Melchior \textsc{FRANZ}}
-% \date{May 10, 2003}
+% \date{May 20, 2003}
 % \maketitle
 %
 %
 % \changes{v1.0}{1998/05/20}{Initial version}%
 %
-% \changes{v1.1a}{1998/10/20}{`smash replaced; The cropmarks
+% \changes{v1.1a}{1998/10/20}{`smash replaced; The crop marks
 %   were displaced, when the package was used together with the
 %   \texttt{amsmath} package (V1.2c), which redefines the \LaTeX\ smash
 %   command to have a different meaning. Although, this is definitely a
@@ -196,6 +196,9 @@
 %   in the preamble (crop is in CVS since v1.4, anyway); rewrote kernel;
 %   added color support; fixed a nasty bug; better driver detection}
 %
+% \changes{v1.9}{2003/05/20}{don't create command sequences by merely
+%   checking for them}
+%
 %
 %
 % \begin{abstract}
@@ -207,7 +210,7 @@
 % A big thank you also goes to \person{Walter Schmidt} for his extensive
 % tests and his expertise on compatibility issues with different devices.}^^A
 %^^A
-% , which provides different forms of cropmarks for trimming paper
+% , which provides different forms of crop marks for trimming paper
 % stacks, for camera alignment and for visualizing the page dimensions.
 % There are options for centering the document page on the paper sheet,
 % for mounting pages on a physical sheet, for reflecting and inverting
@@ -360,7 +363,7 @@
 %    default if the package is input without requesting any of the marks.
 %
 % \item[\itemfont odd, even]---
-%    Use these options to let the cropmarks be put on odd\slash even pages only.
+%    Use these options to let the crop marks be put on odd\slash even pages only.
 %    They automatically turn on \option{cam} marks if no other marks have been
 %    requested. Note that only the page number is considered. If you have
 %    two subsequent pages both with page number~1, and ask for the \option{odd}
@@ -379,8 +382,8 @@
 %    index on every sheet (see figure~\ref{fig:marks}). The page index starts
 %    with \#1 and is incremented with every page info line, hence being more
 %    reliable than page numbers, which are not unique and may be negative or
-%    contain letters. It can also be seen as a cropmarks counter.
-%    Pages without cropmarks aren't counted. This page information is enabled
+%    contain letters. It can also be seen as a crop marks counter.
+%    Pages without crop marks aren't counted. This page information is enabled
 %    by default.
 %
 % \item[\itemfont font]
@@ -395,7 +398,7 @@
 %    |\crop[font=infofont]|
 %
 % \item[\itemfont color]
-%    You can set the color of cropmarks, axes and info text with this
+%    You can set the color of crop marks, axes and info text with this
 %    option, if the \package{color} package could be loaded.
 %    The option takes only color names, as in |[color=red]|. See
 %    the \package{color} package documentation for how to define custom colors.
@@ -461,7 +464,7 @@
 %       \vspace{.5cm}
 %       \caption{That's what you see on top of a 9~cm wide document page when
 %           \option{cam} mode is requested: the marks, jobname, date, time, page number and
-%           cropmarks index.}
+%           crop marks index.}
 %       \label{fig:marks}
 %    \end{center}
 %   \end{quote}
@@ -538,7 +541,7 @@
 % You can change the color of the physical page as usual by using the
 % |\pagecolor| command in the preamble. But after that, within the |document|
 % environment, |\pagecolor| is redefined to only color the logical
-% page. The color of cropmarks, axes marks and page info can independently
+% page. The color of crop marks, axes marks and page info can independently
 % be set via the \option{color} option. The options \option{invert} and
 % \option{notext} override any color settings.
 %
@@ -672,7 +675,7 @@
 % The kernel provides two `hooks' that can be used to add local
 % extensions. These are macros that default to |\relax|. The first, |\CROP@user@a|,
 % is executed at every page, no matter if marks are shown or not, while the
-% second, |\CROP@user@b| is only executed at pages that contain cropmarks.
+% second, |\CROP@user@b| is only executed at pages that contain crop marks.
 % Local definitions and modifications are ideally put into a local configuration
 % file:
 %
@@ -724,7 +727,7 @@
 % other packages, which use the same method (like the \package{everyshi} package
 % by \person{Martin Schr\"oder,} from whom I have in fact borrowed some ideas).
 %
-% In addition to the cropmarks every page gets an info line containing the
+% In addition to the crop marks every page gets an info line containing the
 % jobname, the current date and time, the page number and an index number
 % printed on top. This line can be turned off (\option{noinfo}) and on (\option{info})
 % anywhere in the document.
@@ -804,7 +807,7 @@
 %    \begin{macrocode}
 %<*package>
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{crop}[2003/05/10 v1.8 cropmarks  (mf)]
+\ProvidesPackage{crop}[2003/05/20 v1.9 crop marks  (mf)]
 \expandafter\ifx\csname stockwidth\endcsname\relax
     \newdimen\stockwidth
     \stockwidth\paperwidth
@@ -963,12 +966,16 @@
     \ifx\CROP@driver\@empty
         \PackageInfo{crop}{requested driver: `\CROP@reqdriver'}%
         \ifx\pdfoutput\@undefined\else
-            \ifnum\pdfoutput=0\else
-                \def\CROP@detdriver{pdftex}%
+            \ifx\pdfoutput\relax\else
+                \ifcase\pdfoutput\else
+                    \def\CROP@detdriver{pdftex}%
+                \fi
             \fi
         \fi
         \ifx\VTeXversion\@undefined\else
-            \def\CROP@detdriver{vtex}%
+            \ifx\VTeXversion\relax\else
+                \def\CROP@detdriver{vtex}%
+            \fi
         \fi
         \PackageInfo{crop}{detected driver: `\CROP@detdriver'}%
         \ifx\CROP@reqdriver\@empty\else
@@ -1026,15 +1033,15 @@
     \PackageInfo{crop}{using `pdftex' graphics driver}%
     \pdfpagewidth\stockwidth
     \pdfpageheight\stockheight
-    \let\CROP@reflect\CROP@pdfreflect
-    \let\CROP@rotate\CROP@pdfrotate
+    \let\CROP@reflect\CROP@genreflect
+    \let\CROP@rotate\CROP@genrotate
 }
 \newcommand*\CROP@init@vtex{%
     \PackageInfo{crop}{using `vtex' graphics driver}%
     \mediawidth\stockwidth
     \mediaheight\stockheight
-    \let\CROP@reflect\CROP@pdfreflect
-    \let\CROP@rotate\CROP@pdfrotate
+    \let\CROP@reflect\CROP@genreflect
+    \let\CROP@rotate\CROP@genrotate
 }
 \newcommand*\CROP@init@none{%
     \PackageInfo{crop}{not using any graphics driver}%
@@ -1308,7 +1315,6 @@
             \vss
             \normalfont
             \normalsize
-            \let\protect\relax
             \expandafter\csname\CROP@font\endcsname{%
                 ``\jobname''\x
                 \the\year/\the\month/\the\day\x
@@ -1555,7 +1561,7 @@
 % \begin{macro}{\CROP@@ship}
 %
 % These macros redefine the \TeX\ primitive |\shipout| to insert the
-% contents of the macro |\CROP@@@ship| on top of the box which contains
+% contents of the macro |\CROP@shiplist| on top of the box which contains
 % the page contents ready for output, after which the original
 % |\shipout| command is executed.
 %
@@ -1691,7 +1697,7 @@
 % \begin{macro}{\CROP@opt@off}
 % \begin{macro}{\CROP@opt@odd}
 % \begin{macro}{\CROP@opt@even}
-% These macros start and stop the output of cropmarks.
+% These macros start and stop the output of crop marks.
 %
 %    \begin{macrocode}
 \newcommand*\CROP@opt@off{%
@@ -1799,16 +1805,17 @@
 % \subsection{Page manipulation}
 %
 % \begin{macro}{\CROP@reflect}
-% \begin{macro}{\CROP@pdfreflect}
+% \begin{macro}{\CROP@genreflect}
 % \begin{macro}{\CROP@rotate}
-% \begin{macro}{\CROP@pdfrotate}
+% \begin{macro}{\CROP@genrotate}
 % The \option{mirror} and \option{rotate} options add a macro to the
 % \emph{shiplist,} which then gets every output page and embeds it in
 % a \POSTSCRIPT\ environment (\option{dvips}) or lets the
 % \package{graphics} package reflect or rotate it (\option{pdftex}).
-% We could also use |\CROP@pdfreflect| and |\CROP@pdfrotate| for
-% the \option{dvips} mode. They would produce correct \PS\ documents,
-% the intermediate \DVI\ document, however, would be unreadable.
+% We could also use the generic operations |\CROP@genreflect| and
+% |\CROP@genrotate| for the \option{dvips} mode. They would produce
+% correct \PS\ documents, the intermediate \DVI\ document, however,
+% would be unreadable.
 %
 %    \begin{macrocode}
 \DeclareOption{mirror}{%
@@ -1830,7 +1837,7 @@
     \vbox{#1}%
     \CROP@ps{grestore}%
 }
-\newcommand*\CROP@pdfreflect[1]{%
+\newcommand*\CROP@genreflect[1]{%
     \leavevmode
     \dimen0\CROP@horigin
     \kern2\dimen0
@@ -1867,7 +1874,7 @@
     \vbox{#1}%
     \CROP@ps{grestore}%
 }
-\newcommand*\CROP@pdfrotate[1]{%
+\newcommand*\CROP@genrotate[1]{%
     \dimen0\CROP@vorigin
     \kern2\dimen0
     \leavevmode
@@ -1909,7 +1916,7 @@
 % \begin{macro}{\CROP@drawpagecolor}
 % \begin{macro}{\CROP@overlap}
 % \begin{macro}{\CROP@opt@overlap}
-% These macros care for the color of cropmarks and of the logical and
+% These macros care for the color of crop marks and of the logical and
 % the physical page. The \option{overlap} value is the amount that
 % the logical page is drawn over the page boundaries on each side.
 % This is necessary to get good results on imprecise cutting machines.
@@ -1955,7 +1962,6 @@
     \else
         \rlap{%
             \smash{%
-                \let\protect\relax
                 \dimen@\CROP@overlap
                 \advance\paperwidth2\dimen@
                 \advance\paperheight2\dimen@
@@ -2076,7 +2082,7 @@
 % options \option{off}, \option{noaxes}, \option{info}, and
 % \option{mount1}, because it does not accept default options declared
 % with |\DeclareOption*|. |\@nameuse| doesn't complain if the command
-% sequence is undefined. We let this only be executed |\AtEndOfPackage|,
+% sequence is undefined. We let this only be executed |\AtBeginDocument|,
 % because there are possibly commands from the \option{center} option
 % in the queue that have to be processed first.
 %

@@ -16,8 +16,8 @@ either text or graphics output.
 
 
 author          = "Melchior FRANZ"
-version         = "1.8"
-date            = "10 May 2003"
+version         = "1.9"
+date            = "20 May 2003"
 address         = "Melchior FRANZ
                    Rieder Hauptstrasse 52
                    A-5212 SCHNEEGATTERN
