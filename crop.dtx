@@ -814,7 +814,7 @@
         \global\let\CROP@stockcolor\current@color
     }%
     \AtBeginDocument{%
-        \renewcommand*\set@page@color{%
+        \def\set@page@color{%
             \global\let\CROP@pagecolor\current@color
         }%
         \CROP@defmarkcolor{black}%
@@ -1955,13 +1955,6 @@
 % and breaking a prior \option{invert}.
 %
 %    \begin{macrocode}
-\DeclareOption{invert}{%
-    \CROP@invert{black}%
-    \let\CROP@setmarkcolor\relax
-}
-\DeclareOption{notext}{%
-    \CROP@invert{white}%
-}
 \newcommand*\CROP@invert[1]{%
     \CROP@needscolor
     \AtBeginDvi{%
@@ -1974,6 +1967,13 @@
     \let\pagecolor\color
     \let\textcolor\color
     \let\CROP@invert\@gobble
+}
+\DeclareOption{invert}{%
+    \CROP@invert{black}%
+    \let\CROP@setmarkcolor\relax
+}
+\DeclareOption{notext}{%
+    \CROP@invert{white}%
 }
 %    \end{macrocode}
 % \end{macro}
