@@ -1153,22 +1153,26 @@
     \def\x{\discretionary{}{}{\hbox{\kern.5em---\kern.5em}}}%
     \advance\paperwidth-20\p@
     \dimen@\CROP@overlap
-    \vbox to\z@{%
-        \centering
-        \hsize\paperwidth
-        \vss
-        \normalfont
-        \normalsize
-        \let\protect\relax
-        \expandafter\csname\CROP@font\endcsname{%
-            ``\jobname''\x
-            \the\year/\the\month/\the\day\x
-            \CROP@time\x
-            page\kern.5em\thepage\x
-            \#\the\CROP@index
-            \strut
+    \hb@xt@\z@{%
+        \hss
+        \vbox to\z@{%
+            \centering
+            \hsize\paperwidth
+            \vss
+            \normalfont
+            \normalsize
+            \let\protect\relax
+            \expandafter\csname\CROP@font\endcsname{%
+                ``\jobname''\x
+                \the\year/\the\month/\the\day\x
+                \CROP@time\x
+                page\kern.5em\thepage\x
+                \#\the\CROP@index
+                \strut
+            }%
+            \vskip\dimen@
         }%
-        \vskip\dimen@
+        \hss
     }%
 }}
 \newcommand*\CROP@opt@font{\let\CROP@font\CROP@@}
@@ -1485,9 +1489,9 @@
             \vbox to\paperheight{%
                 \let\protect\relax
                 \hsize\paperwidth
-                \CROP@stockcolor
+%                \CROP@stockcolor
                 \CROP@setcolor
-                \CROP@every
+                \CROP@every             % \FIXME
                 \CROP@background
                 \CROP@@@marks
             }%
@@ -1498,8 +1502,7 @@
 }
 \newcommand*\CROP@marks{%
     \CROP@user@b
-    \CROP@@@info
-    \CROP@ulc\null\hfill\CROP@upedge\hfill\null\CROP@urc
+    \CROP@ulc\null\hfill\CROP@@@info\CROP@upedge\hfill\null\CROP@urc
     \vfill
     \CROP@ledge\hfill\CROP@redge
     \vfill
@@ -1809,7 +1812,7 @@
         }%
     }%
 }
-\gdef\GPTorg@shipout{}%      %\FIXME
+\def\GPTorg@shipout{}%      %\FIXME
 \DeclareOption{invert}{%
     \AtEndOfPackage{\RequirePackage{color}}
     \AtBeginDocument{\CROP@invert{black}}
