@@ -126,7 +126,7 @@
 % \fi
 %
 %
-% \CheckSum{929}
+% ^^A\CheckSum{929}         \FIXME!!!
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -758,21 +758,14 @@
 %
 % \subsection{Preamble}
 %
-% \begin{macro}{\CROP@driver}
 % \begin{macro}{\CROP@font}
-% The options \option{graphics} and \option{nographics} depend on the \package{graphics}
-% package, so we try to load it here. We don't complain now if it can't
-% be found, because we cannot say yet, if one of these options is used in
-% the document at all. Then we try to be clever and look if there's
-% a device dependent graphics driver already loaded, that we can use.
-% This information can, of course, be overridden by the driver options.
 % The |\CROP@font| macro is by default empty and can be changed
 % via the \option{font} option.
 %
 %    \begin{macrocode}
 %<*package>
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{crop}[2002/05/14 v1.7 cropmarks  (mf)]
+\ProvidesPackage{crop}[2002/05/14 v1.7a cropmarks  (mf)]
 \expandafter\ifx\csname stockwidth\endcsname\relax
     \newdimen\stockwidth
     \stockwidth\paperwidth
@@ -783,17 +776,144 @@
 \fi
 \newcount\CROP@index
 \CROP@index\z@
-\newcommand*\CROP@driver{}
+\newcommand*\CROP@font{}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+%
+%
+%^^A--------------------------------------------------------------------
+%
+%
+%
+%
+% \subsection{The device drivers}
+%
+% \begin{macro}{\CROP@driver}
+% The options \option{graphics} and \option{nographics} depend on the \package{graphics}
+% package, so we try to load it here. We don't complain now if it can't
+% be found, because we cannot say yet, if one of these options is used in
+% the document at all. Then we try to be clever and look if there's
+% a device dependent graphics driver already loaded, that we can use.
+% This information can, of course, be overridden by the driver options.
+%
+%    \begin{macrocode}
+\newcommand*\CROP@detdriver{}
 \IfFileExists{graphics.sty}{%
     \RequirePackage{graphics}%
     \let\CROP@Ginclude@graphics\Ginclude@graphics
     \ifx\Gin@driver\@empty\else
         \filename@parse{\Gin@driver}%
-        \edef\CROP@driver{\filename@base}%
+        \edef\CROP@detdriver{\filename@base}%
     \fi
 }{}
-\newcommand*\CROP@font{}
 %    \end{macrocode}
+% \end{macro}
+%
+%
+%
+%
+%^^A--------------------------------------------------------------------
+%
+%
+%
+%
+% \begin{macro}{\CROP@reqdriver}
+%
+%    \begin{macrocode}
+\newcommand*\CROP@reqdriver{}
+\DeclareOption{vtex}{\def\CROP@reqdriver{vtex}}
+\DeclareOption{pdftex}{\def\CROP@reqdriver{pdftex}}
+\DeclareOption{pdflatex}{\def\CROP@reqdriver{pdftex}}
+\DeclareOption{dvips}{\def\CROP@reqdriver{dvips}}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+%
+%
+%^^A--------------------------------------------------------------------
+%
+%
+%
+%
+% \begin{macro}{\CROP@evaldriver}
+%
+%    \begin{macrocode}
+\newcommand*\CROP@evaldriver{%
+    \PackageWarning{crop}{requested driver: \CROP@reqdriver}%
+    \expandafter\ifx\csname pdfoutput\endcsname\relax\else
+        \ifnum\pdfoutput=0\else
+            \def\CROP@detdriver{pdftex}%
+        \fi
+    \fi
+    \expandafter\ifx\csname VTeXversion\endcsname\relax\else
+        \def\CROP@detdriver{vtex}%
+    \fi
+    \PackageWarning{crop}{detected driver: \CROP@detdriver}%
+    \ifx\CROP@reqdriver\empty\else
+        \ifx\CROP@reqdriver\empty\else
+            \ifx\CROP@reqdriver\CROP@detdriver\else
+                \PackageWarning{crop}{I feel like using the
+                    driver \CROP@detdriver\space rather than
+                    \CROP@reqdriver\space which you requested. :-P}%
+            \fi
+        \fi
+    \fi
+    \ifx\CROP@detdriver\empty
+        \let\CROP@driver\CROP@reqdriver
+    \else
+        \let\CROP@driver\CROP@detdriver
+    \fi
+    \let\CROP@evaldriver\relax
+}
+\AtBeginDocument{\CROP@evaldriver}
+\DeclareOption{nodriver}{%
+    \AtBeginDocument{%
+        \def\CROP@driver{}%
+    }%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+%
+%
+%^^A--------------------------------------------------------------------
+%
+%
+%
+%
+% \begin{macro}{\CROP@init@dvips}
+% \begin{macro}{\CROP@init@pdftex}
+% \begin{macro}{\CROP@init@vtex}
+% \changes{v1.6}{2001/11/16}{driver options re-implemented}
+% \changes{v1.7}{2002/05/14}{nodriver option implemented}
+% These options are automatically selected (via definition in |graphics.cfg|)
+% and can as well be chosen explicitly. They do nothing else than handing
+% the given printer paper size over to the \DVI\ driver. This wouldn't
+% be necessary if there were some sort of standard. Sigh \dots
+%
+%    \begin{macrocode}
+\newcommand*\CROP@init@dvips{%
+    \PackageInfo{crop}{using dvips graphics driver}%
+    \AtBeginDvi{%
+        \special{papersize=\the\stockwidth,\the\stockheight}%
+    }%
+}
+\newcommand*\CROP@init@pdftex{%
+    \PackageInfo{crop}{using pdf(la)tex graphics driver}%
+    \pdfpagewidth\stockwidth
+    \pdfpageheight\stockheight
+}
+\newcommand*\CROP@init@vtex{%
+    \PackageInfo{crop}{using vtex graphics driver}%
+    \mediawidth\stockwidth
+    \mediaheight\stockheight
+}
+%    \end{macrocode}
+% \end{macro}
 % \end{macro}
 % \end{macro}
 %
@@ -1761,68 +1881,6 @@
 %
 %
 %
-% \subsection{The device drivers}
-%
-% \begin{macro}{\CROP@init@dvips}
-% \begin{macro}{\CROP@init@pdftex}
-% \begin{macro}{\CROP@init@vtex}
-% \begin{macro}{\CROP@driver}
-% \changes{v1.6}{2001/11/16}{driver options re-implemented}
-% \changes{v1.7}{2002/05/14}{nodriver option implemented}
-% These options are automatically selected (via definition in |graphics.cfg|)
-% and can as well be chosen explicitly. They do nothing else than handing
-% the given printer paper size over to the \DVI\ driver. This wouldn't
-% be necessary if there were some sort of standard. Sigh \dots
-%
-%    \begin{macrocode}
-\DeclareOption{vtex}{\def\CROP@driver{vtex}}
-\DeclareOption{pdftex}{\def\CROP@driver{pdftex}}
-\DeclareOption{pdflatex}{\def\CROP@driver{pdftex}}
-\DeclareOption{dvips}{\def\CROP@driver{dvips}}
-\DeclareOption{nodriver}{\def\CROP@driver{}}
-\newcommand*\CROP@init@dvips{%
-    \PackageInfo{crop}{using dvips graphics driver}%
-    \AtBeginDvi{%
-        \ifdim\stockwidth=\z@
-        \else
-            \special{papersize=\the\stockwidth,\the\stockheight}%
-        \fi
-    }%
-}
-\newcommand*\CROP@init@pdftex{%
-    \PackageInfo{crop}{using pdf(la)tex graphics driver}%
-    \ifx\@undefined\pdfpagewidth
-        \PackageWarning{crop}{implicit or explicit pdf(la)tex option
-        ignored:^^JThis doesn't seem to be pdftex!}%
-    \else
-        \AtBeginDocument{%
-            \ifdim\stockwidth=\z@
-            \else
-                \pdfpagewidth\stockwidth
-                \pdfpageheight\stockheight
-            \fi
-        }%
-    \fi
-}
-\newcommand*\CROP@init@vtex{%
-    \PackageInfo{crop}{using vtex graphics driver}%
-    \ifdim\stockwidth=\z@\else
-        \ifx\@undefined\mediawidth
-            \PackageWarning{crop}{implicit or explicit vtex option
-            ignored:^^JThis doesn't seem to be vtex!}%
-        \else
-            \AtBeginDocument{%
-                \mediawidth\stockwidth
-                \mediaheight\stockheight
-            }%
-        \fi
-    \fi
-}
-%    \end{macrocode}
-% \end{macro}
-% \end{macro}
-% \end{macro}
-% \end{macro}
 %
 %
 %
@@ -1905,7 +1963,7 @@
     \PackageInfo{crop}{Local config file crop.cfg used}
 }{}
 \ProcessOptions
-\AtEndOfPackage{\@nameuse{CROP@init@\CROP@driver}}
+\AtBeginDocument{\@nameuse{CROP@init@\CROP@driver}}
 \endinput
 %</package>
 %    \end{macrocode}
