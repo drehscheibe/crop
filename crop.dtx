@@ -126,7 +126,7 @@
 % \fi
 %
 %
-% \CheckSum{931}
+% \CheckSum{925}
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -863,22 +863,12 @@
 %    \begin{macrocode}
 \DeclareOption{center}{\AtEndOfPackage{\CROP@center}}
 \newcommand*\CROP@center{%
-    \ifdim\stockwidth=\z@
-        \PackageError{crop}{%
-            No printing paper size selected%
-        }{%
-            You have to select a paper size like `a4' or
-            `height=20truecm,width=...' to be able to use the
-            `center' option.%
-        }%
-    \else
-        \voffset\stockheight
-        \advance\voffset-\paperheight
-        \voffset.5\voffset
-        \hoffset\stockwidth
-        \advance\hoffset-\paperwidth
-        \hoffset.5\hoffset
-    \fi
+    \voffset\stockheight
+    \advance\voffset-\paperheight
+    \voffset.5\voffset
+    \hoffset\stockwidth
+    \advance\hoffset-\paperwidth
+    \hoffset.5\hoffset
 }
 %    \end{macrocode}
 % \end{macro}
