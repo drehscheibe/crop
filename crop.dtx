@@ -108,7 +108,7 @@
 % \fi
 %
 %
-% \CheckSum{828}
+% \CheckSum{836}
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -697,15 +697,15 @@
 % the document at all. Then we try to be clever and look if there's
 % a device dependent graphics driver already loaded, that we can use.
 % This information can, of course, be overridden by the driver options.
-% The |\CROP@font| macr is by default empty and can be changed
+% The |\CROP@font| macro is by default empty and can be changed
 % via the \opt{font} option.
 %
 %    \begin{macrocode}
 %<*package>
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{crop}[2001/11/16 v1.6 cropmarks  (mf)]
-\newdimen\CROP@width  \CROP@width\z@
-\newdimen\CROP@height \CROP@height\z@
+\ifx\stockwidth\@undefined  \newdimen\stockwidth  \stockwidth\z@  \fi
+\ifx\stockheight\@undefined \newdimen\stockheight \stockheight\z@ \fi
 \newcount\CROP@index  \CROP@index\z@
 \newcommand*\CROP@includegraphics{%
   \PackageError{crop}%
@@ -742,9 +742,9 @@
 % option exchanges the |\hoffset| and |\voffset| dimension.
 %
 %    \begin{macrocode}
-\newcommand*\CROP@size[2]{\CROP@width#1 \CROP@height#2 }
+\newcommand*\CROP@size[2]{\stockwidth#1 \stockheight#2 }
 \DeclareOption{landscape}{%
-  \def\CROP@size#1#2{\CROP@height#1 \CROP@width#2 }}
+  \def\CROP@size#1#2{\stockheight#1 \stockwidth#2 }}
 \DeclareOption{a0}{\CROP@size{841truemm}{1189truemm}}
 \DeclareOption{a1}{\CROP@size{595truemm}{841truemm}}
 \DeclareOption{a2}{\CROP@size{420truemm}{595truemm}}
@@ -776,15 +776,15 @@
 %    \begin{macrocode}
 \DeclareOption{center}{\AtEndOfPackage{\CROP@center}}
 \newcommand*\CROP@center{%
-  \ifdim\CROP@width=\z@
+  \ifdim\stockwidth=\z@
     \PackageError{crop}{no printing paper size selected}{%
       you have to select a paper size before you can use %
       the `center' option
     }%
   \else
-    \voffset\CROP@height
+    \voffset\stockheight
     \advance\voffset-\paperheight\voffset.5\voffset
-    \hoffset\CROP@width
+    \hoffset\stockwidth
     \advance\hoffset-\paperwidth\hoffset.5\hoffset
   \fi
 }
@@ -1400,8 +1400,8 @@
 \DeclareOption{dvips}{\renewcommand*\CROP@driver{dvips}}
 \newcommand*\CROP@init@dvips{%
   \PackageInfo{crop}{using dvips graphics driver}%
-  \ifdim\CROP@width=\z@\else
-    \special{papersize=\the\CROP@width,\the\CROP@height}%
+  \ifdim\stockwidth=\z@\else
+    \special{papersize=\the\stockwidth,\the\stockheight}%
   \fi
 }
 \newcommand*\CROP@init@pdftex{%
@@ -1410,9 +1410,9 @@
     \PackageWarning{crop}{implicit or explicit pdf(la)tex option
     ignored:^^JThis isn't pdftex!}%
   \else
-    \ifdim\CROP@width=\z@\else
-      \pdfpagewidth\CROP@width
-      \pdfpageheight\CROP@height
+    \ifdim\stockwidth=\z@\else
+      \pdfpagewidth\stockwidth
+      \pdfpageheight\stockheight
     \fi
     \renewcommand*\CROP@opt@nographics{%
       \renewcommand\includegraphics[2][]{%
@@ -1423,12 +1423,12 @@
 }
 \newcommand*\CROP@init@vtex{%
   \PackageInfo{crop}{using vtex graphics driver}%
-  \ifdim\CROP@width=\z@\else
+  \ifdim\stockwidth=\z@\else
     \ifx\@undefined\mediawidth
       \PackageWarning{crop}{implicit or explicit vtex option
       ignored:^^JThis isn't vtex!}%
     \else
-      \mediawidth\CROP@width \mediaheight\CROP@height
+      \mediawidth\stockwidth \mediaheight\stockheight
     \fi
   \fi
 }
@@ -1579,5 +1579,5 @@
 % }
 %
 % ^^A \PrintChanges
-% ^^A vim:ts=2:sw=2:et
+% ^^A vim:ts=4:sw=4:et:cindent
 % \Finale                                               ^^A.E.I.O.U.^^
