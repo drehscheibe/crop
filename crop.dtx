@@ -802,8 +802,9 @@
     \def\set@page@color{\global\let\CROP@stockcolor\current@color}
     \AtBeginDocument{%
         \def\set@page@color{\global\let\CROP@pagecolor\current@color}
+        \CROP@setmarkcolor{black}
     }
-    \newcommand*\CROP@needscolor{}%
+    \let\CROP@needscolor\relax
 }{%
     \newcommand*\CROP@needscolor{%
         \PackageError{crop}{%
@@ -1690,10 +1691,11 @@
         \ifodd\count@
             \let\CROP@ulc\relax
             \let\CROP@llc\relax
+            \let\CROP@ledge\relax
         \else
             \let\CROP@urc\relax
             \let\CROP@lrc\relax
-            \let\CROP@info\relax
+            \let\CROP@redge\relax
         \fi
     }%
 }
@@ -1835,8 +1837,8 @@
     \def\set@color{\global\let\CROP@markcolor\current@color}%
     \color{#1}%
 }}
-\CROP@setmarkcolor{black}
 \newcommand*\CROP@opt@color{%
+    \CROP@needscolor
     \expandafter\CROP@setmarkcolor\expandafter{\CROP@@}%
 }
 \newcommand*\CROP@drawstockcolor{%
@@ -2031,20 +2033,28 @@
 %
 %\begin{verbatim}
 %    \ifodd\count@                         %% if (p % 4 == 1 || p % 4 == 3)
-%      \let\CROP@ulc\relax\let\CROP@llc\relax
+%      \let\CROP@ulc\relax
+%      \let\CROP@llc\relax
+%      \let\CROP@ledge\relax
 %      \divide\count@2 \ifodd\count@       %%    if (p % 4 == 3)
 %        \let\CROP@urc\relax
 %        \let\CROP@info\relax
+%        \let\CROP@upedge\relax
 %      \else                               %%    if (p % 4 == 1)
 %        \let\CROP@lrc\relax
+%        \let\CROP@loedge\relax
 %      \fi
 %    \else                                 %% if (p % 4 == 0 || p % 4 == 2)
-%      \let\CROP@urc\relax\let\CROP@lrc\relax
-%      \let\CROP@info\relax
+%      \let\CROP@urc\relax
+%      \let\CROP@lrc\relax
+%      \let\CROP@redge\relax
 %      \divide\count@2 \ifodd\count@       %%    if (p % 4 == 2)
 %        \let\CROP@llc\relax
+%        \let\CROP@loedge\relax
 %      \else                               %%    if (p % 4 == 0)
 %        \let\CROP@ulc\relax
+%        \let\CROP@info\relax
+%        \let\CROP@upedge\relax
 %      \fi
 %    \fi}}
 %\end{verbatim}
