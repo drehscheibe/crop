@@ -35,7 +35,6 @@
 %%                        Rieder Hauptstrasse 52
 %%                        A-5212 SCHNEEGATTERN
 %%                        AUSTRIA",
-%%     telephone       = "++43 7746 3109",
 %%     URL             = "http://www.unet.univie.ac.at/~a8603365/",
 %%     email           = "a8603365@unet.univie.ac.at",
 %%     codetable       = "ISO/ASCII",
@@ -132,7 +131,7 @@
 % \fi
 %
 %
-% \CheckSum{1060}
+% ^^A\CheckSum{1063}
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -793,6 +792,9 @@
 %
 % \subsection{Preamble}
 %
+% \begin{macro}{\stockwidth}
+% \begin{macro}{\stockheight}
+% \begin{macro}{\CROP@index}
 % \begin{macro}{\CROP@font}
 % Make sure that |\stockwidth| and |\stockheight| are |\dimen|
 % registers that hold the physical paper size. They are initially set
@@ -800,7 +802,7 @@
 % These registers are also used\slash provided by the \package{memoir}
 % class and the \package{hyperref} package.
 % The |\CROP@font| macro is by default empty and can be changed
-% via the \option{font} option.
+% through the \option{font} option.
 %
 %    \begin{macrocode}
 %<*package>
@@ -819,6 +821,9 @@
 \newcommand*\CROP@font{}
 %    \end{macrocode}
 % \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
 %
 %
 %
@@ -828,22 +833,38 @@
 %
 %
 %
-% Here we try to load the \package{color} package and make sure that
-% the |\pagecolor| command doesn't actually set the color, but resorts
-% to storing the requested color. If the package can't be found, we
-% only prepare an error message for eventual later use.
+% \begin{macro}{\CROP@stockcolor}
+% \begin{macro}{\CROP@pagecolor}
+% \begin{macro}{\CROP@needscolor}
+% Try to load the \package{color} package. It is needed for the
+% \option{invert} and the \option{notext} option and, of course,
+% for the modified |\pagecolor| command. Changing the meaning of
+% |\current@color| looks dangerous, but it is only done if the
+% \package{color} package couldn't be loaded, anyway.
 %
 %    \begin{macrocode}
 \let\CROP@stockcolor\@empty
 \let\CROP@pagecolor\@empty
-\newif\ifCROP@color@
 \IfFileExists{color.sty}{%
     \RequirePackage{color}%
-    \CROP@color@true
+    \let\CROP@needscolor\@empty
 }{%
-    \CROP@color@false
+    \newcommand*\CROP@needscolor{%
+        \PackageError{crop}{%
+            The `invert' and `notext' options require the\MessageBreak
+            `color' package, which doesn't seem to be installed%
+        }{%
+            Install the `color' package or don't use the `invert'
+            \MessageBreak or `notext' option.
+        }%
+        \let\CROP@needscolor\relax
+    }%
+    \let\current@color\relax
 }
 %    \end{macrocode}
+% \end{macro}
+% \end{macro}
+% \end{macro}
 %
 %
 %
@@ -858,11 +879,11 @@
 % \begin{macro}{\CROP@detdriver}
 % \begin{macro}{\CROP@Ginclude@graphics}
 % \begin{macro}{\CROP@ps}
-% The options (\option{graphics} and \option{nographics}) depend on the
+% The options \option{graphics} and \option{nographics} depend on the
 % \package{graphics} package, which, if configured appropriately, also
-% tells us what output device is preferred on the system. Issue a
+% tells us which output device is preferred on the system. Show a
 % warning, if the package couldn't be loaded, because we have to use a
-% less portable \PS-`driver' then.
+% less portable \PS\ `driver' then.
 %
 %    \begin{macrocode}
 \let\CROP@detdriver\@empty
@@ -938,8 +959,7 @@
 % \begin{macro}{\CROP@evaldriver}
 % If |\CROP@driver| wasn't already set, decide |\AtBeginDocument| which
 % graphics driver to use. A detected driver takes precedence over a
-% `suggested' one, but issue a warning if the user's choice is
-% ignored.
+% `suggested' one. Show a warning if the user's choice is ignored.
 %
 %    \begin{macrocode}
 \newcommand*\CROP@evaldriver{%
@@ -1087,7 +1107,7 @@
 %
 % \begin{macro}{\CROP@center}
 % The \option{center} option sets |\voffset| and |\hoffset| so that the
-% document pages are centered on the printing paper sheet.
+% document pages are centered on the printing paper sheets.
 %
 %    \begin{macrocode}
 \DeclareOption{center}{\AtBeginDocument{\CROP@center}}
@@ -1154,8 +1174,8 @@
 % stored in |\CROP@@|.
 % The macro tolerates even arguments for options that are not prepared
 % to handle arguments (e.\,g.~|cross=garbage|), or more than one
-% argument (e.\,g.~|mount2=1=garbage|). This is not a bug, it's
-% a feature! It makes the design quite simple.
+% argument (e.\,g.~|mount2=1=garbage|). This makes the design simpler
+% and doesn't hurt.
 %
 %    \begin{macrocode}
 \newcommand*\CROP@execopt[1]{%
@@ -1186,7 +1206,8 @@
 %
 % \begin{macro}{\cropdef}
 % The |\cropdef| macro defines a mode switch (see section
-% \ref{sec:cropdef}).
+% \ref{sec:cropdef}). It supports only corner marks and the page info,
+% but not the axis marks, mainly for hysterical raisins.
 %
 %    \begin{macrocode}
 \newcommand*\cropdef[6][\CROP@@info]{%
@@ -1261,7 +1282,7 @@
 % \begin{macro}{\CROP@@info}
 % \begin{macro}{\CROP@opt@font}
 % This macro prints the jobname, the current date and time, the page
-% number and an index number at the top of the page.
+% number and an index number at the top of the logical page.
 %
 %    \begin{macrocode}
 \newcommand*\CROP@time{}
@@ -1277,7 +1298,7 @@
     \global\advance\CROP@index\@ne
     \def\x{\discretionary{}{}{\hbox{\kern.5em---\kern.5em}}}%
     \advance\paperwidth-20\p@
-    \dimen@3pt
+    \dimen@4pt
     \ifx\CROP@pagecolor\@empty
     \else
         \advance\dimen@\CROP@overlap
@@ -1321,7 +1342,7 @@
 % \subsection{The marks}
 %
 % The following four macros provide different marks for the
-% \option{cam} mode. These do not touch the logical page and can, thus,
+% \option{cam} mode. They do not touch the logical page and can, thus,
 % be printed on every single sheet.
 %
 % \begin{macro}{\CROP@@ulc}
@@ -1901,7 +1922,7 @@
     \def\set@color{\global\let\CROP@markcolor\current@color}%
     \@declaredcolor{#1}%
 }}
-\ifCROP@color@
+\ifx\CROP@needscolor\@empty
     \renewcommand*\set@page@color{%
         \global\let\CROP@stockcolor\current@color
     }%
@@ -1912,17 +1933,6 @@
     }%
     \CROP@defmarkcolor{black}%
     \let\CROP@needscolor\relax
-\else
-    \newcommand*\CROP@needscolor{%
-        \PackageError{crop}{%
-            The `invert' and `notext' options require the\MessageBreak
-            `color' package, which doesn't seem to be installed%
-        }{%
-            Install the `color' package or don't use the `invert'
-            \MessageBreak or `notext' option.
-        }%
-        \let\CROP@needscolor\relax
-    }%
 \fi
 \newcommand*\CROP@opt@color{%
     \CROP@needscolor
@@ -2122,7 +2132,6 @@
 % \end{figure}
 %
 %
-% \noindent
 % First of all |\CROP@offset| is set to the value of the (optional)
 % argument or zero.
 % Then |\CROP@hook| is defined first to set |\count@| to the page number
@@ -2141,7 +2150,7 @@
 % \noindent
 % Now bits~0 and~1 are checked via |\ifodd| to get
 % $p$ modulo 4, after which the respective marks are deleted.
-% The comments in the example use for simplicity C-Notation in which
+% The comments in the example use for simplicity C-notation in which
 % `|%|' is the modulo or remainder operator, `|==|' the equal, and
 % `{\catcode`\|=12\texttt{||}}' the logical (inclusive) OR operator.
 %
