@@ -1654,9 +1654,9 @@
     \else
         \DeclareRobustCommand*\pagecolor[2][]{%
             \def\CROP@a{white}%
-            \def\CROP@b{#2}%    
+            \def\CROP@b{#2}%
             \ifx\CROP@a\CROP@b
-                \let\CROP@color\relax                
+                \global\let\CROP@color\relax
             \else
                 \xdef\CROP@setcolor{%
                     \noexpand\color\if$#1$\else[#1]\fi{#2}%
