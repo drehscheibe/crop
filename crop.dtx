@@ -259,7 +259,7 @@
 %    using the dimensions |\oddsidemargin|, |\evensidemargin| and
 %    |\topmargin|. The |geometry| package does a very good job setting
 %    all these parameters. The options \opt{horigin} and \opt{vorigin} only
-%    move the marks and don't change the page contents. Only them only if
+%    move the marks and don't change the page contents. Use them only if
 %    you know what you are doing. Both options take a mandatory dimension:
 %    write for example |horigin=-.6in|.
 %
@@ -287,7 +287,7 @@
 %    \TeX\ doesn't care about your printing paper. It just typesets documents.
 %    If you are working with |dvips| or |pdftex| you may want to sepcify the
 %    dimensions of the paper you are planning to print on in your PostScript
-%    or PDF's documents. This requires you to chose one of the paper size
+%    or PDF's documents. This requires you to choose one of the paper size
 %    options mentioned above, of course.
 %
 % \changes{v1.2}{1998/12/07}{mirror option added}
@@ -521,7 +521,8 @@
 %      \hbox{\the\year/\the\month/\the\day\strut}%
 %      \hbox{page \thepage\strut}}}}}
 %
-%% make the package time used in the page information public
+%% make the package time used in the page information accessible
+%% in the whole document
 %\let\Time\CROP@time
 %
 %\endinput
