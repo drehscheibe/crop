@@ -8,5 +8,6 @@
 + use \reflectbox when processed with pdflatex
 + add user hooks (kernel, marks)
 + marks/bgnd color (pdflatex!)
++ dropped compatibility options
 
 - check nodriver
