@@ -16,13 +16,12 @@ either text or graphics output.
 
 
 author          = "Melchior FRANZ"
-version         = "1.7"
-date            = "12 May 2002"
+version         = "1.8"
+date            = "10 May 2003"
 address         = "Melchior FRANZ
                    Rieder Hauptstrasse 52
                    A-5212 SCHNEEGATTERN
                    AUSTRIA"
-telephone       = "++43 7746 3109"
 URL             = "http://www.unet.univie.ac.at/~a8603365/"
 email           = "a8603365@unet.univie.ac.at"
 codetable       = "ISO/ASCII"
@@ -40,7 +39,7 @@ in the file macros/latex/base/lppl.txt on any CTAN archive server.
 
 
 Extracting the package & processing the documentation
-=====================================================  
+=====================================================
 
 on Unix/Linux just run "make" to get the style file and the documentation;
 else generate the driver crop.ins (if you don't already have it):
@@ -54,5 +53,5 @@ Now generate the style file:
 And finally to produce the documentation run LaTeX three times:
 
     $ latex crop.dtx
-    $
- 
+
+

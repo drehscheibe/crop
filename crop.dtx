@@ -29,7 +29,7 @@
 %%  @LaTeX-package-file{
 %%     author          = "Melchior FRANZ",
 %%     version         = "1.8",
-%%     date            = "01 March 2003",
+%%     date            = "10 May 2003",
 %%     filename        = "crop.dtx",
 %%     address         = "Melchior FRANZ
 %%                        Rieder Hauptstrasse 52
@@ -45,8 +45,7 @@
 %%                        trimming paper stacks, for camera alignment and
 %%                        for visualizing the page dimensions.
 %%                        There are options for centering the page with
-%%                        respect to some physical paper size, for marking
-%%                        the vertical and horizontal middle axis, for
+%%                        respect to some physical paper size, for
 %%                        mounting pages on a physical sheet, for
 %%                        reflecting and inverting the whole document or
 %%                        printing it upside-down, and for suppressing
@@ -77,7 +76,7 @@
 %
 %<*driver>
 \def\fileversion{1.8}
-\def\filedate{2003/03/01}
+\def\filedate{2003/05/10}
 \documentclass[draft]{ltxdoc}
 %
 \newcommand*\option{\textsf}
@@ -95,7 +94,7 @@
 \newcommand*\CROP{\package{crop}}
 % (the following two are for development versions ONLY!   :-)
 \newcommand*\FIXME{\marginpar{\Huge FIXME}\message{<FIXME>}}
-\newcommand*\BULLSHIT{\marginpar{\Huge BULLSHIT!}}
+\newcommand*\BS{\marginpar{\Huge BULLSHIT!}}
 %
 %
 \IfFileExists{crop.sty}
@@ -131,7 +130,7 @@
 % \fi
 %
 %
-% ^^A\CheckSum{1063}
+% \CheckSum{1063}
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -155,7 +154,7 @@
 % \title{The \CROP\ package}
 %
 % \author{Melchior \textsc{FRANZ}}
-% \date{March 1, 2003}
+% \date{May 10, 2003}
 % \maketitle
 %
 %
@@ -193,7 +192,7 @@
 % \changes{v1.7}{2002/05/14}{odd/even/width/height options added; better
 %   geometry.sty compatibility; adopting `stockwidth/`stockheight}
 %
-% \changes{v1.8}{2003/03/01}{removed all the `changes entries except those
+% \changes{v1.8}{2003/05/10}{removed all the `changes entries except those
 %   in the preamble (crop is in CVS since v1.4, anyway); rewrote kernel;
 %   added color support; fixed a nasty bug; better driver detection}
 %
@@ -210,9 +209,8 @@
 %^^A
 % , which provides different forms of cropmarks for trimming paper
 % stacks, for camera alignment and for visualizing the page dimensions.
-% There are options for centering the document page on the
-% paper sheet, for marking the vertical and horizontal middle axis, for
-% mounting pages on a physical sheet, for reflecting and inverting
+% There are options for centering the document page on the paper sheet,
+% for mounting pages on a physical sheet, for reflecting and inverting
 % the whole document or printing it upside-down, and for suppressing
 % either text or graphics output.
 %
@@ -250,7 +248,7 @@
 % \label{sec:conventional}
 %
 % These options may only be used in the preamble and have to be stated
-% as arguments to the |\usepackage| command (as in |\usepackage[frame]{crop}|).
+% as arguments to the |\usepackage| command (as in |\usepackage[mirror]{crop}|).
 %
 % \begin{labeling}{\indent\indent}
 % \item[\itemfont a0, a1, a2, a3, a4, a5, a6,
@@ -258,7 +256,7 @@
 %    These options declare the printing paper dimensions. One of them should be
 %    specified if the \option{center} option or one of the options \option{dvips},
 %    \option{pdftex} and \option{vtex} is used. The size options do not
-%    declare the logical document page size! See section~\ref{sec:custom-logical}
+%    define the logical document page size! See section~\ref{sec:custom-logical}
 %    for how to achieve this.
 %
 % \item[\itemfont width, height]---
@@ -283,13 +281,12 @@
 %    you may want to pass the dimensions of the paper that you are planning to print on to
 %    the respective driver program. Especially viewer programs like \program{gs}
 %    or \program{gv} make use of this \emph{bounding box} information. Unfortunately,
-%    this can't be done in a generic way---there's no standard. Furthermore, there
-%    are different routines used for rotation and reflection, depending on the
-%    output driver.
+%    this can't be done in a generic way---there's no standard. These options select
+%    driver specific methods to set the paper size and to rotate and reflect a page.
 %
-%    The \CROP\ package tries to find out by itself, which driver to use.
+%    The \CROP\ package tries to find out by itself which driver to use.
 %    You find its choice mentioned in the log file. Additionally, you can
-%    suggest (|[dvips]|) or enforce (|[dvips!]|) one of the drivers. In the
+%    \emph{suggest} (|[dvips]|) or \emph{enforce} (|[dvips!]|) one of the drivers. In the
 %    latter case you only have to add an exclamation point to the driver
 %    option. The difference is, that a suggestion may get overruled by the
 %    package. Assume you have asked for |[dvips]|, but run the document file
@@ -299,9 +296,9 @@
 %    \option{pdflatex} is a synonym for \option{pdftex}.
 %
 % \item[\itemfont mirror]
-%    This option reflects the whole document, provided that the output driver
-%    is supported by the \package{graphics} package. It doesn't have any
-%    effect on the \DVI\ file.
+%    This option reflects the whole document, provided that the selected output
+%    driver supports the \package{graphics} package's |\reflectbox| command.
+%    It doesn't have any effect on the \DVI\ file.
 %
 % \item[\itemfont rotate]
 %    Rotates the document by 180\(^\circ\) so that it appears upside-down.
@@ -311,9 +308,8 @@
 % \item[\itemfont invert]
 %    Lets the whole document be printed white onto black background,
 %    if the \package{color} package can be loaded and the document is output with a
-%    device that is capable of displaying colors. All further color
-%    changing commands stated in the document are disabled.
-%    This option doesn't invert pictures, nor does it really swap
+%    color aware device. All further color changing commands stated in the document
+%    are disabled. This option doesn't invert pictures, nor does it really swap
 %    text and paper color. Red text on green will still become white
 %    text on black. \option{invert} is stronger than \option{notext}.
 %
@@ -336,7 +332,8 @@
 %
 % These options may be used in the preamble like the `conventional' options
 % (see section~\ref{sec:conventional}), but also as optional arguments to the
-% |\crop| command everywhere in the document (as in |\crop[frame]|).
+% |\crop| command everywhere in the document (as in |\crop[frame]|). Using
+% this command without options implies |\crop[cam,noaxes]|.
 %
 % \begin{labeling}{\indent\indent}
 % \item[\itemfont cam]
@@ -347,7 +344,7 @@
 %    selects this mode if no other mode is requested.
 %
 % \item[\itemfont cross]
-%    This mode provides four two inch wide crosses (see figure
+%    This mode provides four 4~cm wide crosses (see figure
 %    \ref{fig:marks}), one at each corner, that touch the logical paper
 %    edge. That's why they should be printed on an extra page
 %    that will be used as a cover page while trimming the whole paper stack.
@@ -366,14 +363,14 @@
 %    Use these options to let the cropmarks be put on odd\slash even pages only.
 %    They automatically turn on \option{cam} marks if no other marks have been
 %    requested. Note that only the page number is considered. If you have
-%    two subsequent pages both with page number~1 and ask for the \option{odd}
+%    two subsequent pages both with page number~1, and ask for the \option{odd}
 %    option, then both pages will have marks.
 %
 % \item[\itemfont axes, noaxes]---
 %    These options enable\slash disable the output of little marks that
-%    show the logical page's horizontal and vertical middle axis and
+%    indicate the logical page's horizontal and vertical middle axis and
 %    may be selected in addition to one of the main modes. These marks
-%    might be needed for punching. Notice that they are lost after
+%    might be needed for punching. Note that they are lost after
 %    trimming, since they lie outside the logical page.
 %    These marks are disabled by default.
 %
@@ -383,8 +380,8 @@
 %    with \#1 and is incremented with every page info line, hence being more
 %    reliable than page numbers, which are not unique and may be negative or
 %    contain letters. It can also be seen as a cropmarks counter.
-%    This page information is enabled by default. Pages without cropmarks
-%    aren't counted.
+%    Pages without cropmarks aren't counted. This page information is enabled
+%    by default.
 %
 % \item[\itemfont font]
 %    The page info line uses |\normalfont| by default. If you are typesetting
@@ -401,7 +398,7 @@
 %    You can set the color of cropmarks, axes and info text with this
 %    option, if the \package{color} package could be loaded.
 %    The option takes only color names, as in |[color=red]|. See
-%    the \package{color} package for how to define custom colors.
+%    the \package{color} package documentation for how to define custom colors.
 %
 % \item[\itemfont mount1, mount2]---
 %    If more than one logical page is to be mounted on a physical sheet,
@@ -410,7 +407,7 @@
 %    The \option{mount2} option prints only the outer marks.
 %    There's also a \option{mount1} option that is selected by default.
 %    These commands take a number as an optional argument serving
-%    as a page offset. Type |mount2| or |mount2=0| for odd pages right
+%    as page offset. Type |mount2| or |mount2=0| for odd pages right
 %    and |mount2=1| for odd pages left. Since further modes are likely
 %    to be document, driver, and printer dependent, it is up to you to
 %    implement them yourself. (See a \option{mount4} suggestion on page
@@ -441,10 +438,10 @@
 %    whether they shall be printed or not.
 %
 % \begin{example}[.86\textwidth]^^A
-% |%\newcommand*\colorgraphics{}                 % print them|\\
-% |\newcommand*\colorgraphics{\crop[nographics]} % don't!|\\
+% |%\newcommand*\colorgraphic{}                 % print them;|\\
+% |\newcommand*\colorgraphic{\crop[nographics]} % don't!|\\
 % |...|\\
-% |{\colorgraphics|\\
+% |{\colorgraphic|\\
 % |\includegraphics{...}|\\
 % |\caption{...}|\\
 % |}|
@@ -475,7 +472,7 @@
 % \subsection{Loading}
 %
 % Since all marks lie outside the logical page, the horizontal and vertical
-% offset are to be set properly. Otherwise the marks are likely to be cut
+% offset should be set properly. Otherwise the marks are likely to be cut
 % off by the \DVI\ driver or the printer.
 % Provided that you have declared the size of your printing paper, you can
 % use the |center| option to center every logical page on the respective sheet.
@@ -535,10 +532,10 @@
 %
 %
 %
-% \subsection{Color handling}
+% \subsection{Color support}
 %
-% The \CROP\ package always tries to loads the \package{color} package.
-% You can change the color of the physical page as usual using the
+% The \CROP\ package always tries to load the \package{color} package.
+% You can change the color of the physical page as usual by using the
 % |\pagecolor| command in the preamble. But after that, within the |document|
 % environment, |\pagecolor| is redefined to only color the logical
 % page. The color of cropmarks, axes marks and page info can independently
@@ -807,7 +804,7 @@
 %    \begin{macrocode}
 %<*package>
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{crop}[2003/03/01 v1.8 cropmarks  (mf)]
+\ProvidesPackage{crop}[2003/05/10 v1.8 cropmarks  (mf)]
 \expandafter\ifx\csname stockwidth\endcsname\relax
     \newdimen\stockwidth
     \stockwidth\paperwidth
@@ -1762,7 +1759,7 @@
 % \begin{macro}{\CROP@opt@mount1}
 % \begin{macro}{\CROP@opt@mount2}
 % Since |\newcommand| doesn't allow macro names to contain non-letters,
-% we need a construction using |\csname|, |\endcsname|, and
+% we need a construction with |\csname|, |\endcsname|, and
 % |\expandafter|. |\@namedef| would have worked, too, but it would not
 % have made a check for redefinitions.
 %
