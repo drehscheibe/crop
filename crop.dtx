@@ -767,7 +767,7 @@
 %    \begin{macrocode}
 %<*package>
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{crop}[2002/05/14 v1.7a cropmarks  (mf)]
+\ProvidesPackage{crop}[2002/12/16 v1.7b cropmarks  (mf)]
 \expandafter\ifx\csname stockwidth\endcsname\relax
     \newdimen\stockwidth
     \stockwidth\paperwidth
@@ -849,7 +849,12 @@
         \filename@parse{\Gin@driver}%
         \edef\CROP@detdriver{\filename@base}%
     \fi
-}{}
+    \let\CROP@ps\Gin@PS@raw
+}{%
+    \PackageWarning{crop}{couldn't find graphics.sty; will use
+        internal PostScript interface}%
+    \newcommand*\CROP@ps[1]{\special{ps: ##1}}%
+}
 %    \end{macrocode}
 % \end{macro}
 %
@@ -897,13 +902,13 @@
     \ifx\CROP@reqdriver\empty\else
         \ifx\CROP@reqdriver\empty\else
             \ifx\CROP@reqdriver\CROP@detdriver\else
-                \PackageWarning{crop}{%
+                \PackageWarningNoLine{crop}{%
                     You requested the `\CROP@reqdriver' driver
                     but I think that the `\CROP@detdriver' works
                     better in the current context. You can force
                     me to respect your decision by additionally
                     stating the `nodriver' option.
-                    e.g. [nodriver,pdftex]
+                    e.g. [nodriver,pdftex]%
                 }
             \fi
         \fi
@@ -1028,7 +1033,7 @@
 % pages are centered on the printing paper sheet.
 %
 %    \begin{macrocode}
-\DeclareOption{center}{\AtEndOfPackage{\CROP@center}}
+\DeclareOption{center}{\AtBeginDocument{\CROP@center}}
 \newcommand*\CROP@center{%
     \voffset\stockheight
     \advance\voffset-\paperheight
@@ -1715,7 +1720,6 @@
 %
 % \begin{macro}{\CROP@reflect}
 % \begin{macro}{\CROP@rotate}
-% \begin{macro}{\CROP@setps}
 % The \option{mirror} and \option{rotate} options add a macro to the \emph{shiplist,}
 % which then gets every output page and embeds it in a \POSTSCRIPT\ environment.
 % The \PS\ commands are only interpreted by \PS-aware output drivers
@@ -1726,7 +1730,7 @@
 %
 %    \begin{macrocode}
 \DeclareOption{mirror}{%
-    \AtBeginDocument{\CROP@shipadd\CROP@reflect\CROP@setps}
+    \AtBeginDocument{\CROP@shipadd\CROP@reflect}
 }
 \newcommand*\CROP@reflect[1]{%
     \vbox to\z@{%
@@ -1759,7 +1763,7 @@
     }%
 }
 \DeclareOption{rotate}{%
-    \AtBeginDocument{\CROP@shipadd\CROP@rotate\CROP@setps}
+    \AtBeginDocument{\CROP@shipadd\CROP@rotate}
 }
 \newcommand*\CROP@rotate[1]{%
     \hb@xt@\z@{%
@@ -1797,18 +1801,7 @@
         }%
     }%
 }
-\newcommand*\CROP@setps{%
-    \ifx\Gin@PS@raw\@undefined
-        \PackageWarning{crop}{internal PostScript interface used}%
-        \newcommand*\CROP@ps[1]{\special{ps: ##1}}%
-    \else
-        \PackageInfo{crop}{graphics/color PostScript interface used}{}%
-        \let\CROP@ps\Gin@PS@raw
-    \fi
-    \let\CROP@setps\relax
-}
 %    \end{macrocode}
-% \end{macro}
 % \end{macro}
 % \end{macro}
 %
