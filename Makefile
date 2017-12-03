@@ -1,5 +1,3 @@
-# $Id$
-
 NAME=crop
 ARCHIVE_NAME=$(NAME).tar.gz
 ARCHIVE_CONTENTS=$(NAME).dtx Makefile $(NAME).txt $(NAME).ins
@@ -36,11 +34,13 @@ archive: $(NAME).ins
 	@ echo ====================
 	@ tar -tzf $(ARCHIVE_NAME)
 
-clean: 
-	rm -f $(NAME).{log,toc,lot,lof,idx,ilg,ind,aux,blg,bbl,dvi,ins}
+clean:
+	rm -f $(NAME).log $(NAME).toc $(NAME).lof $(NAME).dx $(NAME).ilg
+	rm -f $(NAME).ind $(NAME).aux $(NAME).blg $(NAME).bbl $(NAME).dvi
+	rm -f $(NAME).ins
 
 distclean: clean
-	rm -f $(NAME).{ps,pdf,sty} $(ARCHIVE_NAME)
+	rm -f $(NAME).ps $(NAME).pdf $(NAME).sty $(ARCHIVE_NAME)
 
 
 REFWARN = 'Rerun to get cross-references'
