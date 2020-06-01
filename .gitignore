@@ -8,4 +8,6 @@
 *.cfg
 *.pdf
 *.out
-test.*
+*.fls
+*.fdb_latexmk
+*.tar.gz
