@@ -1,14 +1,14 @@
 NAME=crop
 ARCHIVE_NAME=$(NAME).tar.gz
-ARCHIVE_CONTENTS=$(NAME).dtx Makefile $(NAME).txt $(NAME).ins
+ARCHIVE_CONTENTS=$(NAME).dtx Makefile README $(NAME).ins
 
 all: $(NAME).sty $(NAME).pdf
 
 archive: $(NAME).ins
-	@ tar -czf $(ARCHIVE_NAME) $(ARCHIVE_CONTENTS)
-	@ echo $(ARCHIVE_NAME):
-	@ echo ====================
-	@ tar -tzf $(ARCHIVE_NAME)
+	rm -rf $(NAME)/
+	mkdir $(NAME)/
+	cp $(ARCHIVE_CONTENTS) $(NAME)/
+	tar -czf $(ARCHIVE_NAME) $(NAME)
 
 $(NAME).pdf:
 	latexmk $(NAME).dtx
