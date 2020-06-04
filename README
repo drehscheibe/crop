@@ -15,8 +15,8 @@ either text or graphics output.
 
 author          = "Melchior FRANZ"
 maintainer      = "Reuben Thomas"
-version         = "1.10"
-date            = "19 Nov 2017"
+version         = "1.10.1"
+date            = "04 Jun 2020"
 URL             = "https://github.com/rrthomas/crop/"
 email           = "rrt@sc3d.org"
 codetable       = "ISO/ASCII"

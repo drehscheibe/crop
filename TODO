@@ -1,5 +1,0 @@
-1.10:
-+ set \pdfpage{width,height} in \CROP@ship (otherwise
-  geometry overwrites them, even with pdftex=false).
-  (review again!)
-
