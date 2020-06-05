@@ -1,6 +1,6 @@
 NAME=crop
 ARCHIVE_NAME=$(NAME).tar.gz
-ARCHIVE_CONTENTS=$(NAME).dtx $(NAME).pdf Makefile README $(NAME).ins $(NAME).sty
+ARCHIVE_CONTENTS=$(NAME).dtx $(NAME).pdf Makefile README $(NAME).ins
 
 all: $(NAME).sty $(NAME).pdf
 
