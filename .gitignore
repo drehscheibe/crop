@@ -10,5 +10,6 @@
 *.out
 *.fls
 *.fdb_latexmk
-*.tar.gz
+*.zip
 /crop
+/crop.dtx

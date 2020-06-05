@@ -1,28 +1,12 @@
-crop.sty
-========
+crop
+====
 
-provides different forms of cropmarks for
-trimming paper stacks, for camera alignment and
-for visualizing the page dimensions.
-There are options for centering the page with
-respect to some physical paper size, for marking
-the vertical and horizontal middle axis, for
-mounting pages on a physical sheet, for
-reflecting and inverting the whole document or
-printing it upside-down, and for suppressing
-either text or graphics output.
-
-
-author          = "Melchior FRANZ"
-maintainer      = "Reuben Thomas"
-version         = "1.10.1"
-date            = "04 Jun 2020"
-URL             = "https://github.com/rrthomas/crop/"
-email           = "rrt@sc3d.org"
-codetable       = "ISO/ASCII"
-keywords        = "cropmarks, frame, mirror, rotate, invert"
-supported       = "yes"
-
+This package provides different forms of cropmarks for trimming paper
+stacks, for camera alignment and for visualizing the page dimensions. There
+are options for centering the page with respect to some physical paper size,
+for marking the vertical and horizontal middle axis, for mounting pages on a
+physical sheet, for reflecting and inverting the whole document or printing
+it upside-down, and for suppressing either text or graphics output.
 
 
 COPYRIGHT NOTICE
@@ -30,7 +14,6 @@ COPYRIGHT NOTICE
 This package is free software that can be redistributed and/or modified
 under the terms of the LaTeX Project Public License as specified
 in the file macros/latex/base/lppl.txt on any CTAN archive server.
-
 
 
 Extracting the package & processing the documentation

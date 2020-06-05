@@ -27,15 +27,15 @@
 %% ====================================================================
 %%  @LaTeX-package-file{
 %%     author          = "Melchior FRANZ",
-%%     version         = "1.10.1",
-%%     date            = "04 Jun 2020",
+%%     version         = "$paste{VERSION}",
+%%     date            = "$include{date,+%d %b %Y}",
 %%     filename        = "crop.dtx",
 %%     address         = "Melchior FRANZ
 %%                        Rieder Hauptstrasse 52
 %%                        A-5212 SCHNEEGATTERN
 %%                        AUSTRIA",
-%%     URL             = "https://github.com/drehscheibe/crop/",
-%%     email           = "mfranz@aon.at",
+%%     URL             = "https://github.com/rrthomas/crop/",
+%%     email           = "rrt@sc3d.org",
 %%     codetable       = "ISO/ASCII",
 %%     keywords        = "cropmarks, frame, mirror, rotate, invert",
 %%     supported       = "yes",
@@ -74,8 +74,8 @@
 %
 %
 %<*driver>
-\def\fileversion{1.10.1}
-\def\filedate{2020/06/04g}
+\def\fileversion{$include{VERSION}}
+\def\filedate{$include{date,+%Y/%m/%d}}
 \documentclass{ltxdoc}
 \usepackage{hyperref}
 \hypersetup{

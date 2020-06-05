@@ -1,7 +1,0 @@
-- activate and specify checksum
-- set release date (in doc, copyright(!), implementation, and README)
-- set release version (in doc, implementation, and README)
-- ispell -t
-- fresh checkout and compile
-- tag RELEASE (git tag RELEASE_1_* && git push --tags)
-- make archive
