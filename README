@@ -33,8 +33,18 @@ in the file macros/latex/base/lppl.txt on any CTAN archive server.
 
 
 
-Installation
-============
+Extracting the package & processing the documentation
+=====================================================
 
-The package is supplied ready to install: just copy crop.sty and crop.pdf to
-suitable directories.
+on Unix/Linux just run "make" to get the style file and the documentation;
+else generate the driver crop.ins (if you don't already have it):
+
+    $ latex crop.dtx
+
+Now generate the style file:
+
+    $ tex crop.ins
+
+And finally to produce the documentation run LaTeX three times:
+
+    $ latex crop.dtx
