@@ -1,0 +1,16 @@
+Maintenance
+===========
+
+Building crop relies on the following tools:
+
+latexmk (available with TeXLive or probably in your software distribution).
+nancy: https://github.com/rrthomas/nancy
+
+
+Release checklist
+=================
+
+- Update VERSION
+- ispell -t
+- make release
+- Upload archive to CTAN: https://www.ctan.org/pkg/crop

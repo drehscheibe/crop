@@ -1,9 +1,0 @@
-- activate and specify checksum
-- set release date (in doc, copyright(!), implementation, and *.txt)
-- set release version (in doc, implementation, and *.txt)
-- ispell -t
-- fresh checkout and compile
-- tag RELEASE (cvs tag RELEASE_1_*)
-- set release state (cvs admin -sRel)
-- check out freshly (otherwise release state isn't set in the files)
-- make archive

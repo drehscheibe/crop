@@ -1,5 +1,5 @@
 % \iffalse
-%% File: crop.dtx Copyright (C) 1998--2003 Melchior FRANZ
+%% File: crop.dtx Copyright (C) 1998--2017 Melchior FRANZ
 %
 %<*preamble>
 %
@@ -27,15 +27,15 @@
 %% ====================================================================
 %%  @LaTeX-package-file{
 %%     author          = "Melchior FRANZ",
-%%     version         = "1.9",
-%%     date            = "20 May 2003",
+%%     version         = "$paste{VERSION}",
+%%     date            = "$include{date,+%d %b %Y}",
 %%     filename        = "crop.dtx",
 %%     address         = "Melchior FRANZ
 %%                        Rieder Hauptstrasse 52
 %%                        A-5212 SCHNEEGATTERN
 %%                        AUSTRIA",
-%%     URL             = "https://github.com/drehscheibe/crop/",
-%%     email           = "mfranz@aon.at",
+%%     URL             = "https://github.com/rrthomas/crop/",
+%%     email           = "rrt@sc3d.org",
 %%     codetable       = "ISO/ASCII",
 %%     keywords        = "cropmarks, frame, mirror, rotate, invert",
 %%     supported       = "yes",
@@ -74,25 +74,18 @@
 %
 %
 %<*driver>
-\def\fileversion{1.9}
-\def\filedate{2003/05/20}
+\def\fileversion{$include{VERSION}}
+\def\filedate{$include{date,+%Y/%m/%d}}
 \documentclass{ltxdoc}
-%
-%
-%
-\ifx\makehyperref\CROPundefined
-    \newcommand*\texorpdfstring[2]{#1}
-\else   ^^A for "make hyper"
-    \usepackage{hyperref}
-    \hypersetup{
-        bookmarksopen,
-        colorlinks,
-        pdftitle={The crop package},
-        pdfauthor={Melchior FRANZ},
-        pdfkeywords={crop marks, mirror, invert, center, }
-    }
-    \usepackage[pdftex]{graphicx,color}
-\fi
+\usepackage{hyperref}
+\hypersetup{
+    bookmarksopen,
+    colorlinks,
+    pdftitle={The crop package},
+    pdfauthor={Melchior FRANZ},
+    pdfkeywords={crop marks, mirror, invert, center}
+}
+\usepackage[pdftex]{graphicx,color}
 %
 %
 %
@@ -147,7 +140,7 @@
 % \fi
 %
 %
-%^^A \CheckSum{1063}
+% \CheckSum{1098}
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -171,7 +164,7 @@
 % \title{The \CROP\ package}
 %
 % \author{Melchior \textsc{FRANZ}}
-% \date{May 20, 2003}
+% \date{Nov 19, 2017}
 % \maketitle
 %
 %
@@ -216,6 +209,8 @@
 % \changes{v1.9}{2003/05/20}{don't create command sequences by merely
 %   checking for them}
 %
+% \changes{v1.10}{2017/11/19}{fix dimensions of a1, a2, a5 and a6 paper; add
+%   support for LuaTeX.}
 %
 %
 % \begin{abstract}
@@ -275,9 +270,9 @@
 %    b0, b1, b2, b3, b4, b5, b6, letter, legal, executive]\hfill\break
 %    These options declare the printing paper dimensions. One of them should be
 %    specified if the \option{center} option or one of the options \option{dvips},
-%    \option{pdftex} and \option{vtex} is used. The size options do not
-%    define the logical document page size! See section~\ref{sec:custom-logical}
-%    for how to achieve this.
+%    \option{pdftex}, \option{luatex} and \option{vtex} is used. The size options
+%    do not define the logical document page size! See
+%    section~\ref{sec:custom-logical} for how to achieve this.
 %
 % \item[\itemfont width, height]---
 %    Instead of using one of the pre-defined paper formats as described
@@ -296,11 +291,12 @@
 %    to center a document on \emph{landscape oriented} paper. It has nothing
 %    to do with \LaTeX's |landscape| document class option.
 %
-% \item[\itemfont dvips, pdftex, pdflatex, vtex, nodriver]---
-%    If you are working with \program{dvips}, \program{pdftex} or \program{vtex}
+% \item[\itemfont dvips, pdftex, pdflatex, luatex, lualatex, vtex, nodriver]---
+%   If you are working with \program{dvips}, \program{pdftex},
+%   \program{luatex} or \program{vtex}
 %    you may want to pass the dimensions of the paper that you are planning to print on to
-%    the respective driver program. Especially viewer programs like \program{gs}
-%    or \program{gv} make use of this \emph{bounding box} information. Unfortunately,
+%    the respective driver program. Especially viewer programs like \program{evince}
+%    or \program{xpdf} make use of this \emph{bounding box} information. Unfortunately,
 %    this can't be done in a generic way---there's no standard. These options select
 %    driver specific methods to set the paper size and to rotate and reflect a page.
 %
@@ -313,7 +309,8 @@
 %    through \program{pdflatex}. In this case \CROP\ will automatically use
 %    the \option{pdflatex} driver. You can also force \CROP\ not to use any
 %    of the drivers by requesting the \option{nodriver} option.
-%    \option{pdflatex} is a synonym for \option{pdftex}.
+%    \option{pdflatex} is a synonym for \option{pdftex}, and \option{lualatex}
+%    is a synonym for \option{luatex}.
 %
 % \item[\itemfont mirror]
 %    This option reflects the whole document, provided that the selected output
@@ -616,7 +613,8 @@
 %
 % \subsection{Custom printing paper sheet size}
 %
-% If you want to use one of the \option{center}, \option{dvips}, \option{pdftex} or \option{vtex}
+% If you want to use one of the \option{center}, \option{dvips}, \option{pdftex},
+% \option{pdflatex}, \option{luatex}, \option{lualatex} or \option{vtex}
 % options together with non-standard printing paper, you can set it
 % via the \option{width} and \option{height} option, or simply add
 % the respective paper definition to your |crop.cfg| file (see \ref{sec:config}).
@@ -789,6 +787,10 @@
 % (Tested with |graphics.sty|, version~1.0l as of 1999/02/16.)
 %
 %
+% \subsubsection{\package{ifluatex.sty}}
+%
+% \CROP's driver detection depends on the \package{ifluatex} package.
+%
 %
 % \StopEventually{\addtocontents{toc}{\protect\end{multicols}}}
 %
@@ -824,7 +826,8 @@
 %    \begin{macrocode}
 %<*package>
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{crop}[2003/05/20 v1.9 crop marks  (mf)]
+\ProvidesPackage{crop}[2017/11/19 1.10 crop marks (mf)]
+\RequirePackage{ifluatex}
 \expandafter\ifx\csname stockwidth\endcsname\relax
     \newdimen\stockwidth
     \stockwidth\paperwidth
@@ -939,6 +942,8 @@
 \DeclareOption{vtex}{\def\CROP@reqdriver{vtex}}
 \DeclareOption{pdftex}{\def\CROP@reqdriver{pdftex}}
 \DeclareOption{pdflatex}{\def\CROP@reqdriver{pdftex}}
+\DeclareOption{luatex}{\def\CROP@reqdriver{luatex}}
+\DeclareOption{lualatex}{\def\CROP@reqdriver{luatex}}
 \DeclareOption{dvips}{\def\CROP@reqdriver{dvips}}
 %    \end{macrocode}
 % \end{macro}
@@ -959,6 +964,8 @@
 \DeclareOption{vtex!}{\def\CROP@driver{vtex}}
 \DeclareOption{pdftex!}{\def\CROP@driver{pdftex}}
 \DeclareOption{pdflatex!}{\def\CROP@driver{pdftex}}
+\DeclareOption{luatex!}{\def\CROP@driver{luatex}}
+\DeclareOption{lualatex!}{\def\CROP@driver{luatex}}
 \DeclareOption{dvips!}{\def\CROP@driver{dvips}}
 \DeclareOption{nodriver}{\def\CROP@driver{none}}
 \DeclareOption{!}{\def\CROP@driver{none}}
@@ -982,10 +989,14 @@
 \newcommand*\CROP@evaldriver{%
     \ifx\CROP@driver\@empty
         \PackageInfo{crop}{requested driver: `\CROP@reqdriver'}%
-        \ifx\pdfoutput\@undefined\else
-            \ifx\pdfoutput\relax\else
-                \ifcase\pdfoutput\else
-                    \def\CROP@detdriver{pdftex}%
+        \ifluatex
+            \def\CROP@detdriver{luatex}%
+        \else
+            \ifx\pdfoutput\@undefined\else
+                \ifx\pdfoutput\relax\else
+                    \ifcase\pdfoutput\else
+                        \def\CROP@detdriver{pdftex}%
+                    \fi
                 \fi
             \fi
         \fi
@@ -1032,6 +1043,7 @@
 %
 % \begin{macro}{\CROP@init@dvips}
 % \begin{macro}{\CROP@init@pdftex}
+% \begin{macro}{\CROP@init@luatex}
 % \begin{macro}{\CROP@init@vtex}
 % \begin{macro}{\CROP@init@none}
 % These macros prepare the \CROP\ package for one of the supported
@@ -1055,6 +1067,13 @@
         \pdfpageheight\stockheight
     }%
 }
+\newcommand*\CROP@init@luatex{%
+    \PackageInfo{crop}{using `luatex' graphics driver}%
+    \pagewidth\stockwidth
+    \pageheight\stockheight
+    \let\CROP@reflect\CROP@genreflect
+    \let\CROP@rotate\CROP@genrotate
+}
 \newcommand*\CROP@init@vtex{%
     \PackageInfo{crop}{using `vtex' graphics driver}%
     \mediawidth\stockwidth
@@ -1066,6 +1085,7 @@
     \PackageInfo{crop}{not using any graphics driver}%
 }
 %    \end{macrocode}
+% \end{macro}
 % \end{macro}
 % \end{macro}
 % \end{macro}
@@ -1086,8 +1106,9 @@
 % \begin{macro}{\CROP@opt@height}
 % These options set different standard printing paper sizes, which
 % are needed for centering and as a hint for the \program{dvips},
-% \program{pdftex} or \program{vtex} program. Since the physical paper
-% dimensions must not underlie a possible scaling, |true| dimensions
+% \program{pdftex}, \program{luatex} or \program{vtex} program.
+% Since the physical paper
+% dimensions must not undergo a possible scaling, |true| dimensions
 % are used. The \option{landscape} option exchanges the |\hoffset| and
 % |\voffset| values.
 %
@@ -1097,12 +1118,12 @@
     \def\CROP@size#1#2{\stockheight#1 \stockwidth#2 }%
 }
 \DeclareOption{a0}{\CROP@size{841truemm}{1189truemm}}
-\DeclareOption{a1}{\CROP@size{595truemm}{841truemm}}
-\DeclareOption{a2}{\CROP@size{420truemm}{595truemm}}
+\DeclareOption{a1}{\CROP@size{594truemm}{841truemm}}
+\DeclareOption{a2}{\CROP@size{420truemm}{594truemm}}
 \DeclareOption{a3}{\CROP@size{297truemm}{420truemm}}
 \DeclareOption{a4}{\CROP@size{210truemm}{297truemm}}
-\DeclareOption{a5}{\CROP@size{149truemm}{210truemm}}
-\DeclareOption{a6}{\CROP@size{105truemm}{149truemm}}
+\DeclareOption{a5}{\CROP@size{148truemm}{210truemm}}
+\DeclareOption{a6}{\CROP@size{105truemm}{148truemm}}
 \DeclareOption{b0}{\CROP@size{1000truemm}{1414truemm}}
 \DeclareOption{b1}{\CROP@size{707truemm}{1000truemm}}
 \DeclareOption{b2}{\CROP@size{500truemm}{707truemm}}
@@ -1831,7 +1852,8 @@
 % The \option{mirror} and \option{rotate} options add a macro to the
 % \emph{shiplist,} which then gets every output page and embeds it in
 % a \POSTSCRIPT\ environment (\option{dvips}) or lets the
-% \package{graphics} package reflect or rotate it (\option{pdftex}).
+% \package{graphics} package reflect or rotate it (\option{pdftex} or
+% \option{luatex}).
 % We could also use the generic operations |\CROP@genreflect| and
 % |\CROP@genrotate| for the \option{dvips} mode. They would produce
 % correct \PS\ documents, the intermediate \DVI\ document, however,
@@ -2210,13 +2232,6 @@
 %\end{verbatim}
 % }
 %
-%
-%
-%
 % ^^A \PrintChanges
-% \Finale
-%
-%
-%
-%                                                       ^^A.E.I.O.U.^^
 % ^^A vim:ts=4:sw=4:et:cindent
+% \Finale                                               ^^A.E.I.O.U.^^
